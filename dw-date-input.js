@@ -13,7 +13,7 @@ import '@dw/dw-input/dw-input';
 import { DwFormElement } from '@dw/dw-form/dw-form-element';
 import moment from 'moment';
   
-class DwDateInput extends DwFormElement(LitElement) {
+export class DwDateInput extends DwFormElement(LitElement) {
   static get styles() {
     return [
       css`
