@@ -15,6 +15,8 @@ npm install --save @dw/dw-date-input
   import '@dw/dw-date-input/dw-date-input';
 ```
 
+## [Demo](https://dreamworldsolutions.github.io/dw-date-input/demo/index.html)
+
 ## Events
 
 Triggers `value-changed` event on value change.
