@@ -106,6 +106,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * it should be `dd/mm/yyyy` or `mm/dd/yyyy` or `dd-mm-yyyy` or `mm-dd-yyyy`
        */
       inputFormat: { type: String },
+      
+      /**
+       * Set to true to make it dense
+       */
+      isDense: { type: Boolean },
 
       /**
        * Date separator. Possible value: `/` or  `-`
@@ -132,6 +137,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        ?required="${this.required}"
        ?readOnly="${this.readOnly}"
        ?autoSelect="${this.autoSelect}"
+       ?isDense="${this.isDense}"
        allowedPattern=[0-9/-]
        .placeholder="${this.placeholder}"
        .value="${this._getFormattedDate(this.value, this.inputFormat)}"
@@ -153,6 +159,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.placeholder = '';
     this.value = '';
     this.originalValue = '';
+    this.isDense = false;
     this.errorMessagesByState = {
       REQUIRED: 'Required',
       MIN_DATE: 'Date must be >= {minDate}',

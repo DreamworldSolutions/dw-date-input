@@ -1,6 +1,6 @@
 {
   "name": "@dw/dw-date-input",
-  "version": "1.0.0-SNAPSHOT",
+  "version": "1.0.2-SNAPSHOT",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
   "dependencies": {
     "@dw/dw-form": "^1.0.0-SNAPSHOT",
-    "@dw/dw-input": "^1.0.1-SNAPSHOT",
+    "@dw/dw-input": "^1.0.6-SNAPSHOT",
     "lit-element": "^2.2.1",
     "moment": "^2.24.0"
   }
