@@ -59,7 +59,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
       /**
        * Set this to show input with helper text
        */
-      hintText: { type: String },
+      hint: { type: String },
+
+      /**
+       * Always show the helper text despite focus.
+       */
+      hintPersistent: { type: Boolean },
 
       /**
        * Set to true to mark the input as required.
@@ -138,12 +143,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
        ?readOnly="${this.readOnly}"
        ?autoSelect="${this.autoSelect}"
        ?isDense="${this.isDense}"
+       ?hintPersistent="${this.hintPersistent}"
        allowedPattern=[0-9/-]
        .placeholder="${this.placeholder}"
        .value="${this._getFormattedDate(this.value, this.inputFormat)}"
        .errorMessage="${this._getErrorMessage(this.value, this.errorMessagesByState, this._errorState)}"
        .name="${this.name}"
-       .hintText="${this.hintText}"
+       .hint="${this.hint}"
        @blur="${this._onBlur}"
        .validator="${this._customValidator.bind(this)}"
       ></dw-input>
@@ -168,7 +174,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
       INVALID_DATE: 'Date is invalid'
     };
     this.name = '';
-    this.hintText = '';
+    this.hint = '';
+    this.hintPersistent = false;
     this.invalid = false;
     this.autoSelect = false;
     this.inputFormat = 'mm/dd/yyyy';

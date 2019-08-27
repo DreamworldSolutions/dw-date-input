@@ -23,7 +23,7 @@ Triggers `value-changed` event on value change.
 
 ## Features
 
-Supports all the features of `dw-input` like `disabled`, `readOnly`, `hintText` etc. Additional features are as below:
+Supports all the features of `dw-input` like `disabled`, `readOnly`, `hint` etc. Additional features are as below:
 
 - Takes user input in below formates
   - mm/dd/yyy (Default)
