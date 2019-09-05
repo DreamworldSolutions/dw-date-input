@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
   "dependencies": {
-    "@dw/dw-form": "^1.0.0-SNAPSHOT",
-    "@dw/dw-input": "^1.0.8-SNAPSHOT",
+    "@dreamworld/dw-form": "^1.0.1",
+    "@dreamworld/dw-input": "^1.0.0",
     "lit-element": "^2.2.1",
     "moment": "^2.24.0"
   },

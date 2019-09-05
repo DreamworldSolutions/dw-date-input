@@ -6,13 +6,13 @@
 ## Installation
 
 ``` html
-npm install --save @dw/dw-date-input
+npm install --save @dreamworld/dw-date-input
 ```
 
 ## Usage
 
 ``` html
-  import '@dw/dw-date-input/dw-date-input';
+  import '@dreamworld/dw-date-input/dw-date-input';
 ```
 
 ## [Demo](https://dreamworldsolutions.github.io/dw-date-input/demo/index.html)

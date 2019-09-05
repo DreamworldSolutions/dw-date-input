@@ -9,8 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { LitElement, html, css } from 'lit-element';
-import '@dw/dw-input/dw-input';
-import { DwFormElement } from '@dw/dw-form/dw-form-element';
+import '@dreamworld/dw-input/dw-input';
+import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
 import moment from 'moment';
   
 export class DwDateInput extends DwFormElement(LitElement) {
