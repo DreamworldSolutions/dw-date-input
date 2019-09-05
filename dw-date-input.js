@@ -146,7 +146,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
        ?hintPersistent="${this.hintPersistent}"
        allowedPattern=[0-9/-]
        .placeholder="${this.placeholder}"
-       .value="${this._getFormattedDate(this.value, this.inputFormat)}"
+       .value="${this.value}"
+       .formattedValueGetter="${this._getFormattedDate.bind(this)}"
+       .focusedValueGetter = ${this._getFocusedDate}
        .errorMessage="${this._getErrorMessage(this.value, this.errorMessagesByState, this._errorState)}"
        .name="${this.name}"
        .hint="${this.hint}"
@@ -213,30 +215,34 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * @param {String} value - date entered by value
    * @returns {Boolean} returns false if it's invalid
    */
-  _customValidator(value) {
-    value = value.replace(/ /g, '');
-
-    if (!value && !this.required) { 
+  _customValidator(value, formattedValue) {
+    if (!formattedValue) { 
       return true;
     }
 
-    if (!moment(value, this.inputFormat.toUpperCase(), true).isValid()) { 
+    formattedValue = formattedValue.replace(/ /g, '');
+
+    if (!formattedValue && !this.required) { 
+      return true;
+    }
+
+    if (!moment(formattedValue, this.inputFormat.toUpperCase(), true).isValid()) { 
       return false;
     }
 
     if(this.maxDate && this.minDate){
-      let isInputGreater = moment(value).isAfter(this.maxDate);
-      let isInputLower = moment(value).isBefore(this.minDate);
+      let isInputGreater = moment(formattedValue).isAfter(this.maxDate);
+      let isInputLower = moment(formattedValue).isBefore(this.minDate);
       
       return !(isInputLower || isInputGreater);
     }
     
     if(this.maxDate){
-      return moment(value). isBefore(this.maxDate);
+      return moment(formattedValue).isBefore(this.maxDate);
     }
     
     if(this.minDate){
-      return moment(value).isAfter(this.minDate);
+      return moment(formattedValue).isAfter(this.minDate);
     }
 
     return true;
@@ -248,7 +254,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * @returns {String} Error message by state
    */
   _getErrorMessage(value, errorMessage) {
-    if (!value && this.required) { 
+    if (!value) { 
       return errorMessage['REQUIRED'];
     }
 
@@ -278,7 +284,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   _onBlur(e) { 
-    this.value = e.target.value;
+    let value = e.target._formattedValue;
+    this.value = value && value.replace(/ /g, '');
+  }
+
+  _getFocusedDate(value, formattedValue) { 
+    return formattedValue;
   }
 
   /**
@@ -288,7 +299,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * @param {String} format represent - `_inputFormat` property
    * @return {String} formatted date
    */
-  _getFormattedDate(value, format) {
+  _getFormattedDate(value) {
     value = value || '';
     value = value.replace(/ /g, '');
     value = value.replace(/-/g, '/');
@@ -300,12 +311,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
     }
     
     let places = this._createPlaces(value);
-    places = this._fillEmptyPlaces(places, format);
+    places = this._fillEmptyPlaces(places, this.inputFormat);
 
     
     let formattedDate = places.join(` ${this._separator} `);
     
-    this.value = formattedDate.replace(/ /g, '');
     return formattedDate;
   }
   

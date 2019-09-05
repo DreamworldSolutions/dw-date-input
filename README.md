@@ -48,3 +48,8 @@ Supports all the features of `dw-input` like `disabled`, `readOnly`, `hint` etc.
 ``` html
   <dw-date-input label="Date" value="02/12/2019"></dw-date-input>
 ```
+
+#### Use `minDate` and `maxDate` property for min and max date validation
+``` html
+  <dw-date-input label="Date" minDate="02/12/2019" maxDate="02/12/2020"></dw-date-input>
+```
