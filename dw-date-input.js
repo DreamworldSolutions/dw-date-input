@@ -116,6 +116,19 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Set to true to make it dense
        */
       isDense: { type: Boolean },
+      
+      /**
+       * A string which used to check whether user has updated value or not
+       * When `originalValue` and `value` is different input style is changed
+       */
+      originalValue: { type: String },
+      
+      /**
+       * Set to true to highLight textfield when value is changed
+       * Make sure to provide `originalValue` when setting this to true
+       * It will highLight field when `value` and `originalValue` is not same
+       */
+      highLightOnChanged: { type: Boolean },
 
       /**
        * Date separator. Possible value: `/` or  `-`
@@ -146,6 +159,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
        ?hintPersistent="${this.hintPersistent}"
        allowedPattern=[0-9/-]
        .placeholder="${this.placeholder}"
+       ?highLightOnChanged="${this.highLightOnChanged}"
+       .originalValue="${this.originalValue}"
        .value="${this.value}"
        .formattedValueGetter="${this._getFormattedDate.bind(this)}"
        .focusedValueGetter = ${this._getFocusedDate}
@@ -181,6 +196,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.invalid = false;
     this.autoSelect = false;
     this.inputFormat = 'mm/dd/yyyy';
+    this.highLightOnChanged = false;
     this._errorState = 'REQUIRED';
     this._separator = '/';
   }
