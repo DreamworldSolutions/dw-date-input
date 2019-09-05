@@ -1,0 +1,35 @@
+{
+  "name": "@dreamworld/dw-date-input",
+  "version": "0.0.0-development",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/DreamworldSolutions/dw-date-input.git"
+  },
+  "keywords": [
+    "lit",
+    "input"
+  ],
+  "author": "Ruchita kheni",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DreamworldSolutions/dw-date-input/issues"
+  },
+  "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
+  "dependencies": {
+    "@dreamworld/dw-form": "^1.0.1",
+    "@dreamworld/dw-input": "^1.0.0",
+    "lit-element": "^2.2.1",
+    "moment": "^2.24.0"
+  },
+  "devDependencies": {
+    "semantic-release": "beta"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
