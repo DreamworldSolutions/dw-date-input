@@ -19,7 +19,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
       css`
         :host {
           display: inline-block;
-          outline:none;
+          outline:none; 
         }
 
         :host[hidden] {
