@@ -9,9 +9,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { LitElement, html, css } from 'lit-element';
-import '@dreamworld/dw-input/dw-input';
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
 import moment from 'moment';
+import '@vaadin/vaadin-date-picker/theme/material/vaadin-date-picker';
+import './vaadin-text-field-style';
+import './vaadin-date-picker-overlay-style';
+import './date-input';
   
 export class DwDateInput extends DwFormElement(LitElement) {
   static get styles() {
@@ -20,10 +23,23 @@ export class DwDateInput extends DwFormElement(LitElement) {
         :host {
           display: inline-block;
           outline:none;
+          position: relative;
         }
 
         :host[hidden] {
           display: none;
+        }
+
+        vaadin-date-picker{
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+
+        #dateInput{
+          z-index: 5;
         }
       `
     ];
@@ -115,44 +131,59 @@ export class DwDateInput extends DwFormElement(LitElement) {
       /**
        * Set to true to make it dense
        */
-      isDense: { type: Boolean },
-
+      dense: { type: Boolean },
+      
       /**
-       * Date separator. Possible value: `/` or  `-`
+       * A string which used to check whether user has updated value or not
+       * When `originalValue` and `value` is different input style is changed
        */
-      _separator: { type: String },
-
+      originalValue: { type: String },
+      
       /**
-       * Current error state
-       * Poissible value: `REQUIRED`, `MAX_MIN_DATE`, `MIN_DATE`, `MAX_DATE`, `INVALID_DATE`
+       * Set to true to highLight textfield when value is changed
+       * Make sure to provide `originalValue` when setting this to true
+       * It will highLight field when `value` and `originalValue` is not same
        */
-      _errorState: { type: String }
-
+      highlightChanged: { type: Boolean },
     };
   }
 
   render() {
     
     return html`
-      <dw-input
-      id="dateInput"
-      .label="${this.label}"
+      <date-input
+       id="dateInput"
+       .inputFormat="${this.inputFormat}"
+       .label="${this.label}"
        ?disabled="${this.disabled}"
        ?noLabel="${this.noLabel}"
        ?required="${this.required}"
        ?readOnly="${this.readOnly}"
        ?autoSelect="${this.autoSelect}"
-       ?isDense="${this.isDense}"
+       ?dense="${this.dense}"
        ?hintPersistent="${this.hintPersistent}"
-       allowedPattern=[0-9/-]
        .placeholder="${this.placeholder}"
-       .value="${this._getFormattedDate(this.value, this.inputFormat)}"
-       .errorMessage="${this._getErrorMessage(this.value, this.errorMessagesByState, this._errorState)}"
+       ?highlightChanged="${this.highlightChanged}"
+       .originalValue="${this.originalValue}"
+       .value="${this.value}"
        .name="${this.name}"
        .hint="${this.hint}"
-       @blur="${this._onBlur}"
-       .validator="${this._customValidator.bind(this)}"
-      ></dw-input>
+       .minDate="${this.minDate}"
+       .maxDate="${this.maxDate}"
+       .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
+       @value-changed="${this._setValue}"
+       @click="${this._onClick}"
+      ></date-input>
+
+      <vaadin-date-picker
+        tabindex="-1"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readOnly}"
+        .value="${this._getSelectedDate(this.value)}"
+        @value-changed="${this._onSelectedDateChanged}"
+        @opened-changed="${this._onOpenedChanged}">
+      </vaadin-date-picker>
+      
     `;
   }
 
@@ -165,28 +196,21 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.placeholder = '';
     this.value = '';
     this.originalValue = '';
-    this.isDense = false;
-    this.errorMessagesByState = {
-      REQUIRED: 'Required',
-      MIN_DATE: 'Date must be >= {minDate}',
-      MAX_DATE: 'Date must be <= {maxDate}',
-      MIN_MAX_DATE: 'Date must be between {minDate} and {maxDate}',
-      INVALID_DATE: 'Date is invalid'
-    };
+    this.dense = false;
     this.name = '';
     this.hint = '';
     this.hintPersistent = false;
     this.invalid = false;
     this.autoSelect = false;
     this.inputFormat = 'mm/dd/yyyy';
-    this._errorState = 'REQUIRED';
-    this._separator = '/';
-  }
-
-  firstUpdated(changedProps) { 
-    if (changedProps.has('inputFormat')) { 
-      this._separator = this.inputFormat.slice(2, 3);
-    }
+    this.highlightChanged = false;
+    this.errorMessagesByState = {
+      REQUIRED: 'Required',
+      MIN_DATE: 'Date must be > {minDate}',
+      MAX_DATE: 'Date must be < {maxDate}',
+      MIN_MAX_DATE: 'Date must be between {minDate} and {maxDate}',
+      INVALID_DATE: 'Date is invalid'
+    };
   }
 
   /**
@@ -208,38 +232,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
     return isValid;
   }
 
-  /**
-   * Performs date validations like required, minDate, maxDate, invalid
-   * @param {String} value - date entered by value
-   * @returns {Boolean} returns false if it's invalid
-   */
-  _customValidator(value) {
-    value = value.replace(/ /g, '');
-
-    if (!value && !this.required) { 
-      return true;
-    }
-
-    if (!moment(value, this.inputFormat.toUpperCase(), true).isValid()) { 
-      return false;
-    }
-
-    if(this.maxDate && this.minDate){
-      let isInputGreater = moment(value).isAfter(this.maxDate);
-      let isInputLower = moment(value).isBefore(this.minDate);
-      
-      return !(isInputLower || isInputGreater);
-    }
-    
-    if(this.maxDate){
-      return moment(value). isBefore(this.maxDate);
-    }
-    
-    if(this.minDate){
-      return moment(value).isAfter(this.minDate);
-    }
-
-    return true;
+  layout() { 
+    let el = this.shadowRoot.querySelector('#dateInput');
+    el && el.layout();
   }
 
   /**
@@ -248,7 +243,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * @returns {String} Error message by state
    */
   _getErrorMessage(value, errorMessage) {
-    if (!value && this.required) { 
+    if (!value) { 
       return errorMessage['REQUIRED'];
     }
 
@@ -277,110 +272,62 @@ export class DwDateInput extends DwFormElement(LitElement) {
     }
   }
 
-  _onBlur(e) { 
-    this.value = e.target.value;
-  }
-
-  /**
-   * Called when value and format change for formatted date
-   * 
-   * @param {String} value represent - `value` property
-   * @param {String} format represent - `_inputFormat` property
-   * @return {String} formatted date
-   */
-  _getFormattedDate(value, format) {
-    value = value || '';
-    value = value.replace(/ /g, '');
-    value = value.replace(/-/g, '/');
-    value = value.replace(/[\/]+/g, '\/').replace(/^\/*/, '').replace(/\/*$/, '');
-    value = value.split('/').slice(0, 3).join('/');
-    
-    if(!value && value !== '0'){
-      return '';
-    }
-    
-    let places = this._createPlaces(value);
-    places = this._fillEmptyPlaces(places, format);
-
-    
-    let formattedDate = places.join(` ${this._separator} `);
-    
-    this.value = formattedDate.replace(/ /g, '');
-    return formattedDate;
+  _setValue(e) { 
+    this.value = e.detail.value;
+    this.dispatchEvent(new CustomEvent('value-changed', {
+      detail: { value: this.value }
+    }));
   }
   
   /**
-   * used to create places for day, month and year
-   * 
-   * @param {String} - value represent formated text
-   * @param {Array} - Array that now have places for day, month and year
+   * open date picker
    */
-  _createPlaces(value, format) {
-    let place1, place2, place3;
-    let splits = value.split('/');
-    let countSlash = splits.length - 1;
+  _onClick(e) {
+    let paths = e.composedPath()
+    let iconIndex = paths.findIndex((path) => {
+      return path.tagName === 'DW-ICON' || path.tagName === 'DW-ICON-BUTTON';
+    });
 
-    if(!countSlash){
-      place1 = value.slice(0, 2);
-      place2 = value.slice(2, 4);
-      place3 = value.slice(4, 8);
-    }else if(countSlash === 1){
-      place1 = splits[0].slice(0, 2);
-      place2 = splits[1].slice(0, 2);
-      place3 = splits[1].slice(2, 6);
-    }else {
-      place1 = splits[0].slice(0, 2);
-      place2 = splits[1].slice(0, 2);
-      place3 = splits[2].slice(0, 4);
+    if (iconIndex !== -1 && !this.disabled && !this.readOnly) { 
+      this.shadowRoot.querySelector('vaadin-date-picker').opened = true;
+      this.focus();
+    }
+  }
+
+  /**
+   * Sets selected date as input's value
+   */
+  _onSelectedDateChanged(e) { 
+    if (!e.detail.value) { 
+      return;
     }
     
-    return [place1, place2, place3];
+    let selectedDate = moment(e.detail.value, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase());
+    this.value = selectedDate;
+
+    setTimeout(() => {
+      this.layout();
+    });
+  }
+
+  /**
+   * Validate input on date picker close
+   */
+  _onOpenedChanged(e) { 
+    // validate date on calendar close
+    if (e.detail && !e.detail.value && e.target.hasAttribute('focused')) { 
+      setTimeout(() => {
+        this.validate();
+      },1);
+    }
   }
   
-  /**
-   * used to set places that are empty or contain only zeros &
-   * uses `_pad` method to put prefix '0' in value of place[1] and place[2] if there value's length lessthan 2 
-   *
-   * @param {Array} places - represent `dateArray`
-   * @param {String} format - represent `_inputFormat` property
-   * @return {Array} places - represent `dateArray` with filled places
-   */
-  _fillEmptyPlaces(places, format){
-    let isMonthFirst = format.toUpperCase() === "MM/DD/YYYY"? true : false;
-    let day = moment().format('DD');
-    let month = moment().format('MM');
-    let year = moment().format('YYYY');
-    
-    if(!parseInt(places[0])){
-      places[0] = isMonthFirst ? month : day;
-    }
-    if(!parseInt(places[1])){
-      places[1] = isMonthFirst ? day : month;
-    }
-    if(!parseInt(places[2])){
-      places[2] = year;
+  _getSelectedDate(value){
+    if(value){
+      value = value.replace(/ /g, '');
+      return moment(value, this.inputFormat.toUpperCase()).format('YYYY-MM-DD');
     }
     
-    places[0] = this._pad(places[0]);
-    places[1] = this._pad(places[1]);
-    
-    if(places[2] < 1000){
-      places[2] = 2000 + parseInt(places[2]);
-    }
-    
-    return places; 
-  }
-  
-  /**
-   * used to set zero as prefix in value store in  number letiable,
-   * otherwise keep number's value as it is & return it
-   * 
-   * @param {String} number 
-   * @return {String} number
-   */
-  _pad(number){
-    number = number.length < 2 ? ("0" + number) : number;
-    return number;
   }
 
 }
