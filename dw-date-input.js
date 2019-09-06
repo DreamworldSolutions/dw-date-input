@@ -300,7 +300,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   _onBlur(e) { 
-    let value = e.target._formattedValue;
+    let value = e.target.formattedValue;
     this.value = value && value.replace(/ /g, '');
   }
 
