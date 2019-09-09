@@ -211,8 +211,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.isDense = false;
     this.errorMessagesByState = {
       REQUIRED: 'Required',
-      MIN_DATE: 'Date must be >= {minDate}',
-      MAX_DATE: 'Date must be <= {maxDate}',
+      MIN_DATE: 'Date must be > {minDate}',
+      MAX_DATE: 'Date must be < {maxDate}',
       MIN_MAX_DATE: 'Date must be between {minDate} and {maxDate}',
       INVALID_DATE: 'Date is invalid'
     };
