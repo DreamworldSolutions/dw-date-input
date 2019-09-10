@@ -494,8 +494,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
   
   _getSelectedDate(value){
-    value = value.replace(/ /g, '');
-    return moment(value, this.inputFormat.toUpperCase()).format('YYYY-MM-DD');
+    if(value){
+      value = value.replace(/ /g, '');
+      return moment(value, this.inputFormat.toUpperCase()).format('YYYY-MM-DD');
+    }
+    
   }
 
 }
