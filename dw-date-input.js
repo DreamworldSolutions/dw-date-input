@@ -461,6 +461,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
   _onClick(e) {
     if ((e.composedPath()[0].tagName === 'svg' || e.composedPath()[0].tagName === 'path' ) && !this.disabled && !this.readOnly) { 
       this.shadowRoot.querySelector('vaadin-date-picker').opened = true;
+      this.focus();
     }
   }
 
@@ -483,8 +484,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * Validate input on date picker close
    */
   _onOpenedChanged(e) { 
-    // validate date on calender close
-    if (e.detail && !e.detail.value) { 
+    // validate date on calendar close
+    if (e.detail && !e.detail.value && e.target.hasAttribute('focused')) { 
       setTimeout(() => {
         this.validate();
       },1);
