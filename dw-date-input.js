@@ -189,12 +189,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
        .validator="${this._customValidator.bind(this)}"
       ></dw-input>
 
-      ${this.disabled || this.readOnly ? '' : html`
         <vaadin-date-picker
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readOnly}"
+        .value="${this._getSelectedDate(this.value)}"
         @value-changed="${this._onSelectedDateChanged}"
         @opened-changed="${this._onOpenedChanged}">
         </vaadin-date-picker>
-      `}
       
     `;
   }
@@ -490,6 +491,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
         this.validate();
       },1);
     }
+  }
+  
+  _getSelectedDate(value){
+    value = value.replace(/ /g, '');
+    return moment(value, this.inputFormat.toUpperCase()).format('YYYY-MM-DD');
   }
 
 }
