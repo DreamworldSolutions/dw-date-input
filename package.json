@@ -2,7 +2,7 @@
   "name": "@dreamworld/dw-date-input",
   "version": "0.0.0-development",
   "description": "",
-  "main": "index.js",
+  "main": "dw-date-input.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
