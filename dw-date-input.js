@@ -14,7 +14,7 @@ import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
 import moment from 'moment';
 import '@vaadin/vaadin-date-picker/theme/material/vaadin-date-picker';
 import './vaadin-text-field-style';
-import './date-picker-overlay-style';
+import './vaadin-date-picker-overlay-style';
   
 export class DwDateInput extends DwFormElement(LitElement) {
   static get styles() {

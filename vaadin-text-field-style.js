@@ -15,7 +15,8 @@ const textFieldTheme = html`<dom-module id="vaadin-text-field-style" theme-for="
     :host {
       width: 100%;
       height: 100%;
-      padding: 0;
+      padding-top: 0 !important;
+      margin-bottom: 0 !important;
     } 
     
     [part="input-field"] {
