@@ -131,7 +131,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
       /**
        * Set to true to make it dense
        */
-      isDense: { type: Boolean },
+      dense: { type: Boolean },
       
       /**
        * A string which used to check whether user has updated value or not
@@ -144,7 +144,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Make sure to provide `originalValue` when setting this to true
        * It will highLight field when `value` and `originalValue` is not same
        */
-      highLightOnChanged: { type: Boolean },
+      highlightChanged: { type: Boolean },
 
       /**
        * Date separator. Possible value: `/` or  `-`
@@ -171,20 +171,20 @@ export class DwDateInput extends DwFormElement(LitElement) {
        ?required="${this.required}"
        ?readOnly="${this.readOnly}"
        ?autoSelect="${this.autoSelect}"
-       ?isDense="${this.isDense}"
+       ?dense="${this.dense}"
        ?hintPersistent="${this.hintPersistent}"
        allowedPattern=[0-9/-]
        .placeholder="${this.placeholder}"
-       ?highLightOnChanged="${this.highLightOnChanged}"
+       ?highlightChanged="${this.highlightChanged}"
        .originalValue="${this.originalValue}"
        .value="${this.value}"
        .formattedValueGetter="${this._getFormattedDate.bind(this)}"
-       .focusedValueGetter = ${this._getFocusedDate}
+       .valueDeformatter = ${this._getFocusedDate}
        .errorMessage="${this._getErrorMessage(this.value, this.errorMessagesByState, this._errorState)}"
        .name="${this.name}"
        .hint="${this.hint}"
        iconTrailing="date_range"
-       hasClickableIcon
+       clickableIcon
        @blur="${this._onBlur}"
        @click="${this._onClick}"
        .validator="${this._customValidator.bind(this)}"
@@ -210,7 +210,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.placeholder = '';
     this.value = '';
     this.originalValue = '';
-    this.isDense = false;
+    this.dense = false;
     this.errorMessagesByState = {
       REQUIRED: 'Required',
       MIN_DATE: 'Date must be > {minDate}',
@@ -224,7 +224,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.invalid = false;
     this.autoSelect = false;
     this.inputFormat = 'mm/dd/yyyy';
-    this.highLightOnChanged = false;
+    this.highlightChanged = false;
     this._errorState = 'REQUIRED';
     this._separator = '/';
   }
