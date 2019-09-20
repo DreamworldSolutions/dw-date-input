@@ -285,7 +285,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
   _onClick(e) {
     let paths = e.composedPath()
     let iconIndex = paths.findIndex((path) => {
-      return path.tagName === 'DW-ICON';
+      return path.tagName === 'DW-ICON' || path.tagName === 'DW-ICON-BUTTON';
     });
 
     if (iconIndex !== -1 && !this.disabled && !this.readOnly) { 
