@@ -27,12 +27,13 @@
     "moment": "^2.24.0"
   },
   "devDependencies": {
-    "semantic-release": "beta"
+    "semantic-release": "16.0.0-beta.23"
   },
   "publishConfig": {
     "access": "public"
   },
   "resolutions": {
+    "@semantic-release/npm": "5.2.0-beta.5",
     "@material/base": "3.1.0",
     "@material/feature-targeting": "3.1.0",
     "@material/ripple": "3.2.0",
