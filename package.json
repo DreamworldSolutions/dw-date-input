@@ -28,9 +28,21 @@
     "moment": "^2.24.0"
   },
   "devDependencies": {
-    "semantic-release": "beta"
+    "semantic-release": "16.0.0-beta.23"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "resolutions": {
+    "@semantic-release/npm": "5.2.0-beta.5",
+    "@material/mwc-base": "0.7.0",
+    "@material/base": "3.1.0",
+    "@material/feature-targeting": "3.1.0",
+    "@material/ripple": "3.2.0",
+    "@material/rtl": "3.2.0",
+    "@material/theme": "3.1.0",
+    "@material/typography": "3.1.0",
+    "@material/animation": "3.1.0",
+    "@material/dom": "3.1.0"
   }
 }
