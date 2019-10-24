@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css } from 'lit-element'; 
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
 import moment from 'moment';
 import '@vaadin/vaadin-date-picker/theme/material/vaadin-date-picker';
