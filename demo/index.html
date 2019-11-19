@@ -14,10 +14,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta charset="utf-8">
     <title>Date input demo</title>
     <script type="module" src="../dw-date-input.js"></script>
+    <script type="module" src="../dw-date-range-selection.js"></script>
 
     <style>
       body {
         margin: 24px;
+      }
+      .date-range{
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .date-range dw-date-input{
+        margin-right: 16px;
       }
     </style>
   </head>
@@ -53,6 +62,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <h4>Disabled</h4>
     <dw-date-input label="Start date" disabled value="12/12/2019"></dw-date-input>
+
+    <h4>Date range selection</h4>
+    <dw-date-range-selection>
+      <div class="date-range">
+        <dw-date-input id="from" label="Start date"></dw-date-input>
+        <dw-date-input id="to" label="End date"></dw-date-input>
+      </div>
+    </dw-date-range-selection>
 
   </body>
 </html>
