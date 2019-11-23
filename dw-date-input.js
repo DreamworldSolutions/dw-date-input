@@ -30,7 +30,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
           display: none;
         }
 
-        vaadin-date-picker{
+        #datePicker{
           position: absolute;
           top: 0;
           bottom: 0;
@@ -174,15 +174,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
        @value-changed="${this._setValue}"
        @click="${this._onClick}"
       ></date-input>
-
-      <vaadin-date-picker
-        tabindex="-1"
-        ?disabled="${this.disabled}"
-        ?readonly="${this.readOnly}"
-        .value="${this._getSelectedDate(this.value)}"
-        @value-changed="${this._onSelectedDateChanged}"
-        @opened-changed="${this._onOpenedChanged}">
-      </vaadin-date-picker>
+      
+      ${this._getDatePickerTemplate}
       
     `;
   }
@@ -235,6 +228,23 @@ export class DwDateInput extends DwFormElement(LitElement) {
   layout() { 
     let el = this.shadowRoot.querySelector('#dateInput');
     el && el.layout();
+  }
+  
+  /**
+   * Returns date picker's template
+   */
+  get _getDatePickerTemplate(){
+    return html`
+      <vaadin-date-picker
+        id="datePicker"
+        tabindex="-1"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readOnly}"
+        .value="${this._getSelectedDate(this.value)}"
+        @value-changed="${this._onSelectedDateChanged}"
+        @opened-changed="${this._onOpenedChanged}">
+      </vaadin-date-picker>
+    `;
   }
 
   /**
@@ -289,7 +299,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     });
 
     if (iconIndex !== -1 && !this.disabled && !this.readOnly) { 
-      this.shadowRoot.querySelector('vaadin-date-picker').opened = true;
+      this._openDatePicker();
       this.focus();
     }
   }
@@ -328,6 +338,20 @@ export class DwDateInput extends DwFormElement(LitElement) {
       return moment(value, this.inputFormat.toUpperCase()).format('YYYY-MM-DD');
     }
     
+  }
+  
+  /**
+   * Protected Method which opens date picker dialog
+   */
+  _openDatePicker() {
+    let el = this.shadowRoot.querySelector('#datePicker');
+    
+    if(!el){
+      console.warn('Date picker not found. Provide date picker with id=datePicker');
+      return;
+    }
+    
+    el.opened = true;
   }
 
 }
