@@ -27,7 +27,7 @@ export class DateInput extends DwInput {
       minDate: { type: String },
 
       /**
-       * The maximum allowed date (inclusively).  
+       * The maximum allowed date (inclusively).
        */
       maxDate: { type: String },
 
