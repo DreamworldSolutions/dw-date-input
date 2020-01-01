@@ -27,7 +27,7 @@ export class DateInput extends DwInput {
       minDate: { type: String },
 
       /**
-       * The maximum allowed date (inclusively).  
+       * The maximum allowed date (inclusively).
        */
       maxDate: { type: String },
 
@@ -100,18 +100,18 @@ export class DateInput extends DwInput {
     }
 
     if(this.maxDate && this.minDate){
-      let isInputGreater = moment(value).isAfter(this.maxDate);
-      let isInputLower = moment(value).isBefore(this.minDate);
+      let isInputGreater = moment(value).isSameOrAfter(this.maxDate);
+      let isInputLower = moment(value).isSameOrBefore(this.minDate);
       
       return !(isInputLower || isInputGreater);
     }
     
     if(this.maxDate){
-      return moment(value).isBefore(this.maxDate);
+      return moment(value).isSameOrBefore(this.maxDate);
     }
     
     if(this.minDate){
-      return moment(value).isAfter(this.minDate);
+      return moment(value).isSameOrAfter(this.minDate);
     }
 
     return true;
