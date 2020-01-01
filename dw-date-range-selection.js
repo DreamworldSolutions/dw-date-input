@@ -10,7 +10,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { LitElement, html, css } from 'lit-element';
 import moment from 'moment'; 
-  
+
+/**
+ * Behaviors:
+ * - Selects date elements from light dom using id: `from` and `to`.
+ * - When from date is changed:
+ *   - sets minDate of 'toDate'.
+ *   - Resets 'toDate' if it's less than 'minDate'.
+ */
 export class DwDateRangeSelection extends LitElement {
   static get styles() {
     return [
