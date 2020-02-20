@@ -100,8 +100,8 @@ export class DateInput extends DwInput {
     }
 
     if(this.maxDate && this.minDate){
-      let isInputGreater = moment(value).isSameOrAfter(this.maxDate);
-      let isInputLower = moment(value).isSameOrBefore(this.minDate);
+      let isInputGreater = moment(value).isAfter(this.maxDate);
+      let isInputLower = moment(value).isBefore(this.minDate);
       
       return !(isInputLower || isInputGreater);
     }
