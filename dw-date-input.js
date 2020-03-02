@@ -16,6 +16,14 @@ import './vaadin-text-field-style';
 import './vaadin-date-picker-overlay-style';
 import './date-input';
   
+const errorMessagesByStateMap = {
+  REQUIRED: 'Required',
+  MIN_DATE: 'Date must be > {minDate}',
+  MAX_DATE: 'Date must be < {maxDate}',
+  MIN_MAX_DATE: 'Date must be between {minDate} and {maxDate}',
+  INVALID_DATE: 'Date is invalid'
+};
+
 export class DwDateInput extends DwFormElement(LitElement) {
   static get styles() {
     return [
@@ -193,13 +201,18 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.autoSelect = false;
     this.inputFormat = 'mm/dd/yyyy';
     this.highlightChanged = false;
-    this.errorMessagesByState = {
-      REQUIRED: 'Required',
-      MIN_DATE: 'Date must be > {minDate}',
-      MAX_DATE: 'Date must be < {maxDate}',
-      MIN_MAX_DATE: 'Date must be between {minDate} and {maxDate}',
-      INVALID_DATE: 'Date is invalid'
-    };
+    this.errorMessagesByState = errorMessagesByStateMap
+  }
+
+  set errorMessagesByState(value){
+    let oldValue = this._errorMessagesByState;
+
+    this._errorMessagesByState = { ...errorMessagesByStateMap, ...value };
+    this.requestUpdate('errorMessagesByState', oldValue);
+  }
+
+  get errorMessagesByState(){
+    return this._errorMessagesByState;
   }
 
   /**
