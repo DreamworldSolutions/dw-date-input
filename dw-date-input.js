@@ -8,14 +8,14 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { LitElement, html, css } from 'lit-element'; 
+import { LitElement, html, css } from 'lit-element';
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
 import moment from 'moment';
 import '@vaadin/vaadin-date-picker/theme/material/vaadin-date-picker';
 import './vaadin-text-field-style';
 import './vaadin-date-picker-overlay-style';
 import './date-input';
-  
+
 const errorMessagesByStateMap = {
   REQUIRED: 'Required',
   MIN_DATE: 'Date must be > {minDate}',
@@ -95,7 +95,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * A placeholder text in addition to the label.
        */
       placeholder: { type: String },
-      
+
       /**
        * The error message to display when the input is invalid.
        */
@@ -117,7 +117,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
       minDate: { type: String },
 
       /**
-       * The maximum allowed date (inclusively).  
+       * The maximum allowed date (inclusively).
        */
       maxDate: { type: String },
 
@@ -127,33 +127,39 @@ export class DwDateInput extends DwFormElement(LitElement) {
       autoSelect: { type: Boolean },
 
       /**
-       * prefered date input format  
+       * prefered date input format
        * it should be `dd/mm/yyyy` or `mm/dd/yyyy` or `dd-mm-yyyy` or `mm-dd-yyyy`
        */
       inputFormat: { type: String },
-      
+
       /**
        * Set to true to make it dense
        */
       dense: { type: Boolean },
-      
+
       /**
        * A string which used to check whether user has updated value or not
        * When `originalValue` and `value` is different input style is changed
        */
       originalValue: { type: String },
-      
+
       /**
        * Set to true to highLight textfield when value is changed
        * Make sure to provide `originalValue` when setting this to true
        * It will highLight field when `value` and `originalValue` is not same
        */
       highlightChanged: { type: Boolean },
+
+      /**
+       * Input property.
+       * `true` if when to show hint text in oneline. Default hint text is shown in dropdown width area in multiline.
+       */
+      noHintWrap: { type: Boolean, reflect: true }
     };
   }
 
   render() {
-    
+
     return html`
       <date-input
        id="dateInput"
@@ -169,6 +175,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        .placeholder="${this.placeholder}"
        ?highlightChanged="${this.highlightChanged}"
        .originalValue="${this.originalValue}"
+       ?noHintWrap="${this.noHintWrap}"
        .value="${this.value}"
        .name="${this.name}"
        .hint="${this.hint}"
@@ -178,9 +185,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
        @value-changed="${this._setValue}"
        @click="${this._onClick}"
       ></date-input>
-      
+
       ${this._getDatePickerTemplate}
-      
+
     `;
   }
 
@@ -222,23 +229,23 @@ export class DwDateInput extends DwFormElement(LitElement) {
     let inputEl = this.shadowRoot.querySelector('#dateInput');
     inputEl && inputEl.focus();
   }
-   
+
   /**
    * Call to perform validation
    * Returns true if it's valid, false otherwise.
    */
-  validate() { 
+  validate() {
     let el = this.shadowRoot.querySelector('#dateInput');
     let isValid = el.validate();
     this.invalid = !isValid;
     return isValid;
   }
 
-  layout() { 
+  layout() {
     let el = this.shadowRoot.querySelector('#dateInput');
     el && el.layout();
   }
-  
+
   /**
    * Returns date picker's template
    */
@@ -262,14 +269,14 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * @returns {String} Error message by state
    */
   _getErrorMessage(value, errorMessage) {
-    if (!value) { 
+    if (!value) {
       return errorMessage['REQUIRED'];
     }
 
     let errorText;
     value = value.replace(/ /g, '');
 
-    if (!moment(value, this.inputFormat.toUpperCase(), true).isValid()) { 
+    if (!moment(value, this.inputFormat.toUpperCase(), true).isValid()) {
       return errorMessage['INVALID_DATE'];
     }
 
@@ -280,24 +287,24 @@ export class DwDateInput extends DwFormElement(LitElement) {
       return errorText;
     }
 
-    if (this.minDate) { 
+    if (this.minDate) {
       errorText = errorMessage['MIN_DATE'];
       return errorText.replace('{minDate}', this.minDate);
     }
 
-    if (this.maxDate) { 
+    if (this.maxDate) {
       errorText = errorMessage['MAX_DATE'];
       return errorText.replace('{maxDate}', this.maxDate);
     }
   }
 
-  _setValue(e) { 
+  _setValue(e) {
     this.value = e.detail.value;
     this.dispatchEvent(new CustomEvent('value-changed', {
       detail: { value: this.value }
     }));
   }
-  
+
   /**
    * open date picker
    */
@@ -307,7 +314,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
       return path.tagName === 'DW-ICON' || path.tagName === 'DW-ICON-BUTTON';
     });
 
-    if (iconIndex !== -1 && !this.disabled && !this.readOnly) { 
+    if (iconIndex !== -1 && !this.disabled && !this.readOnly) {
       this._openDatePicker();
       this.focus();
     }
@@ -316,11 +323,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
   /**
    * Sets selected date as input's value
    */
-  _onSelectedDateChanged(e) { 
-    if (!e.detail.value) { 
+  _onSelectedDateChanged(e) {
+    if (!e.detail.value) {
       return;
     }
-    
+
     let selectedDate = moment(e.detail.value, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase());
     this.value = selectedDate;
 
@@ -332,34 +339,34 @@ export class DwDateInput extends DwFormElement(LitElement) {
   /**
    * Validate input on date picker close
    */
-  _onOpenedChanged(e) { 
+  _onOpenedChanged(e) {
     // validate date on calendar close
-    if (e.detail && !e.detail.value && e.target.hasAttribute('focused')) { 
+    if (e.detail && !e.detail.value && e.target.hasAttribute('focused')) {
       setTimeout(() => {
         this.validate();
       },1);
     }
   }
-  
+
   _getSelectedDate(value){
     if(value){
       value = value.replace(/ /g, '');
       return moment(value, this.inputFormat.toUpperCase()).format('YYYY-MM-DD');
     }
-    
+
   }
-  
+
   /**
    * Protected Method which opens date picker dialog
    */
   _openDatePicker() {
     let el = this.shadowRoot.querySelector('#datePicker');
-    
+
     if(!el){
       console.warn('Date picker not found. Provide date picker with id=datePicker');
       return;
     }
-    
+
     el.opened = true;
   }
 
