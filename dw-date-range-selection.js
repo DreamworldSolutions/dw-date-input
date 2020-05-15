@@ -33,16 +33,29 @@ export class DwDateRangeSelection extends LitElement {
     ];
   }
 
+  constructor(){
+    super();
+
+    this.noReset = true;
+    this._onFromDateChanged = this.__onFromDateChanged.bind(this);
+  }
+
+  static get properties() {
+    return {
+
+      /**
+       * Input property.
+       * Default value is true.
+       * When true, does not reset the to date if it's invalid.
+       */
+      noReset: {  type: Boolean }
+    }
+  }
+
   render() {
     return html`
       <slot></slot>
     `;
-  }
-
-  constructor() { 
-    super();
-    this._onFromDateChanged = this.__onFromDateChanged.bind(this);
-
   }
 
   firstUpdated() { 
@@ -73,7 +86,7 @@ export class DwDateRangeSelection extends LitElement {
     let toDate = this.toDateEl.value;
 
     // Resets 'toDate' if it's less than 'fromDate'. 
-    if (moment(toDate).isBefore(fromDate)) { 
+    if (moment(toDate).isBefore(fromDate) && this.noReset) { 
       this.toDateEl.value = '';
     }
 
