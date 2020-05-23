@@ -36,7 +36,7 @@ export class DwDateRangeSelection extends LitElement {
   constructor(){
     super();
 
-    this.noReset = true;
+    this.resetDateIfInvalid = true;
     this._onFromDateChanged = this.__onFromDateChanged.bind(this);
   }
 
@@ -48,7 +48,7 @@ export class DwDateRangeSelection extends LitElement {
        * Default value is true.
        * When true, does not reset the to date if it's invalid.
        */
-      noReset: {  type: Boolean }
+      resetDateIfInvalid: {  type: Boolean }
     }
   }
 
@@ -86,7 +86,7 @@ export class DwDateRangeSelection extends LitElement {
     let toDate = this.toDateEl.value;
 
     // Resets 'toDate' if it's less than 'fromDate'. 
-    if (moment(toDate).isBefore(fromDate) && this.noReset) { 
+    if (moment(toDate).isBefore(fromDate) && this.resetDateIfInvalid) { 
       this.toDateEl.value = '';
     }
 
