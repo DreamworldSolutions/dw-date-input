@@ -45,8 +45,8 @@ export class DwDateRangeSelection extends LitElement {
 
       /**
        * Input property.
-       * Default value is true.
-       * When true, does not reset the to date if it's invalid.
+       * Default value is false.
+       * When true, reset 'to date' if it's lower than 'from date'.
        */
       resetDateIfInvalid: {  type: Boolean }
     }
