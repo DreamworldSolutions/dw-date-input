@@ -95,23 +95,29 @@ export class DateInput extends DwInput {
       return true;
     }
 
-    if (!moment(value, this.inputFormat.toUpperCase(), true).isValid()) { 
+    let inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'MM/DD/YYYY';
+    
+    if (!moment(value, inputFormat, true).isValid()) { 
       return false;
     }
 
+    value = moment(value, inputFormat).format('MM/DD/YYYY');
+    let minDate = moment(this.minDate, inputFormat).format('MM/DD/YYYY');
+    let maxDate = moment(this.maxDate, inputFormat).format('MM/DD/YYYY');
+
     if(this.maxDate && this.minDate){
-      let isInputGreater = moment(value).isAfter(this.maxDate);
-      let isInputLower = moment(value).isBefore(this.minDate);
+      let isInputGreater = moment(value).isAfter(maxDate);
+      let isInputLower = moment(value).isBefore(minDate);
       
       return !(isInputLower || isInputGreater);
     }
     
     if(this.maxDate){
-      return moment(value).isSameOrBefore(this.maxDate);
+      return moment(value).isSameOrBefore(maxDate);
     }
     
     if(this.minDate){
-      return moment(value).isSameOrAfter(this.minDate);
+      return moment(value).isSameOrAfter(minDate);
     }
 
     return true;
