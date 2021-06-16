@@ -192,6 +192,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
        @value-changed="${this._setValue}"
        @click="${this._onClick}"
+       .customValidator="${this.customValidator}"
       ></date-input>
 
       ${this._getDatePickerTemplate}
