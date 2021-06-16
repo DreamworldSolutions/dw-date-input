@@ -41,7 +41,7 @@ export class DateInput extends DwInput {
        * Provide function to do custom validations
        * It must be return true or false
        */
-       customValidator: { type: Object }
+       customValidator: { type: Object } 
     };
   }
 
