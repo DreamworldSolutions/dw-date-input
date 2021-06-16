@@ -35,6 +35,13 @@ export class DateInput extends DwInput {
        * Date separator. Possible value: `/` or  `-`
        */
       _separator: { type: String },
+
+      /**
+       * Input property
+       * Provide function to do custom validations
+       * It must be return true or false
+       */
+       customValidator: { type: Object }
     };
   }
 
@@ -101,6 +108,8 @@ export class DateInput extends DwInput {
       return false;
     }
 
+    let bValue = true;
+
     value = moment(value, inputFormat).format('MM/DD/YYYY');
     let minDate = moment(this.minDate, inputFormat).format('MM/DD/YYYY');
     let maxDate = moment(this.maxDate, inputFormat).format('MM/DD/YYYY');
@@ -109,18 +118,36 @@ export class DateInput extends DwInput {
       let isInputGreater = moment(value).isAfter(maxDate);
       let isInputLower = moment(value).isBefore(minDate);
       
-      return !(isInputLower || isInputGreater);
+      bValue = !(isInputLower || isInputGreater);
+      
+      if(this.customValidator && bValue){
+        return this.customValidator(value);
+      }
+
+      return bValue;
     }
     
     if(this.maxDate){
-      return moment(value).isSameOrBefore(maxDate);
+      bValue =  moment(value).isSameOrBefore(maxDate);
+
+      if(this.customValidator && bValue){
+        return this.customValidator(value);
+      }
+
+      return bValue;
     }
     
     if(this.minDate){
-      return moment(value).isSameOrAfter(minDate);
+      bValue =  moment(value).isSameOrAfter(minDate);
+
+      if(this.customValidator && bValue){
+        return this.customValidator(value);
+      }
+
+      return bValue;
     }
 
-    return true;
+    return bValue;
   }
 
   
