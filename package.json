@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
   "dependencies": {
-    "@dreamworld/dw-form": "^2.2.1",
-    "@dreamworld/dw-input": "^2.1.5",
+    "@dreamworld/dw-form": "^2.3.0-development.2",
+    "@dreamworld/dw-input": "^2.2.0-upgrade-version.2",
     "@dreamworld/pwa-helpers": "^1.11.1",
     "@vaadin/vaadin-date-picker": "^4.0.3",
     "lit-element": "^2.2.1",
