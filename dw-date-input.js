@@ -155,7 +155,14 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Input property.
        * `true` if when to show hint text in oneline. Default hint text is shown in dropdown width area in multiline.
        */
-      noHintWrap: { type: Boolean, reflect: true }
+      noHintWrap: { type: Boolean, reflect: true },
+
+      /**
+       * Input property
+       * Provide function to do custom validations
+       * It must be return true or false
+       */
+       customValidator: { type: Object } 
     };
   }
 
@@ -185,6 +192,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
        @value-changed="${this._setValue}"
        @click="${this._onClick}"
+       .customValidator="${this.customValidator}"
       ></date-input>
 
       ${this._getDatePickerTemplate}
@@ -239,6 +247,16 @@ export class DwDateInput extends DwFormElement(LitElement) {
     let el = this.shadowRoot.querySelector('#dateInput');
     let isValid = el.validate();
     this.invalid = !isValid;
+
+    if(!isValid){
+      return false;
+    }
+
+    if(this.customValidator){
+      isValid = this.customValidator(el && el.value);
+      this.invalid = !isValid;
+    }
+
     return isValid;
   }
 
