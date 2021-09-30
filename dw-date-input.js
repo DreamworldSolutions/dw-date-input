@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 import { html, css } from 'lit-element';
 import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
-import moment from 'moment';
+import moment from 'moment/src/moment';
 import '@vaadin/vaadin-date-picker/theme/material/vaadin-date-picker';
 import './vaadin-text-field-style';
 import './vaadin-date-picker-overlay-style';
