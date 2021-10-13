@@ -9,7 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { DwInput } from '@dreamworld/dw-input/dw-input';
-import moment from 'moment';
+import moment from 'moment/src/moment';
   
 export class DateInput extends DwInput {
 
