@@ -73,7 +73,7 @@ export class DwDateRangeSelection extends LitElement {
       return;
     }
 
-    this._onFromDateChanged(); 
+    this._onFromDateChanged();
     this.fromDateEl.addEventListener('value-changed', this._onFromDateChanged);
   }
 
