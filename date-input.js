@@ -8,16 +8,17 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { DwInput } from '@dreamworld/dw-input/dw-input';
-import moment from 'moment/src/moment';
-import { dateParse } from './date-parse';
-  
+import { css } from "lit-element";
+import { DwInput } from "@dreamworld/dw-input/dw-input";
+import moment from "moment/src/moment";
+import { dateParse } from "./date-parse";
+
 export class DateInput extends DwInput {
 
   static get properties() {
     return {
       /**
-       * Prefered date input format  
+       * Prefered date input format
        * It should be `dd/mm/yyyy` or `mm/dd/yyyy` or `dd-mm-yyyy` or `mm-dd-yyyy`
        */
       inputFormat: { type: String },
@@ -42,73 +43,85 @@ export class DateInput extends DwInput {
   constructor() {
     super();
     this.iconTrailing = "date_range";
-    this.allowedPattern = '^[a-zA-Z0-9-/,_ ]*$';
+    this.allowedPattern = "^[a-zA-Z0-9-/,_ ]*$";
     this.clickableIcon = true;
     this.validator = this._customValidator;
-    this.inputFormat = 'dd/mm/yyyy';
-    this._separator = '/';
+    this.inputFormat = "dd/mm/yyyy";
+    this._separator = "/";
+    this.addEventListener("enter", this._onEnter);
+    this.addEventListener("paste", this._onPaste);
   }
 
   firstUpdated(changedProps) {
     super.firstUpdated && super.firstUpdated(changedProps);
 
-    if (changedProps.has('inputFormat')) { 
+    if (changedProps.has("inputFormat")) {
       this._separator = this.inputFormat.slice(2, 3);
     }
   }
 
-  formatText() { 
-    return this.value && this.value.split(`${this._separator}`).join(` ${this._separator} `);;
+  formatText() {
+    return this.value && this.value.split(`${this._separator}`).join(` ${this._separator} `);
   }
 
   parseValue(value) {
     return dateParse(value, this.inputFormat, this._separator);
   }
-  
+
   /**
    * Performs date validations like required, minDate, maxDate, invalid
    * @param {String} value - date entered by value
    * @returns {Boolean} returns false if it's invalid
    */
   _customValidator(value) {
-    if (!value) { 
+    if (!value) {
       return true;
     }
 
-    value = value.replace(/ /g, '');
+    value = value.replace(/ /g, "");
 
-    if (!value && !this.required) { 
+    if (!value && !this.required) {
       return true;
     }
 
-    let inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'MM/DD/YYYY';
-    
-    if (!moment(value, inputFormat, true).isValid()) { 
+    let inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "MM/DD/YYYY";
+
+    if (!moment(value, inputFormat, true).isValid()) {
       return false;
     }
 
-    value = moment(value, inputFormat).format('MM/DD/YYYY');
-    let minDate = moment(this.minDate, inputFormat).format('MM/DD/YYYY');
-    let maxDate = moment(this.maxDate, inputFormat).format('MM/DD/YYYY');
+    value = moment(value, inputFormat).format("MM/DD/YYYY");
+    let minDate = moment(this.minDate, inputFormat).format("MM/DD/YYYY");
+    let maxDate = moment(this.maxDate, inputFormat).format("MM/DD/YYYY");
 
-    if(this.maxDate && this.minDate){
+    if (this.maxDate && this.minDate) {
       let isInputGreater = moment(value).isAfter(maxDate);
       let isInputLower = moment(value).isBefore(minDate);
-      
+
       return !(isInputLower || isInputGreater);
     }
-    
-    if(this.maxDate){
+
+    if (this.maxDate) {
       return moment(value).isSameOrBefore(maxDate);
     }
-    
-    if(this.minDate){
+
+    if (this.minDate) {
       return moment(value).isSameOrAfter(minDate);
     }
 
     return true;
   }
 
+  _onEnter(e) {
+    this.value = this.formatText();
+  }
+
+  _onPaste(e) {
+    let paste = (e.clipboardData || window.clipboardData).getData('text');
+    this.value = this.parseValue(paste);
+    this.value = this.formatText();
+    e.preventDefault();
+  }
 }
 
-window.customElements.define('date-input', DateInput);
+window.customElements.define("date-input", DateInput);

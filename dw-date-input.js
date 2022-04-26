@@ -161,8 +161,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
         .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
-        @paste="${this._onPaste}"
-        @keypress="${this._onKeyPress}"
       ></date-input>
     `;
   }
@@ -204,6 +202,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * @returns {String} Error message by state
    */
   _getErrorMessage(value, errorMessage) {
+    console.log("_getErrorMessage", value);
     if (!value) {
       return errorMessage["REQUIRED"];
     }
@@ -253,17 +252,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
     if (value) {
       value = value.replace(/ /g, "");
       return moment(value, this.inputFormat.toUpperCase()).format("YYYY-MM-DD");
-    }
-  }
-
-  _onPaste(e) {
-    let paste = (e.clipboardData || window.clipboardData).getData("text");
-    //TODO
-  }
-
-  _onKeyPress(e) {
-    if (e.key === 'Enter') {
-      //TODO
     }
   }
 }

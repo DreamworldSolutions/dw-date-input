@@ -21,40 +21,48 @@ export const dateParse = (value, format, seperator) => {
   if (isNumber) {
     // Prosessing date String, considering input has Seperator (- or / or space)
     if (hasSeperator(value)) {
-      let places = seperateDate(value, /[-\/ ]/);
+      let places = seperateDate(value, /[-\/, ]/);
 
       places = fillEmptyPlaces(places, format);
-      return places.join(seperator);
+      return places.slice(0, 3).join(seperator);
     }
 
     // Prosessing date String, considering input has only number. no seperator (- or / or space)
     else {
       let places = createPlaces(value);
+      
       places = fillEmptyPlaces(places, format);
-      return places.join(seperator);
+      return places.slice(0, 3).join(seperator);
     }
   }
 
   // Processing date String, considering input includes alphabetic like months in MMM format
   else {
-    value = value.replace(/,/g, "");
-    let places = seperateDate(value, /[-\/ ]/);
+    value = value.replace(/, /g, " ");
+    let places = seperateDate(value, /[-\/, ]/);
 
     // Considering date format like DD MMM YYYY
     if (isNumeric(places[0])) {
       places[1] = moment().month(places[1]).format("MM");
 
+      if(format.toUpperCase() === "MM/DD/YYYY") {
+        places = reorderMonth(places, 1, 0);
+      }
+
       places = fillEmptyPlaces(places, format);
-      return places.join(seperator);
+      return places.slice(0, 3).join(seperator);
     }
     // Considering date format like MMM DD YYYY
     else {
       places[0] = moment().month(places[0]).format("MM");
-      places = reorderMonth(places);
+
+      if(format.toUpperCase() === "DD/MM/YYYY") {
+        places = reorderMonth(places, 0, 1);
+      }
 
       places = fillEmptyPlaces(places, format);
 
-      return places.join(seperator);
+      return places.slice(0, 3).join(seperator);
     }
   }
 };
@@ -74,7 +82,7 @@ function isNumeric(string) {
  * @returns {Boolean}
  */
 function hasSeperator(value) {
-  return value.split(/[-\/ ]/).length !== 1;
+  return value.split(/[-\/, ]/).length > 1;
 }
 
 /**
@@ -125,7 +133,7 @@ function fillEmptyPlaces(places, format) {
     tempPlaces[1] = isMonthFirst ? day : tempPlaces[0] < day ? month : month - 1;
   }
   if (!parseInt(places[2])) {
-    tempPlaces[2] = tempPlaces[1] < month ? year : year -1;
+    tempPlaces[2] = tempPlaces[1] < month ? year : year - 1;
   }
 
   tempPlaces[0] = pad(places[0]);
@@ -167,14 +175,18 @@ function createPlaces(value) {
 }
 
 /**
- * 
+ *
  * @param {Array} value represent `dateArray`
  * @returns {Array} reorder month
  */
-function reorderMonth(value) {
+function reorderMonth(value, from, to) {
   if (value.length === 1) {
     value.push("", "");
   }
-  value.splice(1, 0, value.splice(0, 1)[0]);
+  value.move(from, to);
   return value;
 }
+
+Array.prototype.move = function (from, to) {
+  this.splice(to, 0, this.splice(from, 1)[0]);
+};
