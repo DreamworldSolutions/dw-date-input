@@ -271,7 +271,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
   _onChange(e) {
     this.value = e.target.value;
 
-    this.dispatchEvent(new CustomEvent("change", { bubbles: true }));
+    this.dispatchEvent(new CustomEvent("change"));
   }
 }
 

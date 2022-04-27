@@ -114,14 +114,14 @@ export class DateInput extends DwInput {
   _onEnter(e) {
     this.value = this.formatText();
 
-    this.dispatchEvent(new CustomEvent("change", { bubbles: true }));
+    this.dispatchEvent(new CustomEvent("change"));
   }
 
   _onPaste(e) {
     let paste = (e.clipboardData || window.clipboardData).getData("text");
     this.value = this.parseValue(paste);
 
-    this.dispatchEvent(new CustomEvent("change", { bubbles: true }));
+    this.dispatchEvent(new CustomEvent("change"));
 
     e.preventDefault();
   }
@@ -129,7 +129,7 @@ export class DateInput extends DwInput {
   _onInputBlur(e) {
     super._onInputBlur(e);
 
-    this.dispatchEvent(new CustomEvent("change", { bubbles: true }));
+    this.dispatchEvent(new CustomEvent("change"));
   }
 }
 
