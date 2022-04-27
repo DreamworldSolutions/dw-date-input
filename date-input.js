@@ -130,7 +130,9 @@ export class DateInput extends DwInput {
     e.preventDefault();
   }
 
-  _onBlur() {
+  _onBlur(e) {
+    this.value = this.parseValue(e.target.value);
+    
     this.dispatchEvent(new CustomEvent("change"));
   }
 }
