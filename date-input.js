@@ -58,6 +58,10 @@ export class DateInput extends DwInput {
     if (changedProps.has("inputFormat")) {
       this._separator = this.inputFormat.slice(2, 3);
     }
+
+    if (this.value) {
+      this.value = this.parseValue(this.value);
+    }
   }
 
   formatText() {
@@ -132,7 +136,7 @@ export class DateInput extends DwInput {
 
   _onBlur(e) {
     this.value = this.parseValue(e.target.value);
-    
+
     this.dispatchEvent(new CustomEvent("change"));
   }
 }
