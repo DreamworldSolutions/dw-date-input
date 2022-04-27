@@ -195,6 +195,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.invalid = false;
     this.autoSelect = false;
     this.inputFormat = "dd/mm/yyyy";
+    this.valueFormat = "yyyy-mm-dd";
     this.highlightChanged = false;
     this.errorMessagesByState = errorMessagesByStateMap;
   }
@@ -269,9 +270,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   _onChange(e) {
-    this.value = e.target.value;
+    let dateInputed = e.target.value;
+    dateInputed = moment(dateInputed, this.inputFormat.toUpperCase()).toDate();
+    let date = moment(dateInputed).format(this.valueFormat.toUpperCase());
 
-    this.dispatchEvent(new CustomEvent("change"));
+    this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
   }
 }
 

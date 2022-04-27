@@ -49,6 +49,7 @@ export class DateInput extends DwInput {
     this._separator = "/";
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
+    this.addEventListener("blur", this._onBlur);
   }
 
   firstUpdated(changedProps) {
@@ -60,7 +61,10 @@ export class DateInput extends DwInput {
   }
 
   formatText() {
-    return this.value && this.value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `);
+    return (
+      this.value &&
+      this.value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `)
+    );
   }
 
   parseValue(value) {
@@ -126,10 +130,7 @@ export class DateInput extends DwInput {
     e.preventDefault();
   }
 
-  _onInputBlur(e) {
-    this.value = this.parseValue(e.target.value);
-    this.formatText();
-
+  _onBlur() {
     this.dispatchEvent(new CustomEvent("change"));
   }
 }
