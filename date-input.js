@@ -127,7 +127,8 @@ export class DateInput extends DwInput {
   }
 
   _onInputBlur(e) {
-    this.formatText()
+    this.value = this.parseValue(e.target.value);
+    this.formatText();
 
     this.dispatchEvent(new CustomEvent("change"));
   }
