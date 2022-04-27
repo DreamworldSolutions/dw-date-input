@@ -60,7 +60,7 @@ export class DateInput extends DwInput {
   }
 
   formatText() {
-    return this.value && this.value.split(`${this._separator}`).join(` ${this._separator} `);
+    return this.value && this.value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `);
   }
 
   parseValue(value) {
@@ -127,7 +127,7 @@ export class DateInput extends DwInput {
   }
 
   _onInputBlur(e) {
-    super._onInputBlur(e);
+    this.formatText()
 
     this.dispatchEvent(new CustomEvent("change"));
   }
