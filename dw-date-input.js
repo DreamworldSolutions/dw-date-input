@@ -108,9 +108,15 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
       /**
        * prefered date input format
-       * it should be `dd/mm/yyyy` or `mm/dd/yyyy` or `dd-mm-yyyy` or `mm-dd-yyyy`
+       * it should be `dd/mm/yyyy`(default) or `mm/dd/yyyy`
        */
       inputFormat: { type: String },
+
+      /**
+       * date value format
+       * default `yyyy-mm-dd`.
+       */
+      valueFormat: { type: String },
 
       /**
        * Set to true to make it dense
@@ -135,6 +141,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * `true` if when to show hint text in oneline. Default hint text is shown in dropdown width area in multiline.
        */
       noHintWrap: { type: Boolean, reflect: true },
+
+      /**
+       * Output property
+       * Possible value: REQUIRED, NOT_A_DATE, RANGE
+       * Set to `true` when user entered value can not be parsed to a Date.
+       */
+      error: { type: String, reflect: true },
     };
   }
 
@@ -161,6 +174,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
         .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
+        @change=${this._onChange}
       ></date-input>
     `;
   }
@@ -253,6 +267,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
       value = value.replace(/ /g, "");
       return moment(value, this.inputFormat.toUpperCase()).format("YYYY-MM-DD");
     }
+  }
+
+  _onChange(e) {
+    this.value = e.target.value;
+
+    this.dispatchEvent(new CustomEvent("change", { bubbles: true }));
   }
 }
 

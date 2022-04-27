@@ -30,7 +30,7 @@ export const dateParse = (value, format, seperator) => {
     // Prosessing date String, considering input has only number. no seperator (- or / or space)
     else {
       let places = createPlaces(value);
-      
+
       places = fillEmptyPlaces(places, format);
       return places.slice(0, 3).join(seperator);
     }
@@ -45,7 +45,7 @@ export const dateParse = (value, format, seperator) => {
     if (isNumeric(places[0])) {
       places[1] = moment().month(places[1]).format("MM");
 
-      if(format.toUpperCase() === "MM/DD/YYYY") {
+      if (format.toUpperCase() === "MM/DD/YYYY") {
         places = reorderMonth(places, 1, 0);
       }
 
@@ -56,7 +56,7 @@ export const dateParse = (value, format, seperator) => {
     else {
       places[0] = moment().month(places[0]).format("MM");
 
-      if(format.toUpperCase() === "DD/MM/YYYY") {
+      if (format.toUpperCase() === "DD/MM/YYYY") {
         places = reorderMonth(places, 0, 1);
       }
 
@@ -133,7 +133,12 @@ function fillEmptyPlaces(places, format) {
     tempPlaces[1] = isMonthFirst ? day : tempPlaces[0] < day ? month : month - 1;
   }
   if (!parseInt(places[2])) {
-    tempPlaces[2] = tempPlaces[1] < month ? year : year - 1;
+    tempPlaces[2] =
+      parseInt(tempPlaces[1]) <= month
+        ? parseInt(tempPlaces[0]) <= day
+          ? year
+          : year - 1
+        : year - 1;
   }
 
   tempPlaces[0] = pad(places[0]);

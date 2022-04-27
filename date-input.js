@@ -14,7 +14,6 @@ import moment from "moment/src/moment";
 import { dateParse } from "./date-parse";
 
 export class DateInput extends DwInput {
-
   static get properties() {
     return {
       /**
@@ -114,13 +113,23 @@ export class DateInput extends DwInput {
 
   _onEnter(e) {
     this.value = this.formatText();
+
+    this.dispatchEvent(new CustomEvent("change", { bubbles: true }));
   }
 
   _onPaste(e) {
-    let paste = (e.clipboardData || window.clipboardData).getData('text');
+    let paste = (e.clipboardData || window.clipboardData).getData("text");
     this.value = this.parseValue(paste);
-    this.value = this.formatText();
+
+    this.dispatchEvent(new CustomEvent("change", { bubbles: true }));
+
     e.preventDefault();
+  }
+
+  _onInputBlur(e) {
+    super._onInputBlur(e);
+
+    this.dispatchEvent(new CustomEvent("change", { bubbles: true }));
   }
 }
 
