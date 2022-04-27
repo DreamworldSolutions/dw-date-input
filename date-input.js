@@ -39,6 +39,22 @@ export class DateInput extends DwInput {
     };
   }
 
+  set value(value) {
+    let oldValue = this._value;
+
+    if(value === oldValue) {
+      return;
+    }
+
+    this._value = this.parseValue(value);
+
+    this.requestUpdate("value", oldValue);
+  }
+
+  get value() {
+    return this._value;
+  }
+
   constructor() {
     super();
     this.iconTrailing = "date_range";
@@ -58,10 +74,6 @@ export class DateInput extends DwInput {
     if (changedProps.has("inputFormat")) {
       this._separator = this.inputFormat.slice(2, 3);
     }
-
-    if (this.value) {
-      this.value = this.parseValue(this.value);
-    }
   }
 
   formatText() {
@@ -72,6 +84,9 @@ export class DateInput extends DwInput {
   }
 
   parseValue(value) {
+    if(!value){
+      return "";
+    }
     return dateParse(value, this.inputFormat, this._separator);
   }
 
@@ -127,7 +142,7 @@ export class DateInput extends DwInput {
 
   _onPaste(e) {
     let paste = (e.clipboardData || window.clipboardData).getData("text");
-    this.value = this.parseValue(paste);
+    this.value = paste;
 
     this.dispatchEvent(new CustomEvent("change"));
 
@@ -135,7 +150,7 @@ export class DateInput extends DwInput {
   }
 
   _onBlur(e) {
-    this.value = this.parseValue(e.target.value);
+    this.value = e.target.value
 
     this.dispatchEvent(new CustomEvent("change"));
   }
