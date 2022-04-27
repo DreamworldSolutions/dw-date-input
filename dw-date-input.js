@@ -216,7 +216,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * @returns {String} Error message by state
    */
   _getErrorMessage(value, errorMessage) {
-    console.log("_getErrorMessage", value);
     if (!value) {
       return errorMessage["REQUIRED"];
     }
