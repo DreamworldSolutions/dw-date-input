@@ -52,18 +52,38 @@ export class DateInput extends DwInput {
     this.addEventListener("blur", this._onBlur);
   }
 
+  set value(val) {
+    let oldValue = this._value;
+
+    if( oldValue === val) {
+      return;
+    }
+
+    this._value = this.parseValue(val);
+
+    this.requestUpdate("value", oldValue);
+  }
+
+  get value() {
+    return this._value;
+  }
+
   firstUpdated(changedProps) {
     super.firstUpdated && super.firstUpdated(changedProps);
 
     if (changedProps.has("inputFormat")) {
       this._separator = this.inputFormat.slice(2, 3);
     }
+
+    if(this.value) {
+      this.value = this.parseValue(this.value);
+    }
   }
 
-  formatText() {
+  formatText(value) {
     return (
-      this.value &&
-      this.value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `)
+      value &&
+      value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `)
     );
   }
 
@@ -119,7 +139,7 @@ export class DateInput extends DwInput {
   }
 
   _onEnter(e) {
-    this.value = this.formatText(e.target.value);
+    this._updateTextfieldValue();
 
     this.dispatchEvent(new CustomEvent("change"));
   }
@@ -127,7 +147,8 @@ export class DateInput extends DwInput {
   _onPaste(e) {
     let paste = (e.clipboardData || window.clipboardData).getData("text");
     this.value = this.parseValue(paste);
-    this.formatText()
+
+    this._updateTextfieldValue();
 
     this.dispatchEvent(new CustomEvent("change"));
 
@@ -135,7 +156,7 @@ export class DateInput extends DwInput {
   }
 
   _onBlur(e) {
-    this.value = this.parseValue(e.target.value);
+    super._onInputBlur(e);
 
     this.dispatchEvent(new CustomEvent("change"));
   }
