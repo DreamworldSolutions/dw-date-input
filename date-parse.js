@@ -133,12 +133,7 @@ function fillEmptyPlaces(places, format) {
     tempPlaces[1] = isMonthFirst ? day : tempPlaces[0] <= day ? month : month - 1;
   }
   if (!parseInt(places[2])) {
-    tempPlaces[2] =
-      parseInt(tempPlaces[1]) <= month
-        ? parseInt(tempPlaces[0]) <= day
-          ? year
-          : year - 1
-        : year - 1;
+    tempPlaces[2] = parseInt(tempPlaces[1]) <= month ? year : year - 1;
   }
 
   tempPlaces[0] = pad(places[0]);

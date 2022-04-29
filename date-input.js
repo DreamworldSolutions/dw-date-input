@@ -55,7 +55,7 @@ export class DateInput extends DwInput {
   set value(val) {
     let oldValue = this._value;
 
-    if( oldValue === val) {
+    if (oldValue === val) {
       return;
     }
 
@@ -75,20 +75,20 @@ export class DateInput extends DwInput {
       this._separator = this.inputFormat.slice(2, 3);
     }
 
-    if(this.value) {
+    if (this.value) {
       this.value = this.parseValue(this.value);
     }
   }
 
-  formatText(value) {
+  formatText() {
     return (
-      value &&
-      value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `)
+      this.value &&
+      this.value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `)
     );
   }
 
   parseValue(value) {
-    if(!value){
+    if (!value) {
       return "";
     }
     return dateParse(value, this.inputFormat, this._separator);
@@ -139,6 +139,7 @@ export class DateInput extends DwInput {
   }
 
   _onEnter(e) {
+    this.value = this.parseValue(e.detail.value);
     this._updateTextfieldValue();
 
     this.dispatchEvent(new CustomEvent("change"));
@@ -147,7 +148,6 @@ export class DateInput extends DwInput {
   _onPaste(e) {
     let paste = (e.clipboardData || window.clipboardData).getData("text");
     this.value = this.parseValue(paste);
-
     this._updateTextfieldValue();
 
     this.dispatchEvent(new CustomEvent("change"));
@@ -155,9 +155,7 @@ export class DateInput extends DwInput {
     e.preventDefault();
   }
 
-  _onBlur(e) {
-    super._onInputBlur(e);
-
+  _onBlur() {
     this.dispatchEvent(new CustomEvent("change"));
   }
 }
