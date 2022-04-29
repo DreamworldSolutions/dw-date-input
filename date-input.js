@@ -141,6 +141,7 @@ export class DateInput extends DwInput {
   _onEnter(e) {
     this.value = this.parseValue(e.detail.value);
     this._updateTextfieldValue();
+    this.validate();
 
     this.dispatchEvent(new CustomEvent("change"));
   }
@@ -149,6 +150,7 @@ export class DateInput extends DwInput {
     let paste = (e.clipboardData || window.clipboardData).getData("text");
     this.value = this.parseValue(paste);
     this._updateTextfieldValue();
+    this.validate();
 
     this.dispatchEvent(new CustomEvent("change"));
 

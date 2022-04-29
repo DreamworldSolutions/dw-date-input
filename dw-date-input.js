@@ -271,8 +271,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   _onChange(e) {
     let dateInputed = e.target.value;
-    dateInputed = moment(dateInputed, this.inputFormat.toUpperCase()).toDate();
-    let date = moment(dateInputed).format(this.valueFormat.toUpperCase());
+    dateInputed = moment(dateInputed, this.inputFormat.toUpperCase());
+    let date = ""
+    if(dateInputed.isValid()){
+      dateInputed = dateInputed.toDate();
+      date = moment(dateInputed).format(this.valueFormat.toUpperCase());
+    }
 
     this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
   }
