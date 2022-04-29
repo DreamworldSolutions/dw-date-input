@@ -224,7 +224,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     let errorText;
     value = value.replace(/ /g, "");
 
-    if (!moment(value, this.inputFormat.toUpperCase(), true).isValid()) {
+    if (!moment(value, this.valueFormat.toUpperCase(), true).isValid()) {
       return errorMessage["INVALID_DATE"];
     }
 
