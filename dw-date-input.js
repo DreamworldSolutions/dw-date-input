@@ -10,6 +10,7 @@ const errorMessagesByStateMap = {
   MAX_DATE: "Date must be < {maxDate}",
   MIN_MAX_DATE: "Date must be between {minDate} and {maxDate}",
   INVALID_DATE: "Date is invalid",
+  SHOW_FUTURE_WARNING: "Future date is not allowed."
 };
 
 export class DwDateInput extends DwFormElement(LitElement) {
@@ -148,6 +149,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Set to `true` when user entered value can not be parsed to a Date.
        */
       error: { type: String, reflect: true },
+
+      /**
+       * Input property.
+       * Set `true` to enable warning when user enters future date.
+       * Note: Error has high priority so when error message is displayed, this warning will not be displayed
+       */
+      showFutureWarning: { type: Boolean, reflect: true },
     };
   }
 
@@ -173,6 +181,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .hint="${this.hint}"
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
+        .showFutureWarning = "${this.showFutureWarning}"
         .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
         @change=${this._onChange}
       ></date-input>
@@ -198,6 +207,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.valueFormat = "yyyy-mm-dd";
     this.highlightChanged = false;
     this.errorMessagesByState = errorMessagesByStateMap;
+    this.showFutureWarning = false;
   }
 
   set errorMessagesByState(value) {
@@ -226,6 +236,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
     if (!moment(value, this.valueFormat.toUpperCase(), true).isValid()) {
       return errorMessage["INVALID_DATE"];
+    }
+
+    if(this.showFutureWarning) {
+      errorText = errorMessage['SHOW_FUTURE_WARNING'];
+      return errorText;
     }
 
     if (this.minDate && this.maxDate) {
@@ -272,8 +287,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
   _onChange(e) {
     let dateInputed = e.target.value;
     dateInputed = moment(dateInputed, this.inputFormat.toUpperCase());
-    let date = ""
-    if(dateInputed.isValid()){
+    let date = "";
+    if (dateInputed.isValid()) {
       dateInputed = dateInputed.toDate();
       date = moment(dateInputed).format(this.valueFormat.toUpperCase());
     }
