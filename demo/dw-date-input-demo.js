@@ -24,6 +24,9 @@ export class DwDateInputDemo extends LitElement {
       <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required" value=${this.value} @change=${this._onValueChange}></dw-date-input>
 
+      <h4>Required</h4>
+      <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning value=${this.value} @change=${this._onValueChange}></dw-date-input>
+
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
 

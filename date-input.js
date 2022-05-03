@@ -33,6 +33,13 @@ export class DateInput extends DwInput {
       maxDate: { type: String },
 
       /**
+       * Input property.
+       * Set `true` to enable warning when user enters future date.
+       * Note: Error has high priority so when error message is displayed, this warning will not be displayed
+       */
+      showFutureWarning: { type: Boolean, reflect: true },
+
+      /**
        * Date separator. Possible value: `/` or  `-`
        */
       _separator: { type: String },
@@ -47,6 +54,7 @@ export class DateInput extends DwInput {
     this.validator = this._customValidator;
     this.inputFormat = "dd/mm/yyyy";
     this._separator = "/";
+    this.showFutureWarning = false;
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
     this.addEventListener("blur", this._onBlur);
@@ -133,6 +141,10 @@ export class DateInput extends DwInput {
 
     if (this.minDate) {
       return moment(value).isSameOrAfter(minDate);
+    }
+
+    if(this.showFutureWarning) {
+      return moment(value).isSameOrBefore(moment());
     }
 
     return true;
