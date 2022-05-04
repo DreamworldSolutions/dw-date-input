@@ -8,15 +8,16 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { DwInput } from '@dreamworld/dw-input/dw-input';
-import moment from 'moment/src/moment';
-  
-export class DateInput extends DwInput {
+import { css } from "lit-element";
+import { DwInput } from "@dreamworld/dw-input/dw-input";
+import moment from "moment/src/moment";
+import { dateParse } from "./date-parse";
 
+export class DateInput extends DwInput {
   static get properties() {
     return {
       /**
-       * Prefered date input format  
+       * Prefered date input format
        * It should be `dd/mm/yyyy` or `mm/dd/yyyy` or `dd-mm-yyyy` or `mm-dd-yyyy`
        */
       inputFormat: { type: String },
@@ -32,6 +33,13 @@ export class DateInput extends DwInput {
       maxDate: { type: String },
 
       /**
+       * Input property.
+       * Set `true` to enable warning when user enters future date.
+       * Note: Error has high priority so when error message is displayed, this warning will not be displayed
+       */
+      showFutureWarning: { type: Boolean, reflect: true },
+
+      /**
        * Date separator. Possible value: `/` or  `-`
        */
       _separator: { type: String },
@@ -41,42 +49,57 @@ export class DateInput extends DwInput {
   constructor() {
     super();
     this.iconTrailing = "date_range";
-    this.allowedPattern = '[0-9/-]';
+    this.allowedPattern = "^[a-zA-Z0-9-/,_ ]*$";
     this.clickableIcon = true;
     this.validator = this._customValidator;
-    this.inputFormat = 'mm/dd/yyyy';
-    this._separator = '/';
+    this.inputFormat = "dd/mm/yyyy";
+    this._separator = "/";
+    this.showFutureWarning = false;
+    this.addEventListener("enter", this._onEnter);
+    this.addEventListener("paste", this._onPaste);
+    this.addEventListener("blur", this._onBlur);
+  }
+
+  set value(val) {
+    let oldValue = this._value;
+
+    if (oldValue === val) {
+      return;
+    }
+
+    this._value = this.parseValue(val);
+
+    this.requestUpdate("value", oldValue);
+  }
+
+  get value() {
+    return this._value;
   }
 
   firstUpdated(changedProps) {
     super.firstUpdated && super.firstUpdated(changedProps);
 
-    if (changedProps.has('inputFormat')) { 
+    if (changedProps.has("inputFormat")) {
       this._separator = this.inputFormat.slice(2, 3);
+    }
+
+    if (this.value) {
+      this.value = this.parseValue(this.value);
     }
   }
 
-  formatText() { 
-    return this.value && this.value.split(`${this._separator}`).join(` ${this._separator} `);;
+  formatText() {
+    return (
+      this.value &&
+      this.value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `)
+    );
   }
 
   parseValue(value) {
-    value = value || '';
-    value = value.replace(/ /g, '');
-    value = value.replace(/-/g, '/');
-    value = value.replace(/[\/]+/g, '\/').replace(/^\/*/, '').replace(/\/*$/, '');
-    value = value.split('/').slice(0, 3).join('/');
-    
-    if(!value && value !== '0'){
-      return '';
+    if (!value) {
+      return "";
     }
-    
-    let places = this._createPlaces(value);
-    places = this._fillEmptyPlaces(places, this.inputFormat.replace(/-/g, '/'));
-    
-    let formattedDate = places.join(`${this._separator}`);
-    
-    return formattedDate;
+    return dateParse(value, this.inputFormat, this._separator);
   }
 
   /**
@@ -85,119 +108,70 @@ export class DateInput extends DwInput {
    * @returns {Boolean} returns false if it's invalid
    */
   _customValidator(value) {
-    if (!value) { 
+    if (!value) {
       return true;
     }
 
-    value = value.replace(/ /g, '');
+    value = value.replace(/ /g, "");
 
-    if (!value && !this.required) { 
+    if (!value && !this.required) {
       return true;
     }
 
-    let inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'MM/DD/YYYY';
-    
-    if (!moment(value, inputFormat, true).isValid()) { 
+    let inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "MM/DD/YYYY";
+
+    if (!moment(value, inputFormat, true).isValid()) {
       return false;
     }
 
-    value = moment(value, inputFormat).format('MM/DD/YYYY');
-    let minDate = moment(this.minDate, inputFormat).format('MM/DD/YYYY');
-    let maxDate = moment(this.maxDate, inputFormat).format('MM/DD/YYYY');
+    value = moment(value, inputFormat).format("MM/DD/YYYY");
+    let minDate = moment(this.minDate, inputFormat).format("MM/DD/YYYY");
+    let maxDate = moment(this.maxDate, inputFormat).format("MM/DD/YYYY");
 
-    if(this.maxDate && this.minDate){
+    if (this.maxDate && this.minDate) {
       let isInputGreater = moment(value).isAfter(maxDate);
       let isInputLower = moment(value).isBefore(minDate);
-      
+
       return !(isInputLower || isInputGreater);
     }
-    
-    if(this.maxDate){
+
+    if (this.maxDate) {
       return moment(value).isSameOrBefore(maxDate);
     }
-    
-    if(this.minDate){
+
+    if (this.minDate) {
       return moment(value).isSameOrAfter(minDate);
+    }
+
+    if(this.showFutureWarning) {
+      return moment(value).isSameOrBefore(moment());
     }
 
     return true;
   }
 
-  
-  /**
-   * used to create places for day, month and year
-   * 
-   * @param {String} - value represent formated text
-   * @param {Array} - Array that now have places for day, month and year
-   */
-  _createPlaces(value, format) {
-    let place1, place2, place3;
-    let splits = value.split('/');
-    let countSlash = splits.length - 1;
+  _onEnter(e) {
+    this.value = this.parseValue(e.detail.value);
+    this._updateTextfieldValue();
+    this.validate();
 
-    if(!countSlash){
-      place1 = value.slice(0, 2);
-      place2 = value.slice(2, 4);
-      place3 = value.slice(4, 8);
-    }else if(countSlash === 1){
-      place1 = splits[0].slice(0, 2);
-      place2 = splits[1].slice(0, 2);
-      place3 = splits[1].slice(2, 6);
-    }else {
-      place1 = splits[0].slice(0, 2);
-      place2 = splits[1].slice(0, 2);
-      place3 = splits[2].slice(0, 4);
-    }
-    
-    return [place1, place2, place3];
-  }
-  
-  /**
-   * used to set places that are empty or contain only zeros &
-   * uses `_pad` method to put prefix '0' in value of place[1] and place[2] if there value's length lessthan 2 
-   *
-   * @param {Array} places - represent `dateArray`
-   * @param {String} format - represent `_inputFormat` property
-   * @return {Array} places - represent `dateArray` with filled places
-   */
-  _fillEmptyPlaces(places, format){
-    let isMonthFirst = format.toUpperCase() === "MM/DD/YYYY"? true : false;
-    let day = moment().format('DD');
-    let month = moment().format('MM');
-    let year = moment().format('YYYY');
-    
-    if(!parseInt(places[0])){
-      places[0] = isMonthFirst ? month : day;
-    }
-    if(!parseInt(places[1])){
-      places[1] = isMonthFirst ? day : month;
-    }
-    if(!parseInt(places[2])){
-      places[2] = year;
-    }
-    
-    places[0] = this._pad(places[0]);
-    places[1] = this._pad(places[1]);
-    
-    if(places[2] < 1000){
-      places[2] = 2000 + parseInt(places[2]);
-    }
-    
-    return places; 
-  }
-  
-  /**
-   * used to set zero as prefix in value store in  number letiable,
-   * otherwise keep number's value as it is & return it
-   * 
-   * @param {String} number 
-   * @return {String} number
-   */
-  _pad(number){
-    number = number.length < 2 ? ("0" + number) : number;
-    return number;
+    this.dispatchEvent(new CustomEvent("change"));
   }
 
+  _onPaste(e) {
+    let paste = (e.clipboardData || window.clipboardData).getData("text");
+    this.value = this.parseValue(paste);
+    this._updateTextfieldValue();
+    this.validate();
+
+    this.dispatchEvent(new CustomEvent("change"));
+
+    e.preventDefault();
+  }
+
+  _onBlur() {
+    this.dispatchEvent(new CustomEvent("change"));
+  }
 }
 
-window.customElements.define('date-input', DateInput);
+window.customElements.define("date-input", DateInput);
