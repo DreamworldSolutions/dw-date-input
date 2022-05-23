@@ -169,7 +169,12 @@ export class DateInput extends DwInput {
     e.preventDefault();
   }
 
-  _onBlur() {
+  _onBlur(e) {
+    let value = e.target.value;
+    this.value = this.parseValue(value);
+    this._updateTextfieldValue();
+    this.validate();
+    
     this.dispatchEvent(new CustomEvent("change"));
   }
 }
