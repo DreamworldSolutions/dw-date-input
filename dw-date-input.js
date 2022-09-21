@@ -1,5 +1,6 @@
 import { html, css } from "lit-element";
 import { LitElement } from "@dreamworld/pwa-helpers/lit-element.js";
+import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 import { DwFormElement } from "@dreamworld/dw-form/dw-form-element";
 import moment from "moment/src/moment";
 import "./date-input";
@@ -10,7 +11,7 @@ const errorMessagesByStateMap = {
   MAX_DATE: "Date must be < {maxDate}",
   MIN_MAX_DATE: "Date must be between {minDate} and {maxDate}",
   INVALID_DATE: "Date is invalid",
-  SHOW_FUTURE_WARNING: "Future date is not allowed."
+  SHOW_FUTURE_WARNING: "Future date is not allowed.",
 };
 
 export class DwDateInput extends DwFormElement(LitElement) {
@@ -181,7 +182,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .hint="${this.hint}"
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
-        .showFutureWarning = "${this.showFutureWarning}"
+        .showFutureWarning="${this.showFutureWarning}"
         .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
         @change=${this._onChange}
       ></date-input>
@@ -238,8 +239,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
       return errorMessage["INVALID_DATE"];
     }
 
-    if(this.showFutureWarning) {
-      errorText = errorMessage['SHOW_FUTURE_WARNING'];
+    if (this.showFutureWarning) {
+      errorText = errorMessage["SHOW_FUTURE_WARNING"];
       return errorText;
     }
 
@@ -297,4 +298,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 }
 
-window.customElements.define("dw-date-input", DwDateInput);
+if (isElementAlreadyRegistered("dw-date-input")) {
+  console.warn("lit: 'dw-date-input' is already registered, so registration skipped.");
+} else {
+  window.customElements.define("dw-date-input", DwDateInput);
+}
