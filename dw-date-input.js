@@ -298,6 +298,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 }
 
-if (!isElementAlreadyRegistered("dw-date-input")) {
+if (isElementAlreadyRegistered("dw-date-input")) {
+  console.warn("lit: 'dw-date-input' is already registered, so registration skipped.");
+} else {
   window.customElements.define("dw-date-input", DwDateInput);
 }
