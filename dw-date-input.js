@@ -1,5 +1,6 @@
 import { html, css } from "lit-element";
 import { LitElement } from "@dreamworld/pwa-helpers/lit-element.js";
+import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 import { DwFormElement } from "@dreamworld/dw-form/dw-form-element";
 import moment from "moment/src/moment";
 import "./date-input";
@@ -297,4 +298,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 }
 
-window.customElements.define("dw-date-input", DwDateInput);
+if(!isElementAlreadyRegistered("dw-date-input")) {
+  window.customElements.define("dw-date-input", DwDateInput);
+}
