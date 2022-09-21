@@ -35,7 +35,8 @@
     "access": "public"
   },
   "resolutions": {
-    "tslib": "2.1.0"
+    "tslib": "2.1.0",
+    "@dreamworld/pwa-helpers": "1.12.0-add-function-to-check-elements-registration-stat.1"
   },
   "release": {
     "branches": [
