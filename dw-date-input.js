@@ -1,5 +1,4 @@
-import { html, css } from "lit-element";
-import { LitElement } from "@dreamworld/pwa-helpers/lit-element.js";
+import { html, css, LitElement } from "@dreamworld/pwa-helpers/lit.js";
 import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 import { DwFormElement } from "@dreamworld/dw-form/dw-form-element";
 import moment from "moment/src/moment";

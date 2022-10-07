@@ -1,5 +1,4 @@
-import { LitElement } from "@dreamworld/pwa-helpers/lit-element";
-import { html, css } from "lit-element";
+import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
 
 import "../dw-date-input.js";
 import "../dw-date-range-selection.js";
