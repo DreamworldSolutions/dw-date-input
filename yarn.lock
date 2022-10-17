@@ -28,63 +28,59 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dreamworld/dw-form@https://github.com/DreamworldSolutions/dw-form.git#feature/upgrade-to-lit":
-  version "0.0.0-development"
-  resolved "https://github.com/DreamworldSolutions/dw-form.git#366f2eacd31d1b91834bcf21a569b7a0c875b210"
+"@dreamworld/dw-form@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-4.0.0.tgz#7fd16502f86d55e17bd634523676fe1cdb4a0482"
+  integrity sha512-o9nsnjkJxpTUhesA/tVp6kCJbQ/nXTD6T34eEPOuWKiaZEuKL4FbzjoKDS9fqhp6cVUMHfm2Q9fwekGiqvMvEA==
   dependencies:
-    "@dreamworld/material-styles" "^2.0.0"
+    "@dreamworld/material-styles" "^3.0.0"
     "@dreamworld/pwa-helpers" "^1.13.1"
     lodash-es "^4.17.15"
 
-"@dreamworld/dw-icon-button@https://github.com/DreamworldSolutions/dw-icon-button.git#feature/upgrade-lit":
-  version "1.0.0-init.1"
-  resolved "https://github.com/DreamworldSolutions/dw-icon-button.git#551e93b7afd8bf3654269ec4915db1c9e42a0023"
+"@dreamworld/dw-icon-button@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon-button/-/dw-icon-button-3.0.0.tgz#b540a13b848da46a50f37d4a83427181f675d119"
+  integrity sha512-8bPtV9GTemgxtf9s0rssxa/9Kx0oc2oLoBGV9YFLg2mrdp18T7GpLljc48h5GxaaFV3m10z7kxDb3JY6WQvATQ==
   dependencies:
-    "@dreamworld/dw-icon" "https://github.com/DreamworldSolutions/dw-icon.git#feature/upgrade-to-lit"
-    "@dreamworld/dw-tooltip" "https://github.com/DreamworldSolutions/dw-tooltip.git#feature/upgrade-to-lit"
+    "@dreamworld/dw-icon" "^4.0.0"
+    "@dreamworld/dw-tooltip" "^3.0.0"
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@dreamworld/web-util" "^1.2.0"
-    "@material/mwc-base" "^0.26.1"
+    "@material/mwc-base" "0.27.0"
 
-"@dreamworld/dw-icon@https://github.com/DreamworldSolutions/dw-icon.git#feature/upgrade-to-lit":
-  version "0.0.0-development"
-  resolved "https://github.com/DreamworldSolutions/dw-icon.git#81e0249a4ad628978c18dcae945f470aff44ea5e"
+"@dreamworld/dw-icon@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-4.0.0.tgz#c43a3d3ef92c0d80744a6d2d4a08f0d647af142d"
+  integrity sha512-pWEZu9Fkp+YYSIQ58WNJQ1iJvXQmS1Mvtz1a+AOxWPAS47TWU//SE7yV1cenOAd+Kw44IOkdlzuDbKZiw58VdA==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.13.1"
-    "@material/mwc-icon" "^0.27.0"
+    "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@https://github.com/DreamworldSolutions/dw-input.git#feature/upgrade-to-lit":
-  version "0.0.0-development"
-  resolved "https://github.com/DreamworldSolutions/dw-input.git#3f66f29f6024c1688e8893168846fc4f93d35908"
+"@dreamworld/dw-input@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.0.0.tgz#ffae142ba1b7193b9a058994324dfbec8655a1e3"
+  integrity sha512-Q+joVswKhvhpQaw5SqtgxwpnILrWb/4tuQJNHEl9hYbiWB5CaxGvSGWGlr0exMMJLZbRqZ6mx8wnBJvrXxOK4g==
   dependencies:
-    "@dreamworld/dw-form" "https://github.com/DreamworldSolutions/dw-form.git#feature/upgrade-to-lit"
-    "@dreamworld/dw-icon" "https://github.com/DreamworldSolutions/dw-icon.git#feature/upgrade-to-lit"
-    "@dreamworld/dw-icon-button" "https://github.com/DreamworldSolutions/dw-icon-button.git#feature/upgrade-lit"
-    "@dreamworld/material-styles" "^1.1.0"
+    "@dreamworld/dw-form" "^4.0.0"
+    "@dreamworld/dw-icon" "^4.0.0"
+    "@dreamworld/dw-icon-button" "^3.0.0"
     "@material/textfield" "^14.0.0"
 
-"@dreamworld/dw-tooltip@https://github.com/DreamworldSolutions/dw-tooltip.git#feature/upgrade-to-lit":
-  version "0.0.0-development"
-  resolved "https://github.com/DreamworldSolutions/dw-tooltip.git#267cc7504e55cfbdc522c92c5a16794db35ce8a7"
+"@dreamworld/dw-tooltip@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-tooltip/-/dw-tooltip-3.0.0.tgz#0c4b7398bcf9c80146dbc8d0562c83b0402a5e70"
+  integrity sha512-TwnEQv7J2I85gCCHd+jbLyiz8dIaZInRCmUVx9+61WsasAsOXljY7pNVy9QnMMzHd4/HOr1iiVQdgVzIM7uSAg==
   dependencies:
-    "@dreamworld/material-styles" "^2.1.0"
+    "@dreamworld/material-styles" "^3.0.0"
     "@dreamworld/pwa-helpers" "^1.13.1"
     tippy.js "^6.2.7"
 
-"@dreamworld/material-styles@^1.1.0":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-1.2.1.tgz#00db7a937787597f48a3aee7906641ed9d6ac777"
-  integrity sha512-vxYOA6s0vRj7Un3ckgMk/ntmvzNI9TUJHVEukD2YqYt/Es6fInHkSI7DjZjUg4FZPVN28ws+NjLzr+C/BcJ4yg==
+"@dreamworld/material-styles@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-3.0.0.tgz#3c7134fc028960b22d06027c3097b7583e272798"
+  integrity sha512-t/aNJFGiU5VA3b99cbKdiwtqrEebiDQDa5zWaC4jJcEmvBF2u/l4e6r5SRYE8nF78HpjLHxKDXf0pmy7Xj//9A==
   dependencies:
-    "@polymer/font-roboto" "^3.0.2"
-    lit-element "^2.2.0"
-
-"@dreamworld/material-styles@^2.0.0", "@dreamworld/material-styles@^2.1.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-2.6.0.tgz#bac615214cc03e20ee8ff5915a95af8a689dce0e"
-  integrity sha512-HuUC7tCWfTSJItmm8eqnlCkeOSfQGFOerEL2aeY0NuXj8UYoQn7tITWbJQZSBYw4R+hETaIqUhpHYbTM5BPzEA==
-  dependencies:
-    lit-element "^2.2.0"
+    "@dreamworld/pwa-helpers" "^1.13.1"
 
 "@dreamworld/pwa-helpers@^1.13.1":
   version "1.13.1"
@@ -212,17 +208,17 @@
     "@material/theme" "^14.0.0"
     tslib "^2.1.0"
 
-"@material/mwc-base@^0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@material/mwc-base/-/mwc-base-0.26.1.tgz#82244634912bbe93129e956f2d907468ebe69fd8"
-  integrity sha512-YcVvWwSoDwQAxjvYevhZgtyXIIPuMeTnw9MtEj+Hv7NJizT88hoTsPmKpwM+X58cIY2SPo0y/tHfgmblWntibQ==
+"@material/mwc-base@0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-base/-/mwc-base-0.27.0.tgz#9bb282510b39168dcaa2d2c23aecdf91f6733c6e"
+  integrity sha512-oCWWtjbyQ52AaUbzINLGBKScIPyqhps2Y7c8t6Gu6fcFeDxhKXMV1Cqvtj/OMhtAt53XjHfD2XruWwYv3cYYUA==
   dependencies:
     "@material/base" "=14.0.0-canary.53b3cad2f.0"
     "@material/dom" "=14.0.0-canary.53b3cad2f.0"
     lit "^2.0.0"
     tslib "^2.0.1"
 
-"@material/mwc-icon@^0.27.0":
+"@material/mwc-icon@0.27.0":
   version "0.27.0"
   resolved "https://registry.yarnpkg.com/@material/mwc-icon/-/mwc-icon-0.27.0.tgz#f25ecdd7fe54d810d7d655ba05251169f78b84fd"
   integrity sha512-Sul44I37M9Ewynn0A9DjkEBrmll2VtNbth6Pxj7I1A/EAwEfaCrPvryyGqfIu1T2hTsRcaojzQx6QjF+B5QW9A==
@@ -592,11 +588,6 @@
   integrity sha512-eJ2jbzjdijiL3B4PrSQaSjuF2sPEQPVCPzBvTHJD9Nz+9dw2SGH4K4xeQJ77YfTq5bRQ+bD8wT11JbeDPmxmGg==
   dependencies:
     "@octokit/openapi-types" "^12.11.0"
-
-"@polymer/font-roboto@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@polymer/font-roboto/-/font-roboto-3.0.2.tgz#80cdaa7225db2359130dfb2c6d9a3be1820020c3"
-  integrity sha512-tx5TauYSmzsIvmSqepUPDYbs4/Ejz2XbZ1IkD7JEGqkdNUJlh+9KU85G56Tfdk/xjEZ8zorFfN09OSwiMrIQWA==
 
 "@polymer/iron-a11y-announcer@^3.0.0":
   version "3.1.0"
@@ -3019,7 +3010,7 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-lit-element@^2.0.0, lit-element@^2.2.0:
+lit-element@^2.0.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/lit-element/-/lit-element-2.4.0.tgz#b22607a037a8fc08f5a80736dddf7f3f5d401452"
   integrity sha512-pBGLglxyhq/Prk2H91nA0KByq/hx/wssJBQFiYqXhGDvEnY31PRGYf1RglVzyLeRysu0IHm2K0P196uLLWmwFg==
