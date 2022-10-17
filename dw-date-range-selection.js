@@ -8,8 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { html, css } from 'lit-element';
-import { LitElement } from '@dreamworld/pwa-helpers/lit-element.js';
+import { html, css, LitElement } from '@dreamworld/pwa-helpers/lit.js';
 import moment from 'moment/src/moment';
 
 /**
