@@ -50,7 +50,7 @@ export class DateInput extends DwInput {
     super();
     this.iconTrailing = "date_range";
     this.allowedPattern = "^[a-zA-Z0-9-/,_ ]*$";
-    this.clickableIcon = true;
+    this.clickableIcon = false; // Set true when date picker support added
     this.validator = this._customValidator;
     this.inputFormat = "dd/mm/yyyy";
     this._separator = "/";
