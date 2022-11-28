@@ -21,6 +21,7 @@ export const dateParse = (value, format, seperator) => {
   if (isNumber) {
     // Prosessing date String, considering input has Seperator (- or / or space)
     if (hasSeperator(value)) {
+      value = value.replaceAll(" ", "");
       let places = seperateDate(value, /[-\/, ]/);
 
       places = fillEmptyPlaces(places, format);
