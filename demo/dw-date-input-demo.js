@@ -3,6 +3,7 @@ import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
 import "../dw-date-input.js";
 import "../dw-date-range-selection.js";
 import "../date-input.js";
+import "../dw-date-picker.js";
 import "../dw-month-year-grid.js";
 
 import {ThemeStyle} from "@dreamworld/material-styles/theme.js";
@@ -41,6 +42,7 @@ export class DwDateInputDemo extends LitElement {
       <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning ></dw-date-input>
 
       <br>
+      <dw-date-picker @date-updated=${(e) => console.log("date-updated", e)}></dw-date-picker>
       <dw-month-year-grid @value-changed=${this._onMonthSelect}></dw-month-year-grid>
 
       <!-- <h4>Required</h4>
