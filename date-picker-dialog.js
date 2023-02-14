@@ -6,11 +6,10 @@ export class DatePickerDialog extends DwCompositeDialog {
     super();
     this.type = "popover";
     this.showTrigger = true;
-    this.popoverPlacement = "bottom-start"
   }
 
   get _contentTemplate() {
-    return html`Content`
+    return html`Date Picker Dialog`
   }
 }
 

@@ -27,10 +27,6 @@ export class DwDateInputDemo extends LitElement {
       <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning ></dw-date-input>
 
-      <button @click=${this._onenDialog}>Open</button>
-
-      <date-picker-dialog></date-picker-dialog> 
-
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
 

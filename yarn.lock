@@ -28,6 +28,14 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
+"@dreamworld/device-info@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/device-info/-/device-info-1.2.1.tgz#5c422e99301fff1a548f46c73a6c66837f3ebf9b"
+  integrity sha512-nRzclZpG8ttmdz/5qxm1hIlulzmHq3YL7QwUVfdhjyvZoin6WPRjILlCI8Si3eHhia6KTofejdCWCSqTLWaiiw==
+  dependencies:
+    "@dreamworld/event-emitter" "^1.1.0"
+    lodash-es "^4.17.21"
+
 "@dreamworld/dw-dialog@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.4.0.tgz#9bba2071ba63586aa11df1bf0057974b13bb2637"
@@ -85,6 +93,11 @@
     "@dreamworld/material-styles" "^3.0.0"
     "@dreamworld/pwa-helpers" "^1.13.1"
     tippy.js "^6.2.7"
+
+"@dreamworld/event-emitter@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/event-emitter/-/event-emitter-1.1.0.tgz#576af754e42abbbb24aee07e47f76d589656bd72"
+  integrity sha512-B2qURdBRBrr2+6figkq6a+eGtAcGANkYhqLGsrNEr8qePD6jWhGx9DZvw5ql1qLIne35b4VsheYLSh24ttQMxA==
 
 "@dreamworld/material-styles@^3.0.0":
   version "3.0.0"
