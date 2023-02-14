@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { css } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, nothing } from "@dreamworld/pwa-helpers/lit.js";
 import { DwInput } from "@dreamworld/dw-input/dw-input";
 import moment from "moment/src/moment";
 import { dateParse } from "./date-parse";
@@ -43,6 +43,11 @@ export class DateInput extends DwInput {
        * Date separator. Possible value: `/` or  `-`
        */
       _separator: { type: String },
+
+      /**
+       * Whether date picker dialog is opened or not
+       */
+      _datePickerOpened: { type: Boolean },
     };
   }
 
@@ -55,9 +60,11 @@ export class DateInput extends DwInput {
     this.inputFormat = "dd/mm/yyyy";
     this._separator = "/";
     this.showFutureWarning = false;
+    this._datePickerOpened = false;
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
     this.addEventListener("blur", this._onBlur);
+    this.addEventListener("click", this._onClick);
   }
 
   set value(val) {
@@ -74,6 +81,23 @@ export class DateInput extends DwInput {
 
   get value() {
     return this._value;
+  }
+
+  render() {
+    return html`${super.render()}${this._datePickerTemplate}`;
+  }
+
+  get _datePickerTemplate() {
+    if (!this._datePickerOpened) {
+      return nothing;
+    }
+
+    import("./date-picker-dialog.js");
+    return html`<date-picker-dialog
+      .opened=${true}
+      .triggerElement=${this}
+      @dw-dialog-closed=${this._onDatePickerDialogClosed}
+    ></date-picker-dialog>`;
   }
 
   firstUpdated(changedProps) {
@@ -143,7 +167,7 @@ export class DateInput extends DwInput {
       return moment(value).isSameOrAfter(minDate);
     }
 
-    if(this.showFutureWarning) {
+    if (this.showFutureWarning) {
       return moment(value).isSameOrBefore(moment());
     }
 
@@ -174,8 +198,16 @@ export class DateInput extends DwInput {
     this.value = this.parseValue(value);
     this._updateTextfieldValue();
     this.validate();
-    
+
     this.dispatchEvent(new CustomEvent("change"));
+  }
+
+  _onClick(e) {
+    this._datePickerOpened = true;
+  }
+
+  _onDatePickerDialogClosed(e) {
+    this._datePickerOpened = false;
   }
 }
 

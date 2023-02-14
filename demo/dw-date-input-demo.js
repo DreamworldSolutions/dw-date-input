@@ -3,6 +3,7 @@ import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
 import "../dw-date-input.js";
 import "../dw-date-range-selection.js";
 import "../date-input.js";
+import "../date-picker-dialog.js"
 
 export class DwDateInputDemo extends LitElement {
 
@@ -25,6 +26,10 @@ export class DwDateInputDemo extends LitElement {
 
       <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning ></dw-date-input>
+
+      <button @click=${this._onenDialog}>Open</button>
+
+      <date-picker-dialog></date-picker-dialog> 
 
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
@@ -64,6 +69,11 @@ export class DwDateInputDemo extends LitElement {
         </div>
       </dw-date-range-selection> -->
     `
+  }
+
+  _onenDialog(e) {
+    let dialogEl = this.renderRoot.querySelector('date-picker-dialog');
+    dialogEl.open(e.target);
   }
 
   _onValueChange(e) {
