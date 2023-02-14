@@ -28,6 +28,25 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
+"@dreamworld/device-info@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/device-info/-/device-info-1.2.1.tgz#5c422e99301fff1a548f46c73a6c66837f3ebf9b"
+  integrity sha512-nRzclZpG8ttmdz/5qxm1hIlulzmHq3YL7QwUVfdhjyvZoin6WPRjILlCI8Si3eHhia6KTofejdCWCSqTLWaiiw==
+  dependencies:
+    "@dreamworld/event-emitter" "^1.1.0"
+    lodash-es "^4.17.21"
+
+"@dreamworld/dw-dialog@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.4.0.tgz#9bba2071ba63586aa11df1bf0057974b13bb2637"
+  integrity sha512-MFP+51c00CvLOaCQ6EbmTZ+HNYQmHAuh3b4HoX9BjB8J798zmeTFwW7RDk5QbMkCTRXeRdi/KRKTjstAYq3CvQ==
+  dependencies:
+    "@dreamworld/material-styles" "^3.1.0"
+    "@dreamworld/pwa-helpers" "^1.14.0"
+    "@material/dialog" "^14.0.0"
+    lodash-es "^4.17.15"
+    tippy.js "^6.2.7"
+
 "@dreamworld/dw-form@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-form/-/dw-form-4.0.0.tgz#7fd16502f86d55e17bd634523676fe1cdb4a0482"
@@ -75,6 +94,11 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     tippy.js "^6.2.7"
 
+"@dreamworld/event-emitter@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/event-emitter/-/event-emitter-1.1.0.tgz#576af754e42abbbb24aee07e47f76d589656bd72"
+  integrity sha512-B2qURdBRBrr2+6figkq6a+eGtAcGANkYhqLGsrNEr8qePD6jWhGx9DZvw5ql1qLIne35b4VsheYLSh24ttQMxA==
+
 "@dreamworld/material-styles@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-3.0.0.tgz#3c7134fc028960b22d06027c3097b7583e272798"
@@ -82,10 +106,28 @@
   dependencies:
     "@dreamworld/pwa-helpers" "^1.13.1"
 
+"@dreamworld/material-styles@^3.1.0":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-3.2.2.tgz#ea8485ca283def57f00bbd86ff1e8eb25ff1721f"
+  integrity sha512-lT8C4xW5Sv3uO6D1UkDF6txLiSyZOAG1J3USQv6Fw03zhnPFxQGglbjX/8aSP/6XwVAUIqHAN+O+WW81PoF7gg==
+  dependencies:
+    "@dreamworld/pwa-helpers" "^1.13.1"
+
 "@dreamworld/pwa-helpers@^1.13.1":
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/@dreamworld/pwa-helpers/-/pwa-helpers-1.13.1.tgz#825e6faf1c530591a48b6568996cdbebf8fcacc8"
   integrity sha512-/NHwoVm7cv6w1obkFYNW2ebPc//r4bzp7CjfGKHgzLaKnqt4RwY/n8nCaqzPyaJ4RJH/HnC5zYijN5g3+PhDqw==
+  dependencies:
+    bowser "^2.8.1"
+    lit "^2.3.1"
+    lit-element "^3.2.2"
+    lodash-es "^4.17.21"
+    pwa-helpers "^0.9.1"
+
+"@dreamworld/pwa-helpers@^1.14.0":
+  version "1.14.2"
+  resolved "https://registry.yarnpkg.com/@dreamworld/pwa-helpers/-/pwa-helpers-1.14.2.tgz#42bc9e9227e12810dbb38d73bb6739ab0c311776"
+  integrity sha512-u21FdqMxF7QUa5WtZvybt8SQCS5YaOmatYasqofiM6QFHBm2s6ErppTxMjp9lrM/DEZp284RPghwKf2/wsD+6A==
   dependencies:
     bowser "^2.8.1"
     lit "^2.3.1"
@@ -134,11 +176,51 @@
   dependencies:
     tslib "^2.1.0"
 
+"@material/button@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/button/-/button-14.0.0.tgz#444402b5c1e31c3b63110fa640985a01102c0675"
+  integrity sha512-dqqHaJq0peyXBZupFzCjmvScrfljyVU66ZCS3oldsaaj5iz8sn33I/45Z4zPzdR5F5z8ExToHkRcXhakj1UEAA==
+  dependencies:
+    "@material/density" "^14.0.0"
+    "@material/dom" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/focus-ring" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/shape" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/tokens" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
+    "@material/typography" "^14.0.0"
+    tslib "^2.1.0"
+
 "@material/density@^14.0.0":
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/@material/density/-/density-14.0.0.tgz#584c4f3468c86c96e361ebe7ba6723f4aa6cd548"
   integrity sha512-NlxXBV5XjNsKd8UXF4K/+fOXLxoFNecKbsaQO6O2u+iG8QBfFreKRmkhEBb2hPPwC3w8nrODwXX0lHV+toICQw==
   dependencies:
+    tslib "^2.1.0"
+
+"@material/dialog@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/dialog/-/dialog-14.0.0.tgz#d24d1c1441de343c6615bbc5dfedb068f7e86c05"
+  integrity sha512-E07NEE4jP8jHaw/y2Il2R1a3f4wDFh2sgfCBtRO/Xh0xxJUMuQ7YXo/F3SAA8jfMbbkUv/PHdJUM3I3HmI9mAA==
+  dependencies:
+    "@material/animation" "^14.0.0"
+    "@material/base" "^14.0.0"
+    "@material/button" "^14.0.0"
+    "@material/dom" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/icon-button" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/shape" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/tokens" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
+    "@material/typography" "^14.0.0"
     tslib "^2.1.0"
 
 "@material/dom@=14.0.0-canary.53b3cad2f.0":
@@ -195,6 +277,32 @@
     "@material/rtl" "^14.0.0"
     "@material/theme" "^14.0.0"
     "@material/typography" "^14.0.0"
+    tslib "^2.1.0"
+
+"@material/focus-ring@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/focus-ring/-/focus-ring-14.0.0.tgz#946c27f9f724e9560b6919676b4be166cfab539b"
+  integrity sha512-fqqka6iSfQGJG3Le48RxPCtnOiaLGPDPikhktGbxlyW9srBVMgeCiONfHM7IT/1eu80O0Y67Lh/4ohu5+C+VAQ==
+  dependencies:
+    "@material/dom" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+
+"@material/icon-button@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/icon-button/-/icon-button-14.0.0.tgz#cdfc7e7b967abe81d537fd7db916c9113c3a09b7"
+  integrity sha512-wHMqzm7Q/UwbWLoWv32Li1r2iVYxadIrwTNxT0+p+7NdfI3lEwMN3NoB0CvoJnHTljjXDzce0KJ3nZloa0P0gA==
+  dependencies:
+    "@material/base" "^14.0.0"
+    "@material/density" "^14.0.0"
+    "@material/dom" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/focus-ring" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
     tslib "^2.1.0"
 
 "@material/line-ripple@^14.0.0":
@@ -305,6 +413,16 @@
   integrity sha512-SXgB9VwsKW4DFkHmJfDIS0x0cGdMWC1D06m6z/WQQ5P5j6/m0pKrbHVlrLzXcRjau+mFhXGvj/KyPo9Pp/Rc8Q==
   dependencies:
     "@material/elevation" "^14.0.0"
+
+"@material/touch-target@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/touch-target/-/touch-target-14.0.0.tgz#66b0b61ff14975946cdbf6fad6627bcbc025423d"
+  integrity sha512-o3kvxmS4HkmZoQTvtzLJrqSG+ezYXkyINm3Uiwio1PTg67pDgK5FRwInkz0VNaWPcw9+5jqjUQGjuZMtjQMq8w==
+  dependencies:
+    "@material/base" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    tslib "^2.1.0"
 
 "@material/typography@^14.0.0":
   version "14.0.0"
