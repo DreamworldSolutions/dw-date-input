@@ -3,9 +3,22 @@ import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
 import "../dw-date-input.js";
 import "../dw-date-range-selection.js";
 import "../date-input.js";
-import "../date-picker-dialog.js"
+import "../dw-month-year-grid.js";
+
+import {ThemeStyle} from "@dreamworld/material-styles/theme.js";
 
 export class DwDateInputDemo extends LitElement {
+
+  static get styles() {
+    return [
+      ThemeStyle,
+      css`
+        dw-month-year-grid {
+          max-height: 500px;
+        }
+      ` 
+    ]
+  }
 
   static get properties() {
     return {
@@ -26,6 +39,9 @@ export class DwDateInputDemo extends LitElement {
 
       <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning ></dw-date-input>
+
+      <br>
+      <dw-month-year-grid @value-changed=${this._onMonthSelect}></dw-month-year-grid>
 
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
@@ -67,14 +83,13 @@ export class DwDateInputDemo extends LitElement {
     `
   }
 
-  _onenDialog(e) {
-    let dialogEl = this.renderRoot.querySelector('date-picker-dialog');
-    dialogEl.open(e.target);
-  }
-
   _onValueChange(e) {
     console.log(e);
     this.value = e.detail.value;
+  }
+
+  _onMonthSelect(e) {
+    console.log(e)
   }
 }
 
