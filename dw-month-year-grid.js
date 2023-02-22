@@ -1,8 +1,8 @@
-import { css, html, LitElement } from "@dreamworld/pwa-helpers/lit.js";
 import "@dreamworld/dw-surface";
+import { css, html, LitElement } from "@dreamworld/pwa-helpers/lit.js";
+import "@lit-labs/virtualizer";
 import { repeat } from "lit/directives/repeat.js";
 import moment from "moment/src/moment";
-import "@lit-labs/virtualizer";
 
 // Styles
 import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
@@ -50,6 +50,10 @@ export class DwMonthYearGrid extends LitElement {
 
       dw-surface[bg="primary"] {
         color: var(--mdc-theme-text-primary-on-primary, #ffffff);
+      }
+
+      lit-virtualizer{
+        height: 336px;
       }
     `;
   }
@@ -133,6 +137,7 @@ export class DwMonthYearGrid extends LitElement {
 
   render() {
     return html`<lit-virtualizer
+      scroller
       .items=${this._years}
       .renderItem=${(year) => html`${this.#_oneYearMonthsLayout(year)}`}
     ></lit-virtualizer>`;

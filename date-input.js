@@ -127,12 +127,12 @@ export class DateInput extends DwInput {
       return nothing;
     }
 
-    import("./date-picker-dialog.js");
-    return html`<date-picker-dialog
+    import("./dw-date-picker-dialog.js");
+    return html`<dw-date-picker-dialog
       .opened=${true}
       .triggerElement=${this}
       @dw-dialog-closed=${this._onDatePickerDialogClosed}
-    ></date-picker-dialog>`;
+    ></dw-date-picker-dialog>`;
   }
 
   firstUpdated(changedProps) {
