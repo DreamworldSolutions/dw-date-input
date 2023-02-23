@@ -23,7 +23,7 @@
   "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
   "dependencies": {
     "@dreamworld/device-info": "^1.2.1",
-    "@dreamworld/dw-dialog": "^5.4.0",
+    "@dreamworld/dw-dialog": "^5.5.0",
     "@dreamworld/dw-form": "^4.0.0",
     "@dreamworld/dw-icon-button": "^3.1.0",
     "@dreamworld/dw-input": "^3.0.0",

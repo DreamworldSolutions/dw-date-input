@@ -25,12 +25,30 @@ export class DwDatePicker extends AppDatePicker {
     return [
       ...AppDatePicker.styles,
       css`
+        :host {
+          --date-picker-min-width: calc((16px * 2) + (48px * 7));
+          --_h: auto;
+        }
+
+        .calendar {
+          min-height: calc(52px + 4px + (48px * 7));
+        }
+
+        app-month-calendar {
+          --_size: 48px;
+        }
+
         .month-and-year-selector {
           cursor: pointer;
         }
 
         dw-month-year-grid {
           height: 336px;
+          padding-left: 24px;
+        }
+
+        .header {
+          padding-left: 8px;
         }
       `,
     ];
@@ -106,7 +124,7 @@ export class DwDatePicker extends AppDatePicker {
             .ariaLabel=${label}
             @click=${this.#navigateMonth}
             data-navigation=${navigationType}
-            title=${ifDefined(label)}
+            .title="${ifDefined(label)}"
             .icon=${isPreviousNavigationType ? "keyboard_arrow_left" : "keyboard_arrow_right"}
           ></dw-icon-button>
         `;
