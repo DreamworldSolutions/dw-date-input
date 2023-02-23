@@ -23,10 +23,36 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
+"@babel/runtime@^7.20.6":
+  version "7.21.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.21.0.tgz#5b55c9d394e5fcf304909a8b00c07dc217b56673"
+  integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
+  dependencies:
+    regenerator-runtime "^0.13.11"
+
 "@colors/colors@1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
+
+"@dreamworld/device-info@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/device-info/-/device-info-1.2.1.tgz#5c422e99301fff1a548f46c73a6c66837f3ebf9b"
+  integrity sha512-nRzclZpG8ttmdz/5qxm1hIlulzmHq3YL7QwUVfdhjyvZoin6WPRjILlCI8Si3eHhia6KTofejdCWCSqTLWaiiw==
+  dependencies:
+    "@dreamworld/event-emitter" "^1.1.0"
+    lodash-es "^4.17.21"
+
+"@dreamworld/dw-dialog@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-dialog/-/dw-dialog-5.5.0.tgz#2e789efc9e22669ca419bb54d03398697575dab4"
+  integrity sha512-1L0Qzax12RpiTB6rT4D5tsnBhmVc6EyvgCYuB5Ues+nvJrxpkJw0VCaZPAUgvfm+voJqZIiRe6i6QeHFe/Qp+g==
+  dependencies:
+    "@dreamworld/material-styles" "^3.1.0"
+    "@dreamworld/pwa-helpers" "^1.14.0"
+    "@material/dialog" "^14.0.0"
+    lodash-es "^4.17.15"
+    tippy.js "^6.2.7"
 
 "@dreamworld/dw-form@^4.0.0":
   version "4.0.0"
@@ -110,6 +136,11 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     tippy.js "^6.2.7"
 
+"@dreamworld/event-emitter@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/event-emitter/-/event-emitter-1.1.0.tgz#576af754e42abbbb24aee07e47f76d589656bd72"
+  integrity sha512-B2qURdBRBrr2+6figkq6a+eGtAcGANkYhqLGsrNEr8qePD6jWhGx9DZvw5ql1qLIne35b4VsheYLSh24ttQMxA==
+
 "@dreamworld/material-styles@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-3.0.0.tgz#3c7134fc028960b22d06027c3097b7583e272798"
@@ -117,7 +148,7 @@
   dependencies:
     "@dreamworld/pwa-helpers" "^1.13.1"
 
-"@dreamworld/material-styles@^3.2.2":
+"@dreamworld/material-styles@^3.1.0", "@dreamworld/material-styles@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@dreamworld/material-styles/-/material-styles-3.2.2.tgz#ea8485ca283def57f00bbd86ff1e8eb25ff1721f"
   integrity sha512-lT8C4xW5Sv3uO6D1UkDF6txLiSyZOAG1J3USQv6Fw03zhnPFxQGglbjX/8aSP/6XwVAUIqHAN+O+WW81PoF7gg==
@@ -130,6 +161,18 @@
   integrity sha512-/NHwoVm7cv6w1obkFYNW2ebPc//r4bzp7CjfGKHgzLaKnqt4RwY/n8nCaqzPyaJ4RJH/HnC5zYijN5g3+PhDqw==
   dependencies:
     bowser "^2.8.1"
+    lit "^2.3.1"
+    lit-element "^3.2.2"
+    lodash-es "^4.17.21"
+    pwa-helpers "^0.9.1"
+
+"@dreamworld/pwa-helpers@^1.14.0":
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/pwa-helpers/-/pwa-helpers-1.16.1.tgz#ca74606410472374f7ba1c8ff06589ad8a4d14ec"
+  integrity sha512-2/okrw3nD9F7fIcXFyjx83cEsOi1MkjX3YWmKPqWmPs4PXUqITYqoTMqN7nbef1M04P8MweQ9VH/tdlbFY08Tg==
+  dependencies:
+    bowser "^2.8.1"
+    i18next "^22.4.9"
     lit "^2.3.1"
     lit-element "^3.2.2"
     lodash-es "^4.17.21"
@@ -223,6 +266,25 @@
     "@material/typography" "14.0.0-canary.53b3cad2f.0"
     tslib "^2.1.0"
 
+"@material/button@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/button/-/button-14.0.0.tgz#444402b5c1e31c3b63110fa640985a01102c0675"
+  integrity sha512-dqqHaJq0peyXBZupFzCjmvScrfljyVU66ZCS3oldsaaj5iz8sn33I/45Z4zPzdR5F5z8ExToHkRcXhakj1UEAA==
+  dependencies:
+    "@material/density" "^14.0.0"
+    "@material/dom" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/focus-ring" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/shape" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/tokens" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
+    "@material/typography" "^14.0.0"
+    tslib "^2.1.0"
+
 "@material/density@14.0.0-canary.53b3cad2f.0":
   version "14.0.0-canary.53b3cad2f.0"
   resolved "https://registry.yarnpkg.com/@material/density/-/density-14.0.0-canary.53b3cad2f.0.tgz#a67e49fdbfc5347b8757ea14654197540762c20a"
@@ -256,6 +318,27 @@
     "@material/tokens" "14.0.0-canary.53b3cad2f.0"
     "@material/touch-target" "14.0.0-canary.53b3cad2f.0"
     "@material/typography" "14.0.0-canary.53b3cad2f.0"
+    tslib "^2.1.0"
+
+"@material/dialog@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/dialog/-/dialog-14.0.0.tgz#d24d1c1441de343c6615bbc5dfedb068f7e86c05"
+  integrity sha512-E07NEE4jP8jHaw/y2Il2R1a3f4wDFh2sgfCBtRO/Xh0xxJUMuQ7YXo/F3SAA8jfMbbkUv/PHdJUM3I3HmI9mAA==
+  dependencies:
+    "@material/animation" "^14.0.0"
+    "@material/base" "^14.0.0"
+    "@material/button" "^14.0.0"
+    "@material/dom" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/icon-button" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/shape" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/tokens" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
+    "@material/typography" "^14.0.0"
     tslib "^2.1.0"
 
 "@material/dom@14.0.0-canary.53b3cad2f.0", "@material/dom@=14.0.0-canary.53b3cad2f.0":
@@ -349,6 +432,15 @@
     "@material/feature-targeting" "14.0.0-canary.53b3cad2f.0"
     "@material/rtl" "14.0.0-canary.53b3cad2f.0"
 
+"@material/focus-ring@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/focus-ring/-/focus-ring-14.0.0.tgz#946c27f9f724e9560b6919676b4be166cfab539b"
+  integrity sha512-fqqka6iSfQGJG3Le48RxPCtnOiaLGPDPikhktGbxlyW9srBVMgeCiONfHM7IT/1eu80O0Y67Lh/4ohu5+C+VAQ==
+  dependencies:
+    "@material/dom" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+
 "@material/icon-button@14.0.0-canary.53b3cad2f.0":
   version "14.0.0-canary.53b3cad2f.0"
   resolved "https://registry.yarnpkg.com/@material/icon-button/-/icon-button-14.0.0-canary.53b3cad2f.0.tgz#396e91458530676da8e320cea7b1e15cfa65715e"
@@ -364,6 +456,23 @@
     "@material/rtl" "14.0.0-canary.53b3cad2f.0"
     "@material/theme" "14.0.0-canary.53b3cad2f.0"
     "@material/touch-target" "14.0.0-canary.53b3cad2f.0"
+    tslib "^2.1.0"
+
+"@material/icon-button@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/icon-button/-/icon-button-14.0.0.tgz#cdfc7e7b967abe81d537fd7db916c9113c3a09b7"
+  integrity sha512-wHMqzm7Q/UwbWLoWv32Li1r2iVYxadIrwTNxT0+p+7NdfI3lEwMN3NoB0CvoJnHTljjXDzce0KJ3nZloa0P0gA==
+  dependencies:
+    "@material/base" "^14.0.0"
+    "@material/density" "^14.0.0"
+    "@material/dom" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/focus-ring" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
     tslib "^2.1.0"
 
 "@material/line-ripple@14.0.0-canary.53b3cad2f.0", "@material/line-ripple@=14.0.0-canary.53b3cad2f.0":
@@ -773,6 +882,16 @@
     "@material/base" "14.0.0-canary.53b3cad2f.0"
     "@material/feature-targeting" "14.0.0-canary.53b3cad2f.0"
     "@material/rtl" "14.0.0-canary.53b3cad2f.0"
+    tslib "^2.1.0"
+
+"@material/touch-target@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/@material/touch-target/-/touch-target-14.0.0.tgz#66b0b61ff14975946cdbf6fad6627bcbc025423d"
+  integrity sha512-o3kvxmS4HkmZoQTvtzLJrqSG+ezYXkyINm3Uiwio1PTg67pDgK5FRwInkz0VNaWPcw9+5jqjUQGjuZMtjQMq8w==
+  dependencies:
+    "@material/base" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/rtl" "^14.0.0"
     tslib "^2.1.0"
 
 "@material/typography@14.0.0-canary.53b3cad2f.0":
@@ -2959,6 +3078,13 @@ humanize-ms@^1.2.1:
   dependencies:
     ms "^2.0.0"
 
+i18next@^22.4.9:
+  version "22.4.10"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.4.10.tgz#cfbfc412c6bc83e3c16564f47e6a5c145255960e"
+  integrity sha512-3EqgGK6fAJRjnGgfkNSStl4mYLCjUoJID338yVyLMj5APT67HUtWoqSayZewiiC5elzMUB1VEUwcmSCoeQcNEA==
+  dependencies:
+    "@babel/runtime" "^7.20.6"
+
 iconv-lite@^0.6.2:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.6.3.tgz#a52f80bf38da1952eb5c681790719871a1a72501"
@@ -4652,6 +4778,11 @@ reduce-flatten@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/reduce-flatten/-/reduce-flatten-2.0.0.tgz#734fd84e65f375d7ca4465c69798c25c9d10ae27"
   integrity sha512-EJ4UNY/U1t2P/2k6oqotuX2Cc3T6nxJwsM0N0asT7dhrtH1ltUxDn4NalSYmPE2rCkVpcf/X6R0wDwcFpzhd4w==
+
+regenerator-runtime@^0.13.11:
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
+  integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 registry-auth-token@^4.0.0:
   version "4.2.2"
