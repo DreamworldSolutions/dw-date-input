@@ -1,22 +1,40 @@
-import { html, nothing } from "@dreamworld/pwa-helpers/lit";
+import "@dreamworld/dw-icon-button";
+import { css, html, nothing } from "@dreamworld/pwa-helpers/lit";
 import { AppDatePicker } from "app-datepicker";
 import { isInCurrentMonth } from "app-datepicker/dist/helpers/is-in-current-month.js";
 import { splitString } from "app-datepicker/dist/helpers/split-string.js";
 import { toDateString } from "app-datepicker/dist/helpers/to-date-string.js";
 import { toFormatters } from "app-datepicker/dist/helpers/to-formatters.js";
 import { toResolvedDate } from "app-datepicker/dist/helpers/to-resolved-date.js";
-import { iconArrowDropdown, iconChevronLeft, iconChevronRight } from "app-datepicker/dist/icons.js";
 import { classMap } from "lit/directives/class-map.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import moment from "moment/src/moment";
 import { calendar } from "nodemod/dist/calendar/calendar.js";
 import { getWeekdays } from "nodemod/dist/calendar/helpers/get-weekdays.js";
-import { toUTCDate } from 'nodemod/dist/calendar/helpers/to-utc-date.js';
+import { toUTCDate } from "nodemod/dist/calendar/helpers/to-utc-date.js";
+import "./dw-month-year-grid.js";
+import { dateFormat, NavigationType } from "./utils";
 
 export class DwDatePicker extends AppDatePicker {
   #formatters;
   #today;
   #focusNavButtonWithKey = false;
   #valueAsDate;
+
+  static get styles() {
+    return [
+      ...AppDatePicker.styles,
+      css`
+        .month-and-year-selector {
+          cursor: pointer;
+        }
+
+        dw-month-year-grid {
+          height: 336px;
+        }
+      `,
+    ];
+  }
 
   constructor() {
     super();
@@ -25,8 +43,8 @@ export class DwDatePicker extends AppDatePicker {
 
     this.#formatters = toFormatters(this.locale);
     this.#today = todayDate;
-    this.min = "2023-01-01";
   }
+
   render() {
     const {
       _currentDate,
@@ -45,27 +63,8 @@ export class DwDatePicker extends AppDatePicker {
     const label = isStartViewYearGrid ? chooseMonthLabel : chooseYearLabel;
 
     return html`
-      <div class="header" part="header">
-        <div class="month-and-year-selector">
-          <p class="selected-year-month">${selectedYearMonth}</p>
-          <app-icon-button
-            .ariaLabel=${label}
-            @click=${this.#updateStartView}
-            class="year-dropdown"
-            title=${ifDefined(label)}
-            >${iconArrowDropdown}</app-icon-button
-          >
-        </div>
-        ${isStartViewYearGrid
-          ? nothing
-          : html`
-              <div class="month-pagination">
-                ${this.#renderNavigationButton("previous", isInCurrentMonth(_min, _currentDate))}
-                ${this.#renderNavigationButton("next", isInCurrentMonth(_max, _currentDate))}
-              </div>
-            `}
-      </div>
-      
+      ${this.#renderHeader(_min, _max, _currentDate, selectedYearMonth)}
+
       <div
         class="body ${classMap({
           [`start-view--${startView}`]: true,
@@ -73,7 +72,7 @@ export class DwDatePicker extends AppDatePicker {
         })}"
         part="body"
       >
-        ${(isStartViewYearGrid ? this.#renderYearGrid : this.#renderCalendar)()}
+        ${(isStartViewYearGrid ? this.#renderMonthYearGrid : this.#renderCalendar)()}
       </div>
     `;
   }
@@ -82,6 +81,20 @@ export class DwDatePicker extends AppDatePicker {
     this.startView = this.startView === "yearGrid" ? "calendar" : "yearGrid";
   };
 
+  #renderHeader(_min, _max, _currentDate, selectedYearMonth) {
+    if (this.startView === "yearGrid") {
+      return nothing;
+    }
+
+    return html`<div class="header" part="header">
+      ${this.#renderNavigationButton(NavigationType.Previous, isInCurrentMonth(_min, _currentDate))}
+      <div class="month-and-year-selector" @click=${this.#updateStartView}>
+        <p class="selected-year-month">${selectedYearMonth}</p>
+      </div>
+      ${this.#renderNavigationButton(NavigationType.Next, isInCurrentMonth(_max, _currentDate))}
+    </div>`;
+  }
+
   #renderNavigationButton = (navigationType, shouldSkipRender = true) => {
     const isPreviousNavigationType = navigationType === "previous";
     const label = isPreviousNavigationType ? this.previousMonthLabel : this.nextMonthLabel;
@@ -89,18 +102,30 @@ export class DwDatePicker extends AppDatePicker {
     return shouldSkipRender
       ? html`<div data-navigation=${navigationType}></div>`
       : html`
-          <app-icon-button
+          <dw-icon-button
             .ariaLabel=${label}
             @click=${this.#navigateMonth}
             data-navigation=${navigationType}
             title=${ifDefined(label)}
-            >${isPreviousNavigationType ? iconChevronLeft : iconChevronRight}</app-icon-button
-          >
+            .icon=${isPreviousNavigationType ? "keyboard_arrow_left" : "keyboard_arrow_right"}
+          ></dw-icon-button>
         `;
   };
 
-  #renderYearGrid = () => {
-    const { _max, _min, _selectedDate, selectedYearLabel, toyearLabel } = this;
+  #renderMonthYearGrid = () => {
+    let { _max, _min, _selectedDate, selectedYearLabel, toyearLabel } = this;
+    _max = moment(_max).format("YYYY");
+    _min = moment(_min).format("YYYY");
+    _selectedDate = moment(_selectedDate).format(dateFormat);
+
+    return html`
+      <dw-month-year-grid
+        .min=${_min}
+        .max=${_max}
+        .value=${_selectedDate}
+        @value-changed=${this.#updateMonthYear}
+      ></dw-month-year-grid>
+    `;
 
     return html`
       <app-year-grid
@@ -212,6 +237,11 @@ export class DwDatePicker extends AppDatePicker {
      */
     this.#focusNavButtonWithKey = ev.detail === 0;
   };
+
+  #updateMonthYear({ detail }) {
+    this._currentDate = new Date(detail);
+    this.startView = "calendar";
+  }
 
   #updateYear = ({ detail: { year } }) => {
     this._currentDate = new Date(this._currentDate.setUTCFullYear(year));

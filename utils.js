@@ -27,3 +27,8 @@ export const yearsInArray = (minYear, maxYear) => {
 
   return years;
 };
+
+export const NavigationType = {
+  Previous: "previous",
+  Next: "next",
+};

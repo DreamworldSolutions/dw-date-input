@@ -43,7 +43,7 @@ export class DwDateInputDemo extends LitElement {
 
       <br>
       <dw-date-picker @date-updated=${(e) => console.log("date-updated", e)}></dw-date-picker>
-      <dw-month-year-grid @value-changed=${this._onMonthSelect}></dw-month-year-grid>
+      <!-- <dw-month-year-grid @value-changed=${this._onMonthSelect}></dw-month-year-grid> -->
 
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>

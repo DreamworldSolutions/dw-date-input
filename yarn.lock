@@ -48,10 +48,29 @@
     "@dreamworld/web-util" "^1.2.0"
     "@material/mwc-base" "0.27.0"
 
+"@dreamworld/dw-icon-button@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon-button/-/dw-icon-button-3.1.0.tgz#2050274f9b808922266b1e4b606ddcba33456c1d"
+  integrity sha512-bwJGd526Zlmqar5uRx4gSExDtRyIOuKNfBYdDwkyO1GbECuVPFddsPuihJO+GwJgCdKvkHivqIrypUYhobg1mw==
+  dependencies:
+    "@dreamworld/dw-icon" "^4.1.0"
+    "@dreamworld/dw-tooltip" "^3.0.0"
+    "@dreamworld/pwa-helpers" "^1.13.1"
+    "@dreamworld/web-util" "^1.2.0"
+    "@material/mwc-base" "0.27.0"
+
 "@dreamworld/dw-icon@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-4.0.0.tgz#c43a3d3ef92c0d80744a6d2d4a08f0d647af142d"
   integrity sha512-pWEZu9Fkp+YYSIQ58WNJQ1iJvXQmS1Mvtz1a+AOxWPAS47TWU//SE7yV1cenOAd+Kw44IOkdlzuDbKZiw58VdA==
+  dependencies:
+    "@dreamworld/pwa-helpers" "^1.13.1"
+    "@material/mwc-icon" "0.27.0"
+
+"@dreamworld/dw-icon@^4.1.0":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon/-/dw-icon-4.1.1.tgz#9f43d6b435d92a36358cb05814999102d24f1eb5"
+  integrity sha512-EdIguPZstPZ1kZ9jrtq2O35Z8n7Rr2yw3QNxSgNdzVHrY+YPCaMAe0Sb2RIPzSV0ewFx6+CSWwvIAUlydGOGGw==
   dependencies:
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
