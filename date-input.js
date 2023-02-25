@@ -13,6 +13,7 @@ import { DwInput } from "@dreamworld/dw-input/dw-input";
 import moment from "moment/src/moment";
 import { dateParse } from "./date-parse";
 import DeviceInfo from "@dreamworld/device-info";
+import { dateFormat } from "./utils";
 
 const KeyCode = {
   ENTER: 13,
@@ -23,11 +24,12 @@ export class DateInput extends DwInput {
     return [
       ...DwInput.styles,
       css`
-        .mdc-text-field__icon:not([tabindex]), .mdc-text-field__icon[tabindex="-1"] {
+        .mdc-text-field__icon:not([tabindex]),
+        .mdc-text-field__icon[tabindex="-1"] {
           pointer-events: auto;
         }
-      ` 
-    ]
+      `,
+    ];
   }
   static get properties() {
     return {
@@ -67,7 +69,7 @@ export class DateInput extends DwInput {
       /**
        * Whether device has virtual Kayboard or not
        */
-      _virtualKeyboard: {type: Boolean}
+      _virtualKeyboard: { type: Boolean },
     };
   }
 
@@ -131,8 +133,16 @@ export class DateInput extends DwInput {
     return html`<dw-date-picker-dialog
       .opened=${true}
       .triggerElement=${this}
+      .value=${this._getDialogDateFormat(this.value)}
+      .min=${this.minDate}
+      .max=${this.maxDate}
+      @change=${this._onDateChange}
       @dw-dialog-closed=${this._onDatePickerDialogClosed}
     ></dw-date-picker-dialog>`;
+  }
+
+  _getDialogDateFormat(value) {
+    return moment(value, this.inputFormat.toUpperCase()).format(dateFormat);
   }
 
   firstUpdated(changedProps) {
@@ -257,6 +267,13 @@ export class DateInput extends DwInput {
 
   _onDateIconClick(e) {
     this._datePickerOpened = true;
+  }
+
+  _onDateChange(e) {
+    console.log("_onDateChange", e);
+    this.value = this.parseValue(e.detail);
+    this._updateTextfieldValue();
+    this.validate();
   }
 }
 
