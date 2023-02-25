@@ -31,8 +31,8 @@ export class DwDatePickerDialog extends DwCompositeDialog {
           padding-left: 16px;
         }
 
-        :host([type="modal"]) .mdc-dialog .mdc-dialog__title,
-        :host([type="popover"]) header {
+        :host(:not([_editMode])[type="modal"]) .mdc-dialog .mdc-dialog__title,
+        :host(:not([_editMode])[type="popover"]) header {
           border-bottom: solid 1px var(--mdc-theme-divider-color, rgba(0, 0, 0, 0.12)) !important;
           box-sizing: border-box;
         }
@@ -70,7 +70,7 @@ export class DwDatePickerDialog extends DwCompositeDialog {
           padding-bottom: 24px;
         }
 
-        .edit-mode {
+        .button-container {
           padding-left: 16px;
           padding-right: 16px;
           padding-top: 8px;
@@ -78,6 +78,9 @@ export class DwDatePickerDialog extends DwCompositeDialog {
 
         .input-container {
           display: flex;
+          padding-top: 8px;
+          padding-left: 16px;
+          padding-right: 4px;
         }
       `,
     ];
@@ -123,7 +126,7 @@ export class DwDatePickerDialog extends DwCompositeDialog {
        * Used to show input field to select date
        * select date from plain input field (same as current date input field)
        */
-      _editMode: { type: Boolean },
+      _editMode: { type: Boolean, reflect: true },
 
       _inputValue: { type: String },
     };
@@ -135,6 +138,7 @@ export class DwDatePickerDialog extends DwCompositeDialog {
     this.opened = true;
     this.showTrigger = true;
     this.heading = "Select date";
+    this._inputValue = "";
 
     this._mobileMode = DeviceInfo.info().layout === "small";
   }
@@ -143,6 +147,20 @@ export class DwDatePickerDialog extends DwCompositeDialog {
     super.connectedCallback();
 
     this._determineType();
+  }
+
+  firstUpdated() {
+    super.firstUpdated();
+    this._inputValue = dateParse(this.value, this.inputFormat, this.separator);
+  }
+
+  updated(_changedProperties) {
+    super.updated(_changedProperties);
+
+    if (_changedProperties.has("_editMode") && this._editMode) {
+      const el = this.renderRoot.querySelector("#customDateInput");
+      el.focus();
+    }
   }
 
   _determineType() {
@@ -159,13 +177,19 @@ export class DwDatePickerDialog extends DwCompositeDialog {
 
   get _contentTemplate() {
     if (this._mobileMode && this._editMode) {
-      return html`<div class="edit-mode">
+      return html` <div class="edit-mode">
         <div class="input-container">
-          <dw-input .value=${this._inputValue} @blur=${this._onInputBlur}></dw-input>
+          <dw-input
+            type="number"
+            id="customDateInput"
+            .value=${this._inputValue}
+            @blur=${this._onInputBlur}
+          ></dw-input>
           <dw-icon-button icon="date_range" @click=${this._toggleEditMode}> </dw-icon-button>
         </div>
-
-        <mwc-button label="set" fullwidth raised @click=${this._onDateSet}></mwc-button>
+        <div class="button-container">
+          <mwc-button label="set" fullwidth raised @click=${this._onDateSet}></mwc-button>
+        </div>
       </div>`;
     }
 
