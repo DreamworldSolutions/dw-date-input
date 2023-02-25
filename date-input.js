@@ -131,6 +131,9 @@ export class DateInput extends DwInput {
     return html`<dw-date-picker-dialog
       .opened=${true}
       .triggerElement=${this}
+      .inputFormat=${this.inputFormat}
+      .separator=${this._separator}
+      @change=${this._onDateChange}
       @dw-dialog-closed=${this._onDatePickerDialogClosed}
     ></dw-date-picker-dialog>`;
   }
@@ -243,6 +246,13 @@ export class DateInput extends DwInput {
     }
 
     this._datePickerOpened = true;
+  }
+
+  _onDateChange(e) {
+    let value = e.target.value;
+    this.value = this.parseValue(value);
+    this._updateTextfieldValue();
+    this.validate();
   }
 
   _onDatePickerDialogClosed(e) {
