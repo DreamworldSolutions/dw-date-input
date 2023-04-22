@@ -1,8 +1,8 @@
-import { css, html, LitElement } from "@dreamworld/pwa-helpers/lit.js";
 import "@dreamworld/dw-surface";
+import { css, html, LitElement } from "@dreamworld/pwa-helpers/lit.js";
+import "@lit-labs/virtualizer";
 import { repeat } from "lit/directives/repeat.js";
 import moment from "moment/src/moment";
-import "@lit-labs/virtualizer";
 
 // Styles
 import * as TypographyLiterals from "@dreamworld/material-styles/typography-literals.js";
@@ -23,7 +23,7 @@ export class DwMonthYearGrid extends LitElement {
 
       .year-label {
         margin-bottom: 8px;
-        padding: 16px 24px 8px;
+        padding: 16px 0 8px;
         color: var(--mdc-theme-text-secondary-on-surface, rgba(0, 0, 0, 0.6));
         ${TypographyLiterals.subtitle2};
       }
@@ -33,8 +33,6 @@ export class DwMonthYearGrid extends LitElement {
         column-gap: 8px;
         row-gap: 16px;
         grid-template-columns: auto auto auto auto;
-        padding-left: 24px;
-        padding-right: 24px;
       }
 
       dw-surface {
@@ -50,6 +48,10 @@ export class DwMonthYearGrid extends LitElement {
 
       dw-surface[bg="primary"] {
         color: var(--mdc-theme-text-primary-on-primary, #ffffff);
+      }
+
+      lit-virtualizer {
+        height: 100%;
       }
     `;
   }
@@ -133,6 +135,7 @@ export class DwMonthYearGrid extends LitElement {
 
   render() {
     return html`<lit-virtualizer
+      scroller
       .items=${this._years}
       .renderItem=${(year) => html`${this.#_oneYearMonthsLayout(year)}`}
     ></lit-virtualizer>`;
