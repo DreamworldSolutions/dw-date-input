@@ -94,11 +94,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
       /**
        * The minimum allowed date (inclusively).
+       * Default Value "1970/01/01"
        */
       minDate: { type: String },
 
       /**
        * The maximum allowed date (inclusively).
+       * Default Value "2100/01/01"
        */
       maxDate: { type: String },
 
@@ -208,6 +210,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.highlightChanged = false;
     this.errorMessagesByState = errorMessagesByStateMap;
     this.showFutureWarning = false;
+    this.minDate = "1970/01/01";
+    this.maxDate = "2100/12/31";
   }
 
   set errorMessagesByState(value) {
