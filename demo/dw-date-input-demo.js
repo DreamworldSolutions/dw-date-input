@@ -48,7 +48,7 @@ export class DwDateInputDemo extends LitElement {
       <dw-date-input
         label="Start date"
         placeholder="Enter date here"
-        showFutureWarning
+
       ></dw-date-input>
 
       <br />

@@ -26,12 +26,12 @@ export class DwDatePicker extends AppDatePicker {
       ...AppDatePicker.styles,
       css`
         :host {
-          --date-picker-min-width: calc((16px * 2) + (48px * 7));
+          --date-picker-min-width: calc((16px * 2) + (48px * 7) - 8px); 
           --_h: auto;
         }
 
         .calendar {
-          min-height: calc(52px + 4px + (48px * 7));
+          min-height: calc(52px + 32px + (48px * 6));
         }
 
         app-month-calendar {
