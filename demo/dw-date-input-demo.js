@@ -1,16 +1,30 @@
-import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
+import { LitElement, html, css, nothing } from "@dreamworld/pwa-helpers/lit.js";
 
 import "../dw-date-input.js";
 import "../dw-date-range-selection.js";
 import "../date-input.js";
-import "../date-picker-dialog.js"
+import "../dw-date-picker.js";
+import "../dw-month-year-grid.js";
+
+import { ThemeStyle } from "@dreamworld/material-styles/theme.js";
 
 export class DwDateInputDemo extends LitElement {
+  static get styles() {
+    return [
+      ThemeStyle,
+      css`
+        dw-month-year-grid {
+          max-height: 500px;
+        }
+      `,
+    ];
+  }
 
   static get properties() {
     return {
-      value: { type: String}
-    }
+      value: { type: String },
+      _open: { type: Boolean },
+    };
   }
 
   constructor() {
@@ -20,12 +34,30 @@ export class DwDateInputDemo extends LitElement {
 
   render() {
     return html`
+      <h4>Required</h4>
+      <dw-date-input
+        label="Start date"
+        placeholder="Enter date here"
+        required
+        errorMessage="Required"
+        value=${this.value}
+        @change=${this._onValueChange}
+      ></dw-date-input>
 
       <h4>Required</h4>
-      <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required" value=${this.value} @change=${this._onValueChange}></dw-date-input>
+      <dw-date-input
+        label="Start date"
+        placeholder="Enter date here"
 
-      <h4>Required</h4>
-      <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning ></dw-date-input>
+      ></dw-date-input>
+
+      <br />
+      <button id="openDialog" @click=${this._onOpenDialog}>Open Dialog</button>
+      ${this._renderDialog()}
+      <!-- <dw-date-picker @date-updated=${(e) =>
+        console.log("date-updated", e)}></dw-date-picker> -->
+      <!-- <dw-month-year-grid @value-changed=${this._onMonthSelect}></dw-month-year-grid> -->
+      <dw-month-year-grid @value-changed=${this._onMonthSelect}></dw-month-year-grid>
 
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
@@ -64,17 +96,47 @@ export class DwDateInputDemo extends LitElement {
           <dw-date-input id="to" label="End date"></dw-date-input>
         </div>
       </dw-date-range-selection> -->
-    `
+    `;
   }
 
-  _onenDialog(e) {
-    let dialogEl = this.renderRoot.querySelector('date-picker-dialog');
-    dialogEl.open(e.target);
+  get _getTriggerElement() {
+    return this.renderRoot.querySelector("#openDialog");
+  }
+
+  _renderDialog() {
+    if (!this._open) {
+      return nothing;
+    }
+
+    import("../dw-date-picker-dialog.js");
+    return html`<dw-date-picker-dialog
+      .value=${this.value}
+      .triggerElement=${this._getTriggerElement}
+      @dw-dialog-closed=${this._onDialogClose}
+      @change=${this._onDateChange}
+    ></dw-date-picker-dialog>`;
+  }
+
+  _onOpenDialog() {
+    this._open = true;
+  }
+
+  _onDialogClose() {
+    this._open = false;
   }
 
   _onValueChange(e) {
-    console.log(e);
+    console.log("_onValueChange", e);
     this.value = e.detail.value;
+  }
+
+  _onDateChange(e) {
+    console.log("_onDateChange", e);
+    this.value = e.detail;
+  }
+
+  _onMonthSelect(e) {
+    console.log(e);
   }
 }
 

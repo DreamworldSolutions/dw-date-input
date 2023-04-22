@@ -23,11 +23,17 @@
   "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
   "dependencies": {
     "@dreamworld/device-info": "^1.2.1",
-    "@dreamworld/dw-dialog": "^5.4.0",
+    "@dreamworld/dw-dialog": "^5.5.0",
     "@dreamworld/dw-form": "^4.0.0",
+    "@dreamworld/dw-icon-button": "^3.1.0",
     "@dreamworld/dw-input": "^3.0.0",
+    "@dreamworld/dw-surface": "^2.0.1",
+    "@dreamworld/material-styles": "^3.2.2",
     "@dreamworld/pwa-helpers": "^1.13.1",
+    "@lit-labs/virtualizer": "^1.0.1",
+    "@material/mwc-button": "^0.27.0",
     "@vaadin/vaadin-date-picker": "^4.0.3",
+    "app-datepicker": "^6.0.0-rc.32",
     "moment": "^2.24.0"
   },
   "devDependencies": {
@@ -38,7 +44,8 @@
     "access": "public"
   },
   "resolutions": {
-    "tslib": "2.1.0"
+    "tslib": "2.1.0",
+    "@dreamworld/dw-icon-button": "^3.1.0"
   },
   "release": {
     "branches": [
