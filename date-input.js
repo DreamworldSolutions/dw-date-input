@@ -8,12 +8,29 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { css } from "@dreamworld/pwa-helpers/lit.js";
+import { css, html, nothing } from "@dreamworld/pwa-helpers/lit.js";
 import { DwInput } from "@dreamworld/dw-input/dw-input";
 import moment from "moment/src/moment";
 import { dateParse } from "./date-parse";
+import DeviceInfo from "@dreamworld/device-info";
+import { dateFormat } from "./utils";
+
+const KeyCode = {
+  ENTER: 13,
+};
 
 export class DateInput extends DwInput {
+  static get styles() {
+    return [
+      ...DwInput.styles,
+      css`
+        .mdc-text-field__icon:not([tabindex]),
+        .mdc-text-field__icon[tabindex="-1"] {
+          pointer-events: auto;
+        }
+      `,
+    ];
+  }
   static get properties() {
     return {
       /**
@@ -43,6 +60,16 @@ export class DateInput extends DwInput {
        * Date separator. Possible value: `/` or  `-`
        */
       _separator: { type: String },
+
+      /**
+       * Whether date picker dialog is opened or not
+       */
+      _datePickerOpened: { type: Boolean },
+
+      /**
+       * Whether device has virtual Kayboard or not
+       */
+      _virtualKeyboard: { type: Boolean },
     };
   }
 
@@ -55,9 +82,14 @@ export class DateInput extends DwInput {
     this.inputFormat = "dd/mm/yyyy";
     this._separator = "/";
     this.showFutureWarning = false;
+    this._datePickerOpened = false;
+    this._virtualKeyboard = DeviceInfo.info().vkb;
+
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
     this.addEventListener("blur", this._onBlur);
+    this.addEventListener("click", this._onClick);
+    this.addEventListener("keydown", this._onKeyDownEvent);
   }
 
   set value(val) {
@@ -74,6 +106,53 @@ export class DateInput extends DwInput {
 
   get value() {
     return this._value;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.readOnly = this._virtualKeyboard;
+  }
+
+  render() {
+    return html`${super.render()}${this._datePickerTemplate}`;
+  }
+
+  get _getSuffixTemplate() {
+    return html`<dw-icon-button
+      class="mdc-text-field__icon"
+      icon="${this.iconTrailing}"
+      .iconSize=${this.iconSize}
+      .buttonSize=${this.iconButtonSize}
+      ?disabled="${this.disabled}"
+      tabindex="-1"
+      @click=${this._onDateIconClick}
+    ></dw-icon-button>`;
+  }
+
+  get _datePickerTemplate() {
+    if (!this._datePickerOpened) {
+      return nothing;
+    }
+
+    import("./dw-date-picker-dialog.js");
+    return html`<dw-date-picker-dialog
+      .opened=${true}
+      .triggerElement=${this}
+      .value=${this._getDialogDateFormat(this.value)}
+      .min=${this.minDate}
+      .max=${this.maxDate}
+      .inputFormat=${this.inputFormat}
+      .separator=${this._separator}
+      @change=${this._onDateChange}
+      @dw-dialog-closed=${this._onDatePickerDialogClosed}
+    ></dw-date-picker-dialog>`;
+  }
+
+  _getDialogDateFormat(value) {
+    if (!value) {
+      return "";
+    }
+    return moment(value, this.inputFormat.toUpperCase()).format(dateFormat);
   }
 
   firstUpdated(changedProps) {
@@ -143,7 +222,7 @@ export class DateInput extends DwInput {
       return moment(value).isSameOrAfter(minDate);
     }
 
-    if(this.showFutureWarning) {
+    if (this.showFutureWarning) {
       return moment(value).isSameOrBefore(moment());
     }
 
@@ -174,8 +253,37 @@ export class DateInput extends DwInput {
     this.value = this.parseValue(value);
     this._updateTextfieldValue();
     this.validate();
-    
+
     this.dispatchEvent(new CustomEvent("change"));
+  }
+
+  _onClick(e) {
+    if (!this._virtualKeyboard) {
+      return;
+    }
+
+    this._datePickerOpened = true;
+  }
+
+  _onDateChange(e) {
+    let value = e.target.value;
+    this.value = this.parseValue(value);
+    this._updateTextfieldValue();
+    this.validate();
+  }
+
+  _onDatePickerDialogClosed(e) {
+    this._datePickerOpened = false;
+  }
+
+  _onKeyDownEvent(e) {
+    if (e.keyCode === KeyCode.ENTER) {
+      this._datePickerOpened = !this._datePickerOpened;
+    }
+  }
+
+  _onDateIconClick(e) {
+    this._datePickerOpened = true;
   }
 }
 
