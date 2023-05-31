@@ -24,7 +24,10 @@ export class DwDateInputDemo extends LitElement {
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required" value=${this.value} @change=${this._onValueChange} .originalValue="${this.value}" highlightChanged></dw-date-input>
 
       <h4>Required</h4>
-      <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning ></dw-date-input>
+      <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning errorMessage="Required" required errorInTooltip @action=${(e) => console.log(e.detail)} .tooltipActions=${[
+          { name: "UPDATE", label: "Update" },
+          { name: "CLEAR", label: "Clear", danger: true },
+        ]} ></dw-date-input>
 
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
