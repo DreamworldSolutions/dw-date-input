@@ -156,6 +156,24 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Note: Error has high priority so when error message is displayed, this warning will not be displayed
        */
       showFutureWarning: { type: Boolean, reflect: true },
+
+      /**
+       * Whether to show error in tooltip
+       * tip trigger on hover of error icon button at trail.
+       */
+      errorInTooltip: { type: Boolean },
+
+      /**
+       * Whether to show warning in tooltip
+       * tip trigger on hover of error icon button at trail.
+       */
+      warningInTooltip: { type: Boolean },
+
+      /**
+       * Tooltip actions
+       * Actions are show right aligned
+       */
+      tooltipActions: { type: Array },
     };
   }
 
@@ -183,6 +201,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .maxDate="${this.maxDate}"
         .showFutureWarning="${this.showFutureWarning}"
         .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
+        .warningText=${this.warningText}
+        .errorInTooltip=${this.errorInTooltip}
+        .warningInTooltip="${this.warningInTooltip}"
+        .tooltipActions="${this.tooltipActions}"
+        @action=${this._onAction}
         @change=${this._onChange}
       ></date-input>
     `;
@@ -294,6 +317,10 @@ export class DwDateInput extends DwFormElement(LitElement) {
     }
 
     this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
+  }
+
+  _onAction(e) {
+    this.dispatchEvent(new CustomEvent('action', { detail: e.detail}))
   }
 }
 
