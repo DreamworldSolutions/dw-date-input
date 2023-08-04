@@ -40,6 +40,12 @@ export class DateInput extends DwInput {
       showFutureWarning: { type: Boolean, reflect: true },
 
       /**
+       * Input property.
+       * Set `true` to show error message when user select future date.
+       */
+      showFutureError: { type: Boolean, reflect: true },
+
+      /**
        * Date separator. Possible value: `/` or  `-`
        */
       _separator: { type: String },
@@ -54,6 +60,7 @@ export class DateInput extends DwInput {
     this.validator = this._customValidator;
     this.inputFormat = "dd/mm/yyyy";
     this._separator = "/";
+    this.showFutureError = false;
     this.showFutureWarning = false;
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
@@ -143,7 +150,16 @@ export class DateInput extends DwInput {
       return moment(value).isSameOrAfter(minDate);
     }
 
-    if(this.showFutureWarning) {
+    if (this.showFutureWarning) {
+      
+      if (!moment(value).isSameOrBefore(moment())) {
+        this.warningText = "Future date is not allowed.";
+      } else {
+        this.warningText = "";
+      }
+    }
+
+    if (this.showFutureError) {
       return moment(value).isSameOrBefore(moment());
     }
 
@@ -174,7 +190,7 @@ export class DateInput extends DwInput {
     this.value = this.parseValue(value);
     this._updateTextfieldValue();
     this.validate();
-    
+
     this.dispatchEvent(new CustomEvent("change"));
   }
 }
