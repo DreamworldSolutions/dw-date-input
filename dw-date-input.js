@@ -10,7 +10,7 @@ const errorMessagesByStateMap = {
   MAX_DATE: "Date must be < {maxDate}",
   MIN_MAX_DATE: "Date must be between {minDate} and {maxDate}",
   INVALID_DATE: "Date is invalid",
-  SHOW_FUTURE_WARNING: "Future date is not allowed.",
+  SHOW_FUTURE_ERROR: "Future date is not allowed.",
 };
 
 export class DwDateInput extends DwFormElement(LitElement) {
@@ -152,10 +152,21 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
       /**
        * Input property.
+       * Set `true` to show error message when user selects future date.
+       */
+      showFutureError: { type: Boolean, reflect: true },
+
+      /**
+       * Input property.
        * Set `true` to enable warning when user enters future date.
        * Note: Error has high priority so when error message is displayed, this warning will not be displayed
        */
       showFutureWarning: { type: Boolean, reflect: true },
+
+      /**
+       * Text to show the warning message.
+       */
+      warningText: { type: String },
     };
   }
 
@@ -181,9 +192,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .hint="${this.hint}"
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
-        .showFutureWarning="${this.showFutureWarning}"
+        .showFutureWarning=${this.showFutureWarning}
+        .showFutureError=${this.showFutureError}
+        .warningText=${this.warningText}
         .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
         @change=${this._onChange}
+        @blur=${this._onBlur}
       ></date-input>
     `;
   }
@@ -207,6 +221,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.valueFormat = "yyyy-mm-dd";
     this.highlightChanged = false;
     this.errorMessagesByState = errorMessagesByStateMap;
+    this.showFutureError = false;
     this.showFutureWarning = false;
   }
 
@@ -238,8 +253,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
       return errorMessage["INVALID_DATE"];
     }
 
-    if (this.showFutureWarning) {
-      errorText = errorMessage["SHOW_FUTURE_WARNING"];
+    if (this.showFutureError) {
+      errorText = errorMessage["SHOW_FUTURE_ERROR"];
       return errorText;
     }
 
@@ -294,6 +309,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
     }
 
     this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
+  }
+
+  _onBlur(e) {
+    let value = e.target.value;
+    value = value ? moment(value).format("YYYY-MM-DD"): ``;
+    this.value = value;
   }
 }
 
