@@ -153,7 +153,7 @@ export class DateInput extends DwInput {
     if (this.showFutureWarning) {
       
       if (!moment(value).isSameOrBefore(moment())) {
-        this.warningText = "Future date is not allowed.";
+        this.warningText = "Future date is selected";
       } else {
         this.warningText = "";
       }
