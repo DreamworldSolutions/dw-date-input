@@ -49,6 +49,11 @@ export class DateInput extends DwInput {
        * Date separator. Possible value: `/` or  `-`
        */
       _separator: { type: String },
+
+      /**
+       * When `true`, sets today date when no value provided.
+       */
+      showTodayAsDefaultDate: { type: Boolean },
     };
   }
 
@@ -67,20 +72,12 @@ export class DateInput extends DwInput {
     this.addEventListener("blur", this._onBlur);
   }
 
-  set value(val) {
-    let oldValue = this._value;
-
-    if (oldValue === val) {
-      return;
+  willUpdate(changedProperties) {
+    super.willUpdate(changedProperties);
+    if (changedProperties.has("value")) {
+      let value = this.value;
+      this._value = this.parseValue(this.value);
     }
-
-    this._value = this.parseValue(val);
-
-    this.requestUpdate("value", oldValue);
-  }
-
-  get value() {
-    return this._value;
   }
 
   firstUpdated(changedProps) {
@@ -104,8 +101,9 @@ export class DateInput extends DwInput {
 
   parseValue(value) {
     if (!value) {
-      return "";
+      return this.showTodayAsDefaultDate ? moment().format(this.inputFormat.toUpperCase()) : "";
     }
+
     return dateParse(value, this.inputFormat, this._separator);
   }
 
@@ -151,9 +149,8 @@ export class DateInput extends DwInput {
     }
 
     if (this.showFutureWarning) {
-      
       if (!moment(value).isSameOrBefore(moment())) {
-        this.warningText = "Future date is selected";
+        this.warningText = "Future date is not allowed.";
       } else {
         this.warningText = "";
       }

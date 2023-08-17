@@ -40,7 +40,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
       /**
        * Current input value entered by user
        */
-      value: { type: String },
+      _value: { type: String },
+
+      /**
+       * Current input value entered by user
+       */
+      date: { type: String },
 
       /**
        * The label for this element.
@@ -167,6 +172,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Text to show the warning message.
        */
       warningText: { type: String },
+
+      /**
+       * When `true`, sets today date when no value provided.
+       */
+      showTodayAsDefaultDate: {
+        type: Boolean,
+      },
     };
   }
 
@@ -187,7 +199,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
         ?highlightChanged="${this.highlightChanged}"
         .originalValue="${this.originalValue}"
         ?noHintWrap="${this.noHintWrap}"
-        .value="${this.value}"
+        .value=${this._value
+          ? this._value
+          : this.showTodayAsDefaultDate
+          ? moment().format(this.valueFormat.toUpperCase())
+          : ""}
+        .showTodayAsDefaultDate=${this.showTodayAsDefaultDate}
         .name="${this.name}"
         .hint="${this.hint}"
         .minDate="${this.minDate}"
@@ -195,8 +212,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .showFutureWarning=${this.showFutureWarning}
         .showFutureError=${this.showFutureError}
         .warningText=${this.warningText}
-        .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
-        @change=${this._onChange}
+        .errorMessage=${this._getErrorMessage(this._value, this.errorMessagesByState)}
         @blur=${this._onBlur}
       ></date-input>
     `;
@@ -209,7 +225,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.required = false;
     this.readOnly = false;
     this.placeholder = "";
-    this.value = "";
+    this._value = "";
     this.originalValue = "";
     this.dense = false;
     this.name = "";
@@ -223,6 +239,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.errorMessagesByState = errorMessagesByStateMap;
     this.showFutureError = false;
     this.showFutureWarning = false;
+  }
+
+  willUpdate(changedProperties) {
+    super.willUpdate(changedProperties);
+    if (changedProperties.has("date") && this.date) {
+      this._value = moment(this.date).format(this.inputFormat.toUpperCase());
+    }
   }
 
   set errorMessagesByState(value) {
@@ -276,45 +299,14 @@ export class DwDateInput extends DwFormElement(LitElement) {
     }
   }
 
-  /**
-   * Sets selected date as input's value
-   */
-  _onSelectedDateChanged(e) {
-    if (!e.detail.value) {
-      return;
-    }
-
-    let selectedDate = moment(e.detail.value, "YYYY-MM-DD").format(this.inputFormat.toUpperCase());
-    this.value = selectedDate;
-
-    setTimeout(() => {
-      this.layout();
-    });
-  }
-
-  _getSelectedDate(value) {
-    if (value) {
-      value = value.replace(/ /g, "");
-      return moment(value, this.inputFormat.toUpperCase()).format("YYYY-MM-DD");
-    }
-  }
-
-  _onChange(e) {
-    let dateInputed = e.target.value;
-    dateInputed = moment(dateInputed, this.inputFormat.toUpperCase());
-    let date = "";
-    if (dateInputed.isValid()) {
-      dateInputed = dateInputed.toDate();
-      date = moment(dateInputed).format(this.valueFormat.toUpperCase());
-    }
-
-    this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
-  }
-
   _onBlur(e) {
-    let value = e.target.value;
-    value = value ? moment(value).format("YYYY-MM-DD"): ``;
-    this.value = value;
+    const value = e.target.value;
+    this.date = value
+      ? moment(value, this.inputFormat.toUpperCase()).format(this.valueFormat.toUpperCase())
+      : this.showTodayAsDefaultDate
+      ? moment().format(this.valueFormat.toUpperCase())
+      : ``;
+    this.dispatchEvent(new CustomEvent("date-changed", { detail: { value: this.date } }));
   }
 }
 
