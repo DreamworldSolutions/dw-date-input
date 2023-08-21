@@ -316,6 +316,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
     value = value ? moment(value).format("YYYY-MM-DD"): ``;
     this.value = value;
   }
+
+  /* Call this to perform validation of the date input */
+  validate() {
+    let isValid = this.renderRoot.querySelector("#dateInput").validate();
+    return isValid;
+  }
 }
 
 if (isElementAlreadyRegistered("dw-date-input")) {
