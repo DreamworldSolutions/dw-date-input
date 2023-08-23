@@ -319,8 +319,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   /* Call this to perform validation of the date input */
   validate() {
-    let isValid = this.renderRoot.querySelector("#dateInput").validate();
-    return isValid;
+    return this.renderRoot.querySelector("#dateInput")?.validate();
   }
 }
 
