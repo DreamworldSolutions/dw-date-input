@@ -236,6 +236,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
     return this._errorMessagesByState;
   }
 
+  async focus() {
+    await this.updateComplete;
+    const el = this.renderRoot.querySelector('date-input');
+    el && el.focus();
+  }
+
   /**
    * @param {String} value - Current entered date
    * @param {Object} errorMessage - ErrorMessage map by possible error state
