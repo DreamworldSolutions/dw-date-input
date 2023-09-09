@@ -177,6 +177,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .inputFormat="${this.inputFormat}"
         .label="${this.label}"
         ?disabled="${this.disabled}"
+        .invalid=${this.invalid}
         ?noLabel="${this.noLabel}"
         ?required="${this.required}"
         ?readOnly="${this.readOnly}"
@@ -187,7 +188,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         ?highlightChanged="${this.highlightChanged}"
         .originalValue="${this.originalValue}"
         ?noHintWrap="${this.noHintWrap}"
-        .value="${this.value}"
+        .date="${this.value}"
         .name="${this.name}"
         .hint="${this.hint}"
         .minDate="${this.minDate}"
@@ -195,7 +196,10 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .showFutureWarning=${this.showFutureWarning}
         .showFutureError=${this.showFutureError}
         .warningText=${this.warningText}
-        .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
+        .errorMessage=${this._getErrorMessage(
+          this.value,
+          this.errorMessagesByState
+        )}
         @change=${this._onChange}
         @blur=${this._onBlur}
       ></date-input>
@@ -238,7 +242,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   async focus() {
     await this.updateComplete;
-    const el = this.renderRoot.querySelector('date-input');
+    const el = this.renderRoot.querySelector("date-input");
     el && el.focus();
   }
 
@@ -282,36 +286,16 @@ export class DwDateInput extends DwFormElement(LitElement) {
     }
   }
 
-  /**
-   * Sets selected date as input's value
-   */
-  _onSelectedDateChanged(e) {
-    if (!e.detail.value) {
-      return;
-    }
-
-    let selectedDate = moment(e.detail.value, "YYYY-MM-DD").format(this.inputFormat.toUpperCase());
-    this.value = selectedDate;
-
-    setTimeout(() => {
-      this.layout();
-    });
-  }
-
-  _getSelectedDate(value) {
-    if (value) {
-      value = value.replace(/ /g, "");
-      return moment(value, this.inputFormat.toUpperCase()).format("YYYY-MM-DD");
-    }
-  }
-
   _onChange(e) {
     let dateInputed = e.target.value;
-    dateInputed = moment(dateInputed, this.inputFormat.toUpperCase());
+    const inputFormat = this.inputFormat.toUpperCase();
+    dateInputed = moment(dateInputed, inputFormat);
     let date = "";
     if (dateInputed.isValid()) {
       dateInputed = dateInputed.toDate();
-      date = moment(dateInputed).format(this.valueFormat.toUpperCase());
+      date = moment(dateInputed, inputFormat).format(
+        this.valueFormat.toUpperCase()
+      );
     }
 
     this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
@@ -319,7 +303,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   _onBlur(e) {
     let value = e.target.value;
-    value = value ? moment(value).format("YYYY-MM-DD"): ``;
+    const inputFormat = this.inputFormat.toUpperCase();
+    value = value ? moment(value, inputFormat).format("YYYY-MM-DD") : ``;
     this.value = value;
   }
 
@@ -330,7 +315,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
 }
 
 if (isElementAlreadyRegistered("dw-date-input")) {
-  console.warn("lit: 'dw-date-input' is already registered, so registration skipped.");
+  console.warn(
+    "lit: 'dw-date-input' is already registered, so registration skipped."
+  );
 } else {
   window.customElements.define("dw-date-input", DwDateInput);
 }
