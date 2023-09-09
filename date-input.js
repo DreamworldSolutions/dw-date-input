@@ -16,6 +16,9 @@ import { dateParse } from "./date-parse";
 export class DateInput extends DwInput {
   static get properties() {
     return {
+
+      date: { type: String },
+
       /**
        * Prefered date input format
        * It should be `dd/mm/yyyy` or `mm/dd/yyyy` or `dd-mm-yyyy` or `mm-dd-yyyy`
@@ -58,7 +61,7 @@ export class DateInput extends DwInput {
     this.allowedPattern = "^[a-zA-Z0-9-/,_ ]*$";
     this.clickableIcon = false; // Set true when date picker support added
     this.validator = this._customValidator;
-    this.inputFormat = "dd/mm/yyyy";
+    this.inputFormat = "DD/MM/YYYY";
     this._separator = "/";
     this.showFutureError = false;
     this.showFutureWarning = false;
@@ -67,31 +70,18 @@ export class DateInput extends DwInput {
     this.addEventListener("blur", this._onBlur);
   }
 
-  set value(val) {
-    let oldValue = this._value;
-
-    if (oldValue === val) {
-      return;
-    }
-
-    this._value = this.parseValue(val);
-
-    this.requestUpdate("value", oldValue);
-  }
-
-  get value() {
-    return this._value;
-  }
-
   firstUpdated(changedProps) {
     super.firstUpdated && super.firstUpdated(changedProps);
 
     if (changedProps.has("inputFormat")) {
       this._separator = this.inputFormat.slice(2, 3);
     }
+  }
 
-    if (this.value) {
-      this.value = this.parseValue(this.value);
+  willUpdate(changedProps){
+    super.willUpdate(changedProps);
+    if(changedProps.has('date')){
+      this.value = this.parseValue(moment(this.date, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase()));
     }
   }
 
@@ -115,44 +105,44 @@ export class DateInput extends DwInput {
    * @returns {Boolean} returns false if it's invalid
    */
   _customValidator(value) {
-    if (!value) {
+    value = value ? value.replace(/ /g, "") : '';
+
+    if (!value && this.required) {
+      return false;
+    }
+
+    if(!value){
       return true;
     }
 
-    value = value.replace(/ /g, "");
-
-    if (!value && !this.required) {
-      return true;
-    }
-
-    let inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "MM/DD/YYYY";
+    const inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "DD/MM/YYYY";
 
     if (!moment(value, inputFormat, true).isValid()) {
       return false;
     }
 
-    value = moment(value, inputFormat).format("MM/DD/YYYY");
-    let minDate = moment(this.minDate, inputFormat).format("MM/DD/YYYY");
-    let maxDate = moment(this.maxDate, inputFormat).format("MM/DD/YYYY");
+    value = moment(value, inputFormat).format(inputFormat);
 
     if (this.maxDate && this.minDate) {
-      let isInputGreater = moment(value).isAfter(maxDate);
-      let isInputLower = moment(value).isBefore(minDate);
+      const minDate = moment(this.minDate, 'YYYY-MM-DD').format(inputFormat);
+      const maxDate = moment(this.maxDate, 'YYYY-MM-DD').format(inputFormat);
 
-      return !(isInputLower || isInputGreater);
+      return value <= maxDate && value >= minDate;
     }
 
     if (this.maxDate) {
-      return moment(value).isSameOrBefore(maxDate);
+      const maxDate = moment(this.maxDate, 'YYYY-MM-DD').format(inputFormat);
+      return value <= maxDate;
     }
 
     if (this.minDate) {
-      return moment(value).isSameOrAfter(minDate);
+      const minDate = moment(this.minDate, 'YYYY-MM-DD').format(inputFormat);
+      return value >= minDate;
     }
 
     if (this.showFutureWarning) {
-      
-      if (!moment(value).isSameOrBefore(moment())) {
+      const todayDate = moment().format(inputFormat);
+      if (value > todayDate) {
         this.warningText = "Future date is selected";
       } else {
         this.warningText = "";
@@ -160,7 +150,8 @@ export class DateInput extends DwInput {
     }
 
     if (this.showFutureError) {
-      return moment(value).isSameOrBefore(moment());
+      const todayDate = moment().format(inputFormat);
+      return value <= todayDate;
     }
 
     return true;
