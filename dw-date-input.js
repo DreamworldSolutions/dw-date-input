@@ -167,6 +167,29 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Text to show the warning message.
        */
       warningText: { type: String },
+
+      /**
+       * Code to determine which warning message will be show
+       */
+      warningCode: { type: String },
+
+      /**
+       * Sets of messages.
+       */
+      warningMessages: { type: Object },
+
+      /**
+       * Custom validator for warning message
+       *
+       * ### Usage
+       * ```
+       * (value) => warningCode
+       * ```
+       *
+       * Params value: currently selected value
+       * Returns warning code that helps to show warning message
+       */
+      customWarningValidator: { type: Function },
     };
   }
 
@@ -196,10 +219,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .showFutureWarning=${this.showFutureWarning}
         .showFutureError=${this.showFutureError}
         .warningText=${this.warningText}
-        .errorMessage=${this._getErrorMessage(
-          this.value,
-          this.errorMessagesByState
-        )}
+        .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
         @change=${this._onChange}
         @blur=${this._onBlur}
       ></date-input>
@@ -293,9 +313,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     let date = "";
     if (dateInputed.isValid()) {
       dateInputed = dateInputed.toDate();
-      date = moment(dateInputed, inputFormat).format(
-        this.valueFormat.toUpperCase()
-      );
+      date = moment(dateInputed, inputFormat).format(this.valueFormat.toUpperCase());
     }
 
     this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
@@ -306,18 +324,38 @@ export class DwDateInput extends DwFormElement(LitElement) {
     const inputFormat = this.inputFormat.toUpperCase();
     value = value ? moment(value, inputFormat).format("YYYY-MM-DD") : ``;
     this.value = value;
+    this.validate();
   }
 
   /* Call this to perform validation of the date input */
   validate() {
-    return this.renderRoot.querySelector("#dateInput")?.validate();
+    const el = this.renderRoot.querySelector("#dateInput");
+    const isValid = el?.validate();
+    const inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "DD/MM/YYYY";
+    let value = el?.value;
+    value = value ? value.replace(/ /g, "") : '';
+    
+    if (isValid) {
+      if (this.showFutureWarning) {
+        const todayDate = moment({}).format('YYYY-MM-DD');
+        if (moment(value, inputFormat).isAfter(todayDate, inputFormat)) {
+          this.warningText = "Future date is selected";
+          return;
+        } else {
+          this.warningText = "";
+        }
+      }
+
+      const warningCode = this.customWarningValidator(this.value);
+      this.warningText = this.warningMessages[warningCode];
+    }
+
+    return isValid;
   }
 }
 
 if (isElementAlreadyRegistered("dw-date-input")) {
-  console.warn(
-    "lit: 'dw-date-input' is already registered, so registration skipped."
-  );
+  console.warn("lit: 'dw-date-input' is already registered, so registration skipped.");
 } else {
   window.customElements.define("dw-date-input", DwDateInput);
 }

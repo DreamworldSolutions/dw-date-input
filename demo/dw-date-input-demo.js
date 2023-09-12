@@ -3,13 +3,13 @@ import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
 import "../dw-date-input.js";
 import "../dw-date-range-selection.js";
 import "../date-input.js";
+import moment from "moment/src/moment";
 
 export class DwDateInputDemo extends LitElement {
-
   static get properties() {
     return {
-      value: { type: String}
-    }
+      value: { type: String },
+    };
   }
 
   constructor() {
@@ -17,14 +17,39 @@ export class DwDateInputDemo extends LitElement {
     this.value = "2022-04-25";
   }
 
+  get _getWarningMessages() {
+    return {
+      'LOCKED': 'Transaction is Locked'
+    }
+  }
+
+  _setCustomWarningValidator(value) {
+    const lockTxnDate = '2023-09-10';
+    if (moment(value).isBefore(lockTxnDate)) {
+      return "LOCKED"
+    }
+  }
+
   render() {
     return html`
+      <h4>Required</h4>
+      <dw-date-input
+        label="Start date"
+        placeholder="Enter date here"
+        required
+        errorMessage="Required"
+        value=${this.value}
+        @change=${this._onValueChange}
+      ></dw-date-input>
 
       <h4>Required</h4>
-      <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required" value=${this.value} @change=${this._onValueChange}></dw-date-input>
-
-      <h4>Required</h4>
-      <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning ></dw-date-input>
+      <dw-date-input
+        label="Start date"
+        placeholder="Enter date here"
+        showFutureWarning
+        .warningMessages="${this._getWarningMessages}",
+        .customWarningValidator="${this._setCustomWarningValidator}"
+      ></dw-date-input>
 
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
@@ -63,7 +88,7 @@ export class DwDateInputDemo extends LitElement {
           <dw-date-input id="to" label="End date"></dw-date-input>
         </div>
       </dw-date-range-selection> -->
-    `
+    `;
   }
 
   _onValueChange(e) {

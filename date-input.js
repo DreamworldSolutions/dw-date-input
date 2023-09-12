@@ -140,15 +140,6 @@ export class DateInput extends DwInput {
       return value >= minDate;
     }
 
-    if (this.showFutureWarning) {
-      const todayDate = moment().format(inputFormat);
-      if (value > todayDate) {
-        this.warningText = "Future date is selected";
-      } else {
-        this.warningText = "";
-      }
-    }
-
     if (this.showFutureError) {
       const todayDate = moment().format(inputFormat);
       return value <= todayDate;
