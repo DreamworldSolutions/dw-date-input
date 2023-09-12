@@ -16,7 +16,6 @@ import { dateParse } from "./date-parse";
 export class DateInput extends DwInput {
   static get properties() {
     return {
-
       date: { type: String },
 
       /**
@@ -52,6 +51,18 @@ export class DateInput extends DwInput {
        * Date separator. Possible value: `/` or  `-`
        */
       _separator: { type: String },
+
+      /**
+       * Custom validator for error message
+       *
+       * ### Usage
+       * ```
+       * (value) => boolean
+       * ```
+       * Params value: currently selected value
+       * Returns invalid that helps to show error message or invalid state
+       */
+      customErrorValidator: { type: Function },
     };
   }
 
@@ -78,10 +89,12 @@ export class DateInput extends DwInput {
     }
   }
 
-  willUpdate(changedProps){
+  willUpdate(changedProps) {
     super.willUpdate(changedProps);
-    if(changedProps.has('date')){
-      this.value = this.parseValue(moment(this.date, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase()));
+    if (changedProps.has("date")) {
+      this.value = this.parseValue(
+        moment(this.date, "YYYY-MM-DD").format(this.inputFormat.toUpperCase())
+      );
     }
   }
 
@@ -105,13 +118,13 @@ export class DateInput extends DwInput {
    * @returns {Boolean} returns false if it's invalid
    */
   _customValidator(value) {
-    value = value ? value.replace(/ /g, "") : '';
+    value = value ? value.replace(/ /g, "") : "";
 
     if (!value && this.required) {
       return false;
     }
 
-    if(!value){
+    if (!value) {
       return true;
     }
 
@@ -124,25 +137,29 @@ export class DateInput extends DwInput {
     value = moment(value, inputFormat).format(inputFormat);
 
     if (this.maxDate && this.minDate) {
-      const minDate = moment(this.minDate, 'YYYY-MM-DD').format(inputFormat);
-      const maxDate = moment(this.maxDate, 'YYYY-MM-DD').format(inputFormat);
+      const minDate = moment(this.minDate, "YYYY-MM-DD").format(inputFormat);
+      const maxDate = moment(this.maxDate, "YYYY-MM-DD").format(inputFormat);
 
       return value <= maxDate && value >= minDate;
     }
 
     if (this.maxDate) {
-      const maxDate = moment(this.maxDate, 'YYYY-MM-DD').format(inputFormat);
+      const maxDate = moment(this.maxDate, "YYYY-MM-DD").format(inputFormat);
       return value <= maxDate;
     }
 
     if (this.minDate) {
-      const minDate = moment(this.minDate, 'YYYY-MM-DD').format(inputFormat);
+      const minDate = moment(this.minDate, "YYYY-MM-DD").format(inputFormat);
       return value >= minDate;
     }
 
     if (this.showFutureError) {
       const todayDate = moment().format(inputFormat);
       return value <= todayDate;
+    }
+
+    if (this.customErrorValidator) {
+      return this.customErrorValidator(value);
     }
 
     return true;

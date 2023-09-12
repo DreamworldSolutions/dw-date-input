@@ -190,6 +190,18 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Returns warning code that helps to show warning message
        */
       customWarningValidator: { type: Function },
+
+      /**
+       * Custom validator for error message
+       *
+       * ### Usage
+       * ```
+       * (value) => boolean
+       * ```
+       * Params value: currently selected value
+       * Returns invalid that helps to show error message or invalid state
+       */
+      customErrorValidator: { type: Function },
     };
   }
 
@@ -220,6 +232,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .showFutureError=${this.showFutureError}
         .warningText=${this.warningText}
         .errorMessage=${this._getErrorMessage(this.value, this.errorMessagesByState)}
+        .customErrorValidator="${this.customErrorValidator}"
         @change=${this._onChange}
         @blur=${this._onBlur}
       ></date-input>
@@ -325,32 +338,27 @@ export class DwDateInput extends DwFormElement(LitElement) {
     value = value ? moment(value, inputFormat).format("YYYY-MM-DD") : ``;
     this.value = value;
     this.validate();
+    this._computeWarningtext();
   }
 
   /* Call this to perform validation of the date input */
   validate() {
-    const el = this.renderRoot.querySelector("#dateInput");
-    const isValid = el?.validate();
-    const inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "DD/MM/YYYY";
-    let value = el?.value;
-    value = value ? value.replace(/ /g, "") : '';
-    
-    if (isValid) {
-      if (this.showFutureWarning) {
-        const todayDate = moment({}).format('YYYY-MM-DD');
-        if (moment(value, inputFormat).isAfter(todayDate, inputFormat)) {
-          this.warningText = "Future date is selected";
-          return;
-        } else {
-          this.warningText = "";
-        }
-      }
+    return this.renderRoot.querySelector("#dateInput")?.validate();
+  }
 
-      const warningCode = this.customWarningValidator(this.value);
-      this.warningText = this.warningMessages[warningCode];
+  _computeWarningtext() {
+    if (this.showFutureWarning) {
+      const todayDate = moment({}).format("YYYY-MM-DD");
+      if (moment(this.value).isAfter(todayDate)) {
+        this.warningText = "Future date is selected";
+        return;
+      } else {
+        this.warningText = "";
+      }
     }
 
-    return isValid;
+    const warningCode = this.customWarningValidator && this.customWarningValidator(this.value);
+    this.warningText = this.warningMessages && this.warningMessages[warningCode];
   }
 }
 
