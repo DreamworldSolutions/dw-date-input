@@ -169,11 +169,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
       warningText: { type: String },
 
       /**
-       * Code to determine which warning message will be show
-       */
-      warningCode: { type: String },
-
-      /**
        * Sets of messages.
        */
       warningMessages: { type: Object },
