@@ -182,7 +182,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * ```
        *
        * Params value: currently selected value
-       * Returns warning code that helps to show warning message
+       * Returns warning code that helps show the warning message
        */
       customWarningValidator: { type: Function },
 
@@ -194,7 +194,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * (value) => boolean
        * ```
        * Params value: currently selected value
-       * Returns invalid that helps to show error message or invalid state
+       * Returns invalid, that helps to show error message or invalid state
        */
       customErrorValidator: { type: Function },
     };
