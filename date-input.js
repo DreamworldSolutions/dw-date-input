@@ -81,7 +81,7 @@ export class DateInput extends DwInput {
   willUpdate(changedProps){
     super.willUpdate(changedProps);
     if(changedProps.has('date')){
-      this.value = this.parseValue(moment(this.date, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase()));
+      this.value = this.date ? this.parseValue(moment(this.date, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
     }
   }
 
