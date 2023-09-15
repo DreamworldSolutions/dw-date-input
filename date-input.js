@@ -124,15 +124,15 @@ export class DateInput extends DwInput {
     value = moment(value, inputFormat).format('YYYY-MM-DD');
 
     if (this.maxDate && this.minDate) {
-      return value <= maxDate && value >= minDate;
+      return value <= this.maxDate && value >= this.minDate;
     }
 
     if (this.maxDate) {
-      return value <= maxDate;
+      return value <= this.maxDate;
     }
 
     if (this.minDate) {
-      return value >= minDate;
+      return value >= this.minDate;
     }
 
     if (this.showFutureWarning) {
