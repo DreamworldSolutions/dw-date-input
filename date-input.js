@@ -121,27 +121,22 @@ export class DateInput extends DwInput {
       return false;
     }
 
-    value = moment(value, inputFormat).format(inputFormat);
+    value = moment(value, inputFormat).format('YYYY-MM-DD');
 
     if (this.maxDate && this.minDate) {
-      const minDate = moment(this.minDate, 'YYYY-MM-DD').format(inputFormat);
-      const maxDate = moment(this.maxDate, 'YYYY-MM-DD').format(inputFormat);
-
       return value <= maxDate && value >= minDate;
     }
 
     if (this.maxDate) {
-      const maxDate = moment(this.maxDate, 'YYYY-MM-DD').format(inputFormat);
       return value <= maxDate;
     }
 
     if (this.minDate) {
-      const minDate = moment(this.minDate, 'YYYY-MM-DD').format(inputFormat);
       return value >= minDate;
     }
 
     if (this.showFutureWarning) {
-      const todayDate = moment().format(inputFormat);
+      const todayDate = moment().format('YYYY-MM-DD');
       if (value > todayDate) {
         this.warningText = "Future date is selected";
       } else {
@@ -150,7 +145,7 @@ export class DateInput extends DwInput {
     }
 
     if (this.showFutureError) {
-      const todayDate = moment().format(inputFormat);
+      const todayDate = moment().format('YYYY-MM-DD');
       return value <= todayDate;
     }
 
