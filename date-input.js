@@ -19,6 +19,8 @@ export class DateInput extends DwInput {
 
       date: { type: String },
 
+      originalDate: { type: String },
+
       /**
        * Prefered date input format
        * It should be `dd/mm/yyyy` or `mm/dd/yyyy` or `dd-mm-yyyy` or `mm-dd-yyyy`
@@ -70,6 +72,12 @@ export class DateInput extends DwInput {
     this.addEventListener("blur", this._onBlur);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.originalValue = this.originalDate ? this.parseValue(moment(this.originalDate, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
+  }
+
   firstUpdated(changedProps) {
     super.firstUpdated && super.firstUpdated(changedProps);
 
@@ -82,6 +90,9 @@ export class DateInput extends DwInput {
     super.willUpdate(changedProps);
     if(changedProps.has('date')){
       this.value = this.date ? this.parseValue(moment(this.date, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
+    }
+    if(changedProps.has('originalDate')){
+      this.originalValue = this.originalDate ? this.parseValue(moment(this.originalDate, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
     }
   }
 

@@ -186,9 +186,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
         ?hintPersistent="${this.hintPersistent}"
         .placeholder="${this.placeholder}"
         ?highlightChanged="${this.highlightChanged}"
-        .originalValue="${this.originalValue}"
         ?noHintWrap="${this.noHintWrap}"
         .date="${this.value}"
+        .originalDate="${this.originalValue}"
         .name="${this.name}"
         .hint="${this.hint}"
         .minDate="${this.minDate}"
@@ -238,6 +238,10 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   get errorMessagesByState() {
     return this._errorMessagesByState;
+  }
+
+  get _computedOriginalValue() {
+
   }
 
   async focus() {
