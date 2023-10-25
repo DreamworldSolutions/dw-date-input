@@ -240,10 +240,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
     return this._errorMessagesByState;
   }
 
-  get _computedOriginalValue() {
-
-  }
-
   async focus() {
     await this.updateComplete;
     const el = this.renderRoot.querySelector("date-input");
