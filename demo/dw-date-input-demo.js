@@ -5,11 +5,10 @@ import "../dw-date-range-selection.js";
 import "../date-input.js";
 
 export class DwDateInputDemo extends LitElement {
-
   static get properties() {
     return {
-      value: { type: String}
-    }
+      value: { type: String },
+    };
   }
 
   constructor() {
@@ -17,17 +16,44 @@ export class DwDateInputDemo extends LitElement {
     this.value = "2022-04-25";
   }
 
+  get _actions() {
+    return [
+      { name: "UPDATE", label: "Update" },
+      { name: "CLEAR", label: "Clear", danger: true },
+    ];
+  }
+
   render() {
     return html`
+      <h4>Required</h4>
+      <dw-date-input
+        label="Start date"
+        placeholder="Enter date here"
+        required
+        errorMessage="Required"
+        value=${this.value}
+        @change=${this._onValueChange}
+        .originalValue="${this.value}"
+        highlightChanged
+        warningText="Warning Text"
+        warningInTooltip
+        .hint="${"Hint"}"
+      ></dw-date-input>
 
       <h4>Required</h4>
-      <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required" value=${this.value} @change=${this._onValueChange} .originalValue="${this.value}" highlightChanged></dw-date-input>
-
-      <h4>Required</h4>
-      <dw-date-input label="Start date" placeholder="Enter date here" showFutureWarning errorMessage="Required" required errorInTooltip @action=${(e) => console.log(e.detail)} .tooltipActions=${[
+      <dw-date-input
+        label="Start date"
+        placeholder="Enter date here"
+        showFutureWarning
+        errorMessage="Required"
+        required
+        errorInTooltip
+        @action=${(e) => console.log(e.detail)}
+        .tooltipActions=${[
           { name: "UPDATE", label: "Update" },
           { name: "CLEAR", label: "Clear", danger: true },
-        ]} ></dw-date-input>
+        ]}
+      ></dw-date-input>
 
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
@@ -66,7 +92,7 @@ export class DwDateInputDemo extends LitElement {
           <dw-date-input id="to" label="End date"></dw-date-input>
         </div>
       </dw-date-range-selection> -->
-    `
+    `;
   }
 
   _onValueChange(e) {
