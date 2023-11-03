@@ -167,6 +167,45 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Text to show the warning message.
        */
       warningText: { type: String },
+
+      /**
+       * Whether to show hint in tooltip
+       * tip trigger on hover of info, warning, and error icon button at trail.
+       */
+      hintInTooltip: {type: Boolean},
+
+      /**
+       * Whether to show error in tooltip
+       * tip trigger on hover of info, warning, and error icon button at trail.
+       */
+      errorInTooltip: { type: Boolean },
+
+      /**
+       * Whether to show warning in tooltip
+       * tip trigger on hover of info, warning, and error icon button at trail.
+       */
+      warningInTooltip: { type: Boolean },
+
+      /**
+       * Tooltip actions for hint text
+       */
+      hintTooltipActions: { type: Array },
+
+      /**
+       * Tooltip actions for error text
+       */
+      errorTooltipActions: { type: Array },
+
+      /**
+       * Tooltip actions for warning text
+       */
+      warningTooltipActions: { type: Array },
+
+      /**
+       * Tooltip placement
+       * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
+       */
+      tipPlacement: { type: String }
     };
   }
 
@@ -200,6 +239,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
           this.value,
           this.errorMessagesByState
         )}
+        .hintInTooltip="${this.hintInTooltip}"
+        .errorInTooltip="${this.errorInTooltip}"
+        .warningInTooltip="${this.warningInTooltip}"
+        .hintTooltipActions="${this.hintTooltipActions}"
+        .errorTooltipActions="${this.errorTooltipActions}"
+        .warningTooltipActions="${this.warningTooltipActions}"
+        .tipPlacement="${this.tipPlacement}"
         @change=${this._onChange}
         @blur=${this._onBlur}
       ></date-input>
