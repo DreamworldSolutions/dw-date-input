@@ -165,7 +165,7 @@ export class DateInput extends DwInput {
     }
 
     const todayDate = moment().format('YYYY-MM-DD');
-    if (this.showFutureError && value <= todayDate) {
+    if (this.showFutureError && value >= todayDate) {
       return this.errorMessages["showFutureError"];
     }
 
