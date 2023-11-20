@@ -131,9 +131,8 @@ export class DateInput extends DwInput {
    * @param {String} value - date entered by value
    * @returns {Boolean} returns false if it's invalid
    */
-  _customError(value) {
-    value = value ? value.replace(/ /g, "") : '';
-
+  _customError() {
+    let value = this.value ? this.value.replace(/ /g, "") : '';
     const inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "DD/MM/YYYY";
     if(!value){
       return '';
@@ -142,24 +141,27 @@ export class DateInput extends DwInput {
     if (!moment(value, inputFormat, true).isValid()) {
       return this.errorMessages["invalidDate"];
     }
-
+    
     value = moment(value, inputFormat).format('YYYY-MM-DD');
+    let errorText;
+    let minDate = this.minDate && moment(this.minDate).format('YYYY-MM-DD');
+    let maxDate = this.maxDate && moment(this.maxDate).format('YYYY-MM-DD');
 
-    if (this.maxDate && this.minDate && value <= this.maxDate && value >= this.minDate) {
+    if (this.maxDate && this.minDate && (value >= maxDate || value <= minDate)) {
       errorText = this.errorMessages["minMaxDate"];
       errorText = errorText.replace("{maxDate}", this.maxDate);
       errorText = errorText.replace("{minDate}", this.minDate);
       return errorText;
     }
 
-    if (this.maxDate && value <= this.maxDate) {
+    if (this.maxDate && value >= maxDate) {
       errorText = this.errorMessages["minDate"];
-      return errorText.replace("{minDate}", this.minDate);
+      return errorText.replace("{minDate}", this.maxDate);
     }
 
-    if (this.minDate && value >= this.minDate) {
+    if (this.minDate && value <= minDate) {
       errorText = this.errorMessages["maxDate"];
-      return errorText.replace("{maxDate}", this.maxDate);
+      return errorText.replace("{maxDate}", this.minDate);
     }
 
     const todayDate = moment().format('YYYY-MM-DD');
