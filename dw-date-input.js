@@ -143,11 +143,10 @@ export class DwDateInput extends DwFormElement(LitElement) {
       noHintWrap: { type: Boolean, reflect: true },
 
       /**
-       * Output property
-       * Possible value: REQUIRED, NOT_A_DATE, RANGE
-       * Set to `true` when user entered value can not be parsed to a Date.
+       * Input property
+       * It could be either `String` or `Function`.
        */
-      error: { type: Object, reflect: true },
+      error: { type: Object },
 
       /**
        * Input property.
@@ -163,7 +162,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
       showFutureWarning: { type: Boolean, reflect: true },
 
       /**
+       * Input property.
        * Text to show the warning message.
+       * It could be either `String` or `Function`.
        */
       warning: { type: Object },
 
@@ -278,7 +279,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .errorTooltipActions="${this.errorTooltipActions}"
         .warningTooltipActions="${this.warningTooltipActions}"
         .tipPlacement="${this.tipPlacement}"
-        .errorMessages="${this.errorMessages}"
+        .errorMessages="${this._errorMessages}"
         @change=${this._onChange}
         @blur=${this._onBlur}
       ></date-input>
