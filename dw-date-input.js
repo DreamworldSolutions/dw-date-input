@@ -147,7 +147,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Possible value: REQUIRED, NOT_A_DATE, RANGE
        * Set to `true` when user entered value can not be parsed to a Date.
        */
-      error: { type: String, reflect: true },
+      error: { type: Object, reflect: true },
 
       /**
        * Input property.
@@ -205,16 +205,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
        */
       tipPlacement: { type: String },
-      
-      /**
-       * Message to show in the error color when the date input is invalid.
-       */
-      error: { type: Object },
-
-      /**
-       * Text to show the warning message.
-       */
-      warning: { type: Object },
     };
   }
 
@@ -282,7 +272,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .warning=${this.warning}
         .error=${this.error}
         .hintInTooltip="${this.hintInTooltip}"
-        .errorInTooltip="${this.errorInTooltip}"
+        .errorInTooltip="${this._errorInTooltip}"
         .warningInTooltip="${this.warningInTooltip}"
         .hintTooltipActions="${this.hintTooltipActions}"
         .errorTooltipActions="${this.errorTooltipActions}"
