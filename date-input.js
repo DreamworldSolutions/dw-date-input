@@ -1,14 +1,3 @@
-/**
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
-import { css } from "@dreamworld/pwa-helpers/lit.js";
 import { DwInput } from "@dreamworld/dw-input/dw-input";
 import moment from "moment/src/moment";
 import { dateParse } from "./date-parse";
@@ -62,7 +51,6 @@ export class DateInput extends DwInput {
     this.iconTrailing = "date_range";
     this.allowedPattern = "^[a-zA-Z0-9-/,_ ]*$";
     this.clickableIcon = false; // Set true when date picker support added
-    this.validator = this._customValidator;
     this.inputFormat = "DD/MM/YYYY";
     this._separator = "/";
     this.showFutureError = false;
@@ -109,58 +97,69 @@ export class DateInput extends DwInput {
     }
     return dateParse(value, this.inputFormat, this._separator);
   }
+  
+  /**
+   * @returns {String} Warning message by state
+   */
+  _customWarning() {
+    let value = this.value ? this.value.replace(/ /g, "") : '';
+
+    if (this.showFutureWarning) {
+      const todayDate = moment().format('YYYY-MM-DD');
+      if (value > todayDate) {
+        return "Future date is selected";
+      } else {
+        return "";
+      }
+    }
+
+    return "";
+  }
 
   /**
    * Performs date validations like required, minDate, maxDate, invalid
    * @param {String} value - date entered by value
    * @returns {Boolean} returns false if it's invalid
    */
-  _customValidator(value) {
-    value = value ? value.replace(/ /g, "") : '';
-
-    if (!value && this.required) {
-      return false;
-    }
-
-    if(!value){
-      return true;
-    }
-
+  _customError() {
+    let value = this.value ? this.value.replace(/ /g, "") : '';
     const inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "DD/MM/YYYY";
+    if(!value){
+      return '';
+    }
 
     if (!moment(value, inputFormat, true).isValid()) {
-      return false;
+      return this.errorMessages["invalidDate"];
     }
-
+    
     value = moment(value, inputFormat).format('YYYY-MM-DD');
+    let errorText;
+    let minDate = this.minDate && moment(this.minDate).format('YYYY-MM-DD');
+    let maxDate = this.maxDate && moment(this.maxDate).format('YYYY-MM-DD');
 
-    if (this.maxDate && this.minDate) {
-      return value <= this.maxDate && value >= this.minDate;
+    if (this.maxDate && this.minDate && (value >= maxDate || value <= minDate)) {
+      errorText = this.errorMessages["minMaxDate"];
+      errorText = errorText.replace("{maxDate}", this.maxDate);
+      errorText = errorText.replace("{minDate}", this.minDate);
+      return errorText;
     }
 
-    if (this.maxDate) {
-      return value <= this.maxDate;
+    if (this.maxDate && value >= maxDate) {
+      errorText = this.errorMessages["minDate"];
+      return errorText.replace("{minDate}", this.maxDate);
     }
 
-    if (this.minDate) {
-      return value >= this.minDate;
+    if (this.minDate && value <= minDate) {
+      errorText = this.errorMessages["maxDate"];
+      return errorText.replace("{maxDate}", this.minDate);
     }
 
-    if (this.showFutureWarning) {
-      const todayDate = moment().format('YYYY-MM-DD');
-      if (value > todayDate) {
-        this.warningText = "Future date is selected";
-      } else {
-        this.warningText = "";
-      }
+    const todayDate = moment().format('YYYY-MM-DD');
+    if (this.showFutureError && value >= todayDate) {
+      return this.errorMessages["showFutureError"];
     }
 
-    if (this.showFutureError) {
-      const todayDate = moment().format('YYYY-MM-DD');
-      return value <= todayDate;
-    }
-
-    return true;
+    return '';
   }
 
   _onEnter(e) {
@@ -189,6 +188,61 @@ export class DateInput extends DwInput {
     this.validate();
 
     this.dispatchEvent(new CustomEvent("change"));
+  }
+
+  get _warning() {
+    if (this.invalid) return;
+
+    let warningMsg = "";
+
+    warningMsg = this._customWarning();
+
+    if (warningMsg) {
+      return warningMsg;
+    }
+
+    return super._warning;
+  }
+
+  get _error() {
+    if (!this.invalid) return;
+    let errorMsg = "";
+
+    errorMsg = this._customError();
+
+    if (errorMsg) {
+      return errorMsg;
+    }
+
+    return super._error;
+  }
+
+  checkValidity() {
+    let isValid = !this._customError();
+    if (isValid !== false) {
+      return super.checkValidity();
+    }
+
+    return isValid;
+  }
+
+  reportValidity() {
+    let errorMessage = this._customError();
+    
+    if (!errorMessage && this.error) {
+      if (typeof this.error === "string") {
+        errorMessage = this.error;
+      } else {
+        errorMessage = this.error(this.value);
+      }
+    }
+
+    this.setCustomValidity(errorMessage);
+
+    let isValid = this.checkValidity();
+
+    this.invalid = !isValid;
+    return isValid;
   }
 }
 
