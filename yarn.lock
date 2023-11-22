@@ -64,10 +64,10 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     "@material/mwc-icon" "0.27.0"
 
-"@dreamworld/dw-input@^3.8.0-standardize-form-validation.1":
-  version "3.8.0-standardize-form-validation.1"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.8.0-standardize-form-validation.1.tgz#921dfafab00ca8654028f563e195c8927d528fd2"
-  integrity sha512-Uem12SmfgWM8OkxSwe67Nm+lJ66jV/XCrYDHSeSDf5RMOOFR9P7D/ejeocvIfYCMi3wb/kq423/QkuCnN3Uzyg==
+"@dreamworld/dw-input@^3.8.0-standardize-form-validation.4":
+  version "3.8.0-standardize-form-validation.4"
+  resolved "https://registry.yarnpkg.com/@dreamworld/dw-input/-/dw-input-3.8.0-standardize-form-validation.4.tgz#549b1dc799ad6aeca3d4101f2adfb21d7f7adf43"
+  integrity sha512-tff8NsL/KHU0Xd4XNX8mMK4qQBKxGkU4dq7a75SjBtVH7/X1I8Mdg03+R9mBa8Q0HnMDFpxiD9YFXjzFjOKD9Q==
   dependencies:
     "@dreamworld/dw-button" "^3.0.3"
     "@dreamworld/dw-form" "^4.0.0"
