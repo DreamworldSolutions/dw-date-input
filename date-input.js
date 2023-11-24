@@ -102,11 +102,9 @@ export class DateInput extends DwInput {
    * @returns {String} Warning message by state
    */
   _customWarning() {
-    let value = this.value ? this.value.replace(/ /g, "") : '';
-
     if (this.showFutureWarning) {
       const todayDate = moment().format('YYYY-MM-DD');
-      if (value > todayDate) {
+      if (this.date > todayDate) {
         return "Future date is selected";
       } else {
         return "";
