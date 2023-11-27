@@ -119,7 +119,7 @@ export class DateInput extends DwInput {
    * @param {String} value - date entered by value
    * @returns {Boolean} returns false if it's invalid
    */
-  _customError() {
+  _dateCustomError() {
     let value = this.value ? this.value.replace(/ /g, "") : '';
     const inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "DD/MM/YYYY";
     if(!value){
@@ -206,7 +206,7 @@ export class DateInput extends DwInput {
     if (!this.invalid) return;
     let errorMsg = "";
 
-    errorMsg = this._customError();
+    errorMsg = this._dateCustomError();
 
     if (errorMsg) {
       return errorMsg;
@@ -216,7 +216,7 @@ export class DateInput extends DwInput {
   }
 
   checkValidity() {
-    let isValid = !this._customError();
+    let isValid = !this._dateCustomError();
     if (isValid !== false) {
       return super.checkValidity();
     }
@@ -225,7 +225,7 @@ export class DateInput extends DwInput {
   }
 
   reportValidity() {
-    let errorMessage = this._customError();
+    let errorMessage = this._dateCustomError();
     
     if (!errorMessage && this.error) {
       if (typeof this.error === "string") {

@@ -270,8 +270,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .maxDate="${this.maxDate}"
         .showFutureWarning=${this.showFutureWarning}
         .showFutureError=${this.showFutureError}
-        .warning=${this.warning}
-        .error=${this.error}
+        .warning=${this._warning}
+        .error=${this._error}
         .hintInTooltip="${this.hintInTooltip}"
         .errorInTooltip="${this._errorInTooltip}"
         .warningInTooltip="${this.warningInTooltip}"
@@ -284,6 +284,22 @@ export class DwDateInput extends DwFormElement(LitElement) {
         @blur=${this._onBlur}
       ></date-input>
     `;
+  }
+
+  /**
+   * This getter is written because if it is extended and used and the component has custom validations, 
+   * then this getter method can be overridden and custom validations can be written.
+   */
+  get _error() {
+    this.error;
+  }
+
+  /**
+   * This getter is written because if it is extended and used and the component has custom validations, 
+   * then this getter method can be overridden and custom validations can be written.
+   */
+  get _warning() {
+    this.warning;
   }
 
   async focus() {
