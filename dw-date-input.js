@@ -291,7 +291,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * then this getter method can be overridden and custom validations can be written.
    */
   get _error() {
-    this.error;
+    return this.error;
   }
 
   /**
@@ -299,7 +299,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
    * then this getter method can be overridden and custom validations can be written.
    */
   get _warning() {
-    this.warning;
+    return this.warning;
   }
 
   async focus() {
