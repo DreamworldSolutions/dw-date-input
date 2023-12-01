@@ -270,8 +270,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .maxDate="${this.maxDate}"
         .showFutureWarning=${this.showFutureWarning}
         .showFutureError=${this.showFutureError}
-        .warning=${this.warning}
-        .error=${this.error}
+        .warning=${this._warning}
+        .error=${this._error}
         .hintInTooltip="${this.hintInTooltip}"
         .errorInTooltip="${this._errorInTooltip}"
         .warningInTooltip="${this.warningInTooltip}"
@@ -284,6 +284,32 @@ export class DwDateInput extends DwFormElement(LitElement) {
         @blur=${this._onBlur}
       ></date-input>
     `;
+  }
+
+  /**
+   * This getter is written because it is used when someone extends this component, and it has some custom validations. 
+   * They can override this getter method and add custom validations and call super.
+   * 
+   * NOTE:
+   * Q. Why can't extended components use the "error" property? Why is this method needed?
+   * Ans. If the extended components use the "error" property, then at integration time, the integrator can't set an error, 
+   * and if it does, that component's deflection validation will not work.
+   */
+  get _error() {
+    return this.error;
+  }
+
+  /**
+   * This getter is written because it is used when someone extends this component, and it has some custom warnings. 
+   * They can override this getter method and add custom warnings and call super.
+   * 
+   * NOTE:
+   * Q. Why can't extended components use the "warning" property? Why is this method needed?
+   * Ans. If the extended components use the "warning" property, then at integration time, the integrator can't set an warning, 
+   * and if it does, that component's deflection validation will not work.
+   */
+  get _warning() {
+    return this.warning;
   }
 
   async focus() {

@@ -157,7 +157,7 @@ export class DateInput extends DwInput {
       return this.errorMessages["showFutureError"];
     }
 
-    return '';
+    return super._customError();
   }
 
   _onEnter(e) {
@@ -200,47 +200,6 @@ export class DateInput extends DwInput {
     }
 
     return super._warning;
-  }
-
-  get _error() {
-    if (!this.invalid) return;
-    let errorMsg = "";
-
-    errorMsg = this._customError();
-
-    if (errorMsg) {
-      return errorMsg;
-    }
-
-    return super._error;
-  }
-
-  checkValidity() {
-    let isValid = !this._customError();
-    if (isValid !== false) {
-      return super.checkValidity();
-    }
-
-    return isValid;
-  }
-
-  reportValidity() {
-    let errorMessage = this._customError();
-    
-    if (!errorMessage && this.error) {
-      if (typeof this.error === "string") {
-        errorMessage = this.error;
-      } else {
-        errorMessage = this.error(this.value);
-      }
-    }
-
-    this.setCustomValidity(errorMessage);
-
-    let isValid = this.checkValidity();
-
-    this.invalid = !isValid;
-    return isValid;
   }
 }
 
