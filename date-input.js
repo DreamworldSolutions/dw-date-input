@@ -157,7 +157,7 @@ export class DateInput extends DwInput {
       return this.errorMessages["showFutureError"];
     }
 
-    return '';
+    return super._customError();
   }
 
   _onEnter(e) {

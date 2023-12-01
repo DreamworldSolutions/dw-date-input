@@ -287,16 +287,26 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   /**
-   * This getter is written because if it is extended and used and the component has custom validations, 
-   * then this getter method can be overridden and custom validations can be written.
+   * This getter is written because it is used when someone extends this component, and it has some custom validations. 
+   * They can override this getter method and add custom validations and call super.
+   * 
+   * NOTE:
+   * Q. Why can't extended components use the "error" property? Why is this method needed?
+   * Ans. If the extended components use the "error" property, then at integration time, the integrator can't set an error, 
+   * and if it does, that component's deflection validation will not work.
    */
   get _error() {
     return this.error;
   }
 
   /**
-   * This getter is written because if it is extended and used and the component has custom validations, 
-   * then this getter method can be overridden and custom validations can be written.
+   * This getter is written because it is used when someone extends this component, and it has some custom validations. 
+   * They can override this getter method and add custom validations and call super.
+   * 
+   * NOTE:
+   * Q. Why can't extended components use the "error" property? Why is this method needed?
+   * Ans. If the extended components use the "error" property, then at integration time, the integrator can't set an error, 
+   * and if it does, that component's deflection validation will not work.
    */
   get _warning() {
     return this.warning;
