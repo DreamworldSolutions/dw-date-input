@@ -152,12 +152,12 @@ export class DateInput extends DwInput {
     }
 
     if (this.maxDate && value > maxDate) {
-      errorText = this._errorMessages["maxDate"];
+      errorText = this.errorMessages["maxDate"];
       return errorText.replace("{maxDate}", this.maxDate);
     }
 
     if (this.minDate && value < minDate) {
-      errorText = this._errorMessages["minDate"];
+      errorText = this.errorMessages["minDate"];
       return errorText.replace("{minDate}", this.minDate);
     }
 

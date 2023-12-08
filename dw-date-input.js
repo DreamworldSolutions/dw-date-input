@@ -5,8 +5,8 @@ import moment from "moment/src/moment";
 import "./date-input";
 
 const defaultErrorMessages = {
-  minDate: "Date must be > {minDate}",
-  maxDate: "Date must be < {maxDate}",
+  minDate: "Date must be < {minDate}",
+  maxDate: "Date must be > {maxDate}",
   minMaxDate: "Date must be between {minDate} and {maxDate}",
   invalidDate: "Date is invalid",
   showFutureError: "Future date is not allowed.",
@@ -273,7 +273,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .warning=${this._warning}
         .error=${this._error}
         .hintInTooltip="${this.hintInTooltip}"
-        .errorInTooltip="${this._errorInTooltip}"
+        .errorInTooltip="${this.errorInTooltip}"
         .warningInTooltip="${this.warningInTooltip}"
         .hintTooltipActions="${this.hintTooltipActions}"
         .errorTooltipActions="${this.errorTooltipActions}"
