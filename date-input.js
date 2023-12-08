@@ -143,13 +143,13 @@ export class DateInput extends DwInput {
     }
 
     if (this.maxDate && value >= maxDate) {
-      errorText = this.errorMessages["minDate"];
-      return errorText.replace("{minDate}", this.maxDate);
+      errorText = this.errorMessages["maxDate"];
+      return errorText.replace("{maxDate}", this.maxDate);
     }
 
     if (this.minDate && value <= minDate) {
-      errorText = this.errorMessages["maxDate"];
-      return errorText.replace("{maxDate}", this.minDate);
+      errorText = this.errorMessages["minDate"];
+      return errorText.replace("{minDate}", this.minDate);
     }
 
     const todayDate = moment().format('YYYY-MM-DD');
