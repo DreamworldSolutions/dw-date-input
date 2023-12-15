@@ -97,6 +97,15 @@ export class DateInput extends DwInput {
     }
     return dateParse(value, this.inputFormat, this._separator);
   }
+
+  /**
+   * @override
+   * Do not parseValue when user is typing..
+   */
+  _onInput() {
+    const value = this._textFieldInstance?.value || '';
+    this._setValue(value);
+  }
   
   /**
    * @returns {String} Warning message by state
