@@ -144,25 +144,25 @@ export class DateInput extends DwInput {
     let minDate = this.minDate && moment(this.minDate).format('YYYY-MM-DD');
     let maxDate = this.maxDate && moment(this.maxDate).format('YYYY-MM-DD');
 
-    if (this.maxDate && this.minDate && (value >= maxDate || value <= minDate)) {
+    if (this.maxDate && this.minDate && (value > maxDate || value < minDate)) {
       errorText = this.errorMessages["minMaxDate"];
       errorText = errorText.replace("{maxDate}", this.maxDate);
       errorText = errorText.replace("{minDate}", this.minDate);
       return errorText;
     }
 
-    if (this.maxDate && value >= maxDate) {
+    if (this.maxDate && value > maxDate) {
       errorText = this.errorMessages["minDate"];
       return errorText.replace("{minDate}", this.maxDate);
     }
 
-    if (this.minDate && value <= minDate) {
+    if (this.minDate && value < minDate) {
       errorText = this.errorMessages["maxDate"];
       return errorText.replace("{maxDate}", this.minDate);
     }
 
     const todayDate = moment().format('YYYY-MM-DD');
-    if (this.showFutureError && value >= todayDate) {
+    if (this.showFutureError && value > todayDate) {
       return this.errorMessages["showFutureError"];
     }
 
