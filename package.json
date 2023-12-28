@@ -23,7 +23,7 @@
   "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
   "dependencies": {
     "@dreamworld/dw-form": "^4.0.0",
-    "@dreamworld/dw-input": "^4.0.4",
+    "@dreamworld/dw-input": "^4.0.10",
     "@dreamworld/pwa-helpers": "^1.13.1",
     "@vaadin/vaadin-date-picker": "^4.0.3",
     "moment": "^2.24.0"
