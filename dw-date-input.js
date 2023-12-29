@@ -273,7 +273,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .warning=${this._warning}
         .error=${this._error}
         .hintInTooltip="${this.hintInTooltip}"
-        .errorInTooltip="${this._errorInTooltip}"
+        .errorInTooltip="${this.errorInTooltip}"
         .warningInTooltip="${this.warningInTooltip}"
         .hintTooltipActions="${this.hintTooltipActions}"
         .errorTooltipActions="${this.errorTooltipActions}"
