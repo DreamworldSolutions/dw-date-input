@@ -1,11 +1,14 @@
 import { html, css, LitElement } from '@dreamworld/pwa-helpers/lit.js';
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
 import moment from 'moment/src/moment';
+
+/* 
+TODO: at present @vaadin is removed from package.json, so install it when this work is resumed.
 import '@vaadin/vaadin-date-picker/theme/material/vaadin-date-picker';
 import './vaadin-text-field-style';
 import './vaadin-date-picker-overlay-style';
-import './date-input';
-
+import './date-input'; 
+*/
 const errorMessagesByStateMap = {
   REQUIRED: 'Required',
   MIN_DATE: 'Date must be > {minDate}',
