@@ -1,4 +1,6 @@
-import moment from "moment/src/moment";
+import dayjs from 'dayjs/esm/index.js';
+import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 /**
  *
@@ -44,7 +46,7 @@ export const dateParse = (value, format, seperator) => {
 
     // Considering date format like DD MMM YYYY
     if (isNumeric(places[0])) {
-      places[1] = moment().month(places[1]).format("MM");
+      places[1] = dayjs().month(places[1]).format("MM");
 
       if (format.toUpperCase() === "MM/DD/YYYY") {
         places = reorderMonth(places, 1, 0);
@@ -55,7 +57,7 @@ export const dateParse = (value, format, seperator) => {
     }
     // Considering date format like MMM DD YYYY
     else {
-      places[0] = moment().month(places[0]).format("MM");
+      places[0] = dayjs().month(places[0]).format("MM");
 
       if (format.toUpperCase() === "DD/MM/YYYY") {
         places = reorderMonth(places, 0, 1);
@@ -108,9 +110,9 @@ function fillEmptyPlaces(places, format) {
   let tempPlaces = places;
   let isMonthFirst = format.toUpperCase() === "MM/DD/YYYY";
   let isYearFirst = places[0].length === 4;
-  let day = moment().format("DD");
-  let month = moment().format("MM");
-  let year = moment().format("YYYY");
+  let day = dayjs().format("DD");
+  let month = dayjs().format("MM");
+  let year = dayjs().format("YYYY");
 
   // considering first place has year
   if (isYearFirst) {

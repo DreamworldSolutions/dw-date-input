@@ -1,5 +1,7 @@
 import { html, css, LitElement } from '@dreamworld/pwa-helpers/lit.js';
-import moment from 'moment/src/moment';
+import dayjs from 'dayjs/esm/index.js';
+import isSameOrBefore from 'dayjs/esm/plugin/isSameOrBefore';
+dayjs.extend(isSameOrBefore);
 
 /**
  * Behaviors:
@@ -77,7 +79,7 @@ export class DwDateRangeSelection extends LitElement {
     let toDate = this.toDateEl.value;
 
     // Resets 'toDate' if it's less than 'fromDate'. 
-    if (moment(toDate).isBefore(fromDate) && this.resetDateIfInvalid) { 
+    if (dayjs(toDate).isSameOrBefore(fromDate) && this.resetDateIfInvalid) { 
       this.toDateEl.value = '';
     }
 

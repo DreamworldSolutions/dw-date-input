@@ -1,6 +1,8 @@
 import { html, css, LitElement } from '@dreamworld/pwa-helpers/lit.js';
 import { DwFormElement } from '@dreamworld/dw-form/dw-form-element';
-import moment from 'moment/src/moment';
+import dayjs from 'dayjs/esm/index.js';
+import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 /* 
 TODO: at present @vaadin is removed from package.json, so install it when this work is resumed.
@@ -269,7 +271,7 @@ export class DwDateInputTemp extends DwFormElement(LitElement) {
     let errorText;
     value = value.replace(/ /g, '');
 
-    if (!moment(value, this.inputFormat.toUpperCase(), true).isValid()) {
+    if (!dayjs(value, this.inputFormat.toUpperCase(), true).isValid()) {
       return errorMessage['INVALID_DATE'];
     }
 
@@ -321,7 +323,7 @@ export class DwDateInputTemp extends DwFormElement(LitElement) {
       return;
     }
 
-    let selectedDate = moment(e.detail.value, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase());
+    let selectedDate = dayjs(e.detail.value, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase());
     this.value = selectedDate;
 
     setTimeout(() => {
@@ -344,7 +346,7 @@ export class DwDateInputTemp extends DwFormElement(LitElement) {
   _getSelectedDate(value){
     if(value){
       value = value.replace(/ /g, '');
-      return moment(value, this.inputFormat.toUpperCase()).format('YYYY-MM-DD');
+      return dayjs(value, this.inputFormat.toUpperCase()).format('YYYY-MM-DD');
     }
 
   }
