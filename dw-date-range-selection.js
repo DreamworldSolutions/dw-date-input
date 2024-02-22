@@ -1,7 +1,5 @@
 import { html, css, LitElement } from '@dreamworld/pwa-helpers/lit.js';
 import dayjs from 'dayjs/esm/index.js';
-import isSameOrBefore from 'dayjs/esm/plugin/isSameOrBefore';
-dayjs.extend(isSameOrBefore);
 
 /**
  * Behaviors:
@@ -79,7 +77,7 @@ export class DwDateRangeSelection extends LitElement {
     let toDate = this.toDateEl.value;
 
     // Resets 'toDate' if it's less than 'fromDate'. 
-    if (dayjs(toDate).isSameOrBefore(fromDate) && this.resetDateIfInvalid) { 
+    if (dayjs(toDate).isBefore(fromDate) && this.resetDateIfInvalid) { 
       this.toDateEl.value = '';
     }
 
