@@ -1,6 +1,8 @@
 import { DwInput } from "@dreamworld/dw-input/dw-input";
-import moment from "moment/src/moment";
 import { dateParse } from "./date-parse";
+import dayjs from 'dayjs/esm/index.js';
+import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 export class DateInput extends DwInput {
   static get properties() {
@@ -63,7 +65,7 @@ export class DateInput extends DwInput {
   connectedCallback() {
     super.connectedCallback();
 
-    this.originalValue = this.originalDate ? this.parseValue(moment(this.originalDate, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
+    this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
   }
 
   firstUpdated(changedProps) {
@@ -77,10 +79,10 @@ export class DateInput extends DwInput {
   willUpdate(changedProps){
     super.willUpdate(changedProps);
     if(changedProps.has('date')){
-      this.value = this.date ? this.parseValue(moment(this.date, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
+      this.value = this.date ? this.parseValue(dayjs(this.date, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
     }
     if(changedProps.has('originalDate')){
-      this.originalValue = this.originalDate ? this.parseValue(moment(this.originalDate, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
+      this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
     }
   }
 
@@ -112,7 +114,7 @@ export class DateInput extends DwInput {
    */
   _customWarning() {
     if (this.showFutureWarning) {
-      const todayDate = moment().format('YYYY-MM-DD');
+      const todayDate = dayjs().format('YYYY-MM-DD');
       if (this.date > todayDate) {
         return "Future date is selected";
       } else {
@@ -135,14 +137,14 @@ export class DateInput extends DwInput {
       return '';
     }
 
-    if (!moment(value, inputFormat, true).isValid()) {
+    if (!dayjs(value, inputFormat, true).isValid()) {
       return this._errorMessages["invalidDate"];
     }
     
-    value = moment(value, inputFormat).format('YYYY-MM-DD');
+    value = dayjs(value, inputFormat).format('YYYY-MM-DD');
     let errorText;
-    let minDate = this.minDate && moment(this.minDate).format('YYYY-MM-DD');
-    let maxDate = this.maxDate && moment(this.maxDate).format('YYYY-MM-DD');
+    let minDate = this.minDate && dayjs(this.minDate).format('YYYY-MM-DD');
+    let maxDate = this.maxDate && dayjs(this.maxDate).format('YYYY-MM-DD');
 
     if (this.maxDate && this.minDate && (value > maxDate || value < minDate)) {
       errorText = this._errorMessages["minMaxDate"];
@@ -161,7 +163,7 @@ export class DateInput extends DwInput {
       return errorText.replace("{minDate}", this.minDate);
     }
 
-    const todayDate = moment().format('YYYY-MM-DD');
+    const todayDate = dayjs().format('YYYY-MM-DD');
     if (this.showFutureError && value > todayDate) {
       return this._errorMessages["showFutureError"];
     }

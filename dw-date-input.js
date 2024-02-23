@@ -1,7 +1,9 @@
 import { html, css, LitElement } from "@dreamworld/pwa-helpers/lit.js";
 import { isElementAlreadyRegistered } from "@dreamworld/pwa-helpers/utils.js";
 import { DwFormElement } from "@dreamworld/dw-form/dw-form-element";
-import moment from "moment/src/moment";
+import dayjs from 'dayjs/esm/index.js';
+import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 import "./date-input";
 
 const defaultErrorMessages = {
@@ -321,11 +323,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
   _onChange(e) {
     let dateInputed = e.target.value;
     const inputFormat = this.inputFormat.toUpperCase();
-    dateInputed = moment(dateInputed, inputFormat);
+    dateInputed = dayjs(dateInputed, inputFormat);
     let date = "";
     if (dateInputed.isValid()) {
       dateInputed = dateInputed.toDate();
-      date = moment(dateInputed, inputFormat).format(
+      date = dayjs(dateInputed, inputFormat).format(
         this.valueFormat.toUpperCase()
       );
     }
@@ -336,7 +338,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
   _onBlur(e) {
     let value = e.target.value;
     const inputFormat = this.inputFormat.toUpperCase();
-    value = value ? moment(value, inputFormat).format("YYYY-MM-DD") : ``;
+    value = value ? dayjs(value, inputFormat).format("YYYY-MM-DD") : ``;
     this.value = value;
   }
 
