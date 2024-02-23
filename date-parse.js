@@ -1,6 +1,4 @@
 import dayjs from 'dayjs/esm/index.js';
-import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
 
 /**
  *
