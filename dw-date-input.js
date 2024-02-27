@@ -321,15 +321,10 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   _onChange(e) {
-    let dateInputed = e.target.value;
-    const inputFormat = this.inputFormat.toUpperCase();
-    dateInputed = dayjs(dateInputed, inputFormat);
+    const dateInputed = dayjs(e.target.value, this.inputFormat.toUpperCase());
     let date = "";
     if (dateInputed.isValid()) {
-      dateInputed = dateInputed.toDate();
-      date = dayjs(dateInputed, inputFormat).format(
-        this.valueFormat.toUpperCase()
-      );
+      date = dateInputed.format(this.valueFormat.toUpperCase());
     }
 
     this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
