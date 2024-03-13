@@ -1,3 +1,4 @@
+import { css } from '@dreamworld/pwa-helpers/lit.js';
 import { DwInput } from "@dreamworld/dw-input/dw-input";
 import { dateParse } from "./date-parse";
 import dayjs from 'dayjs/esm/index.js';
@@ -5,6 +6,16 @@ import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
 export class DateInput extends DwInput {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+        .mdc-text-field--outlined .mdc-text-field__input {
+          padding: var(--dw-date-input-padding, 12px 16px 14px);
+        }
+      `
+    ]
+  }
   static get properties() {
     return {
 
@@ -17,6 +28,12 @@ export class DateInput extends DwInput {
        * It should be `dd/mm/yyyy` or `mm/dd/yyyy` or `dd-mm-yyyy` or `mm-dd-yyyy`
        */
       inputFormat: { type: String },
+
+      /**
+       * date value format
+       * default `yyyy-mm-dd`.
+       */
+      valueFormat: { type: String },
 
       /**
        * The minimum allowed date (inclusively).
@@ -39,22 +56,54 @@ export class DateInput extends DwInput {
        * Input property.
        * Set `true` to show error message when user select future date.
        */
-      showFutureError: { type: Boolean, reflect: true },
-
-      /**
-       * Date separator. Possible value: `/` or  `-`
-       */
-      _separator: { type: String },
+      showFutureError: { type: Boolean, reflect: true }
     };
+  }
+
+  /**
+   * Getter of `inputFormat` property.
+   */
+  get inputFormat() {
+    return this._inputFormat && this._inputFormat.toUpperCase() || this._inputFormat;
+  }
+  
+  /**
+   * Setter of `inputFormat` property.
+   */
+  set inputFormat(value) {
+    let oldValue = this._inputFormat;
+    if (value === oldValue) {
+      return;
+    }
+    this._inputFormat = value;
+    this.requestUpdate("inputFormat", oldValue);
+  }
+
+  /**
+   * Getter of `valueFormat` property.
+   */
+  get valueFormat() {
+    return this._valueFormat && this._valueFormat.toUpperCase() || this._valueFormat;
+  }
+  
+  /**
+   * Setter of `valueFormat` property.
+   */
+  set valueFormat(value) {
+    let oldValue = this._valueFormat;
+    if (value === oldValue) {
+      return;
+    }
+    this._valueFormat = value;
+    this.requestUpdate("valueFormat", oldValue);
   }
 
   constructor() {
     super();
-    this.iconTrailing = "date_range";
-    this.allowedPattern = "^[a-zA-Z0-9-/,_ ]*$";
-    this.clickableIcon = false; // Set true when date picker support added
+    this.clickableIcon = true;
     this.inputFormat = "DD/MM/YYYY";
-    this._separator = "/";
+    this.valueFormat = "YYYY-MM-DD";
+    this.separator = "/";
     this.showFutureError = false;
     this.showFutureWarning = false;
     this.addEventListener("enter", this._onEnter);
@@ -63,65 +112,71 @@ export class DateInput extends DwInput {
   }
 
   connectedCallback() {
-    super.connectedCallback();
-
-    this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
-  }
-
-  firstUpdated(changedProps) {
-    super.firstUpdated && super.firstUpdated(changedProps);
-
-    if (changedProps.has("inputFormat")) {
-      this._separator = this.inputFormat.slice(2, 3);
-    }
+    super.connectedCallback && super.connectedCallback();
+    this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, this.valueFormat).format(this.inputFormat)) : '';
+    this.updateComplete.then(() => {
+      this._updateDateTextfieldValue();
+    });
   }
 
   willUpdate(changedProps){
     super.willUpdate(changedProps);
+    if (changedProps.has("inputFormat")) {
+      this.separator = this.inputFormat ? this.inputFormat.slice(2, 3): '/';
+    }
+
     if(changedProps.has('date')){
-      this.value = this.date ? this.parseValue(dayjs(this.date, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
+      this.value = this.date ? this.parseValue(dayjs(this.date, this.valueFormat).format(this.inputFormat)) : '';
     }
+
     if(changedProps.has('originalDate')){
-      this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, 'YYYY-MM-DD').format(this.inputFormat.toUpperCase())) : '';
+      this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, this.valueFormat).format(this.inputFormat)) : '';
     }
   }
 
-  formatText() {
-    return (
-      this.value &&
-      this.value.replace(/ /g, "").split(`${this._separator}`).join(` ${this._separator} `)
-    );
-  }
-
-  parseValue(value) {
-    if (!value) {
-      return "";
+  updated(changedProps) {
+    super.updated(changedProps);
+    if (changedProps.has('date')) {
+      this._updateDateTextfieldValue();
     }
-    return dateParse(value, this.inputFormat, this._separator);
   }
 
   /**
-   * @override
-   * Do not parseValue when user is typing..
+   * Updates text-field's value based on the current value of `value` property.
+   * It applies formatting.
    */
-  _onInput() {
-    const value = this._textFieldInstance?.value || '';
-    this._setValue(value);
+  _updateDateTextfieldValue() {
+    if (!this._textFieldInstance) {
+      return;
+    }
+
+    let text = this.formatDateText(this.value);
+    this._textFieldInstance.value = text || '';
   }
-  
+
+  formatDateText() {
+    return this.value && this.value.replace(/ /g, "").split(`${this.separator}`).join(` ${this.separator} `);
+  }
+
+  parseDateValue(value) {
+    if (!value) {
+      return "";
+    }
+    return dateParse(value, this.inputFormat);
+  }
+
   /**
    * @returns {String} Warning message by state
    */
   _customWarning() {
     if (this.showFutureWarning) {
-      const todayDate = dayjs().format('YYYY-MM-DD');
+      const todayDate = dayjs().format(this.valueFormat);
       if (this.date > todayDate) {
         return "Future date is selected";
       } else {
         return "";
       }
     }
-
     return "";
   }
 
@@ -132,7 +187,7 @@ export class DateInput extends DwInput {
    */
   _customError() {
     let value = this.value ? this.value.replace(/ /g, "") : '';
-    const inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : "DD/MM/YYYY";
+    const inputFormat = this.inputFormat ? this.inputFormat : "DD/MM/YYYY";
     if(!value){
       return '';
     }
@@ -141,10 +196,10 @@ export class DateInput extends DwInput {
       return this._errorMessages["invalidDate"];
     }
     
-    value = dayjs(value, inputFormat).format('YYYY-MM-DD');
+    value = dayjs(value, inputFormat).format(this.valueFormat);
     let errorText;
-    let minDate = this.minDate && dayjs(this.minDate).format('YYYY-MM-DD');
-    let maxDate = this.maxDate && dayjs(this.maxDate).format('YYYY-MM-DD');
+    let minDate = this.minDate && dayjs(this.minDate).format(this.valueFormat);
+    let maxDate = this.maxDate && dayjs(this.maxDate).format(this.valueFormat);
 
     if (this.maxDate && this.minDate && (value > maxDate || value < minDate)) {
       errorText = this._errorMessages["minMaxDate"];
@@ -163,7 +218,7 @@ export class DateInput extends DwInput {
       return errorText.replace("{minDate}", this.minDate);
     }
 
-    const todayDate = dayjs().format('YYYY-MM-DD');
+    const todayDate = dayjs().format(this.valueFormat);
     if (this.showFutureError && value > todayDate) {
       return this._errorMessages["showFutureError"];
     }
@@ -172,31 +227,36 @@ export class DateInput extends DwInput {
   }
 
   _onEnter(e) {
-    this.value = this.parseValue(e.detail.value);
-    this._updateTextfieldValue();
+    const inputValue = e.detail.value || this._getCurrentInputValue();
+    const value = this.parseDateValue(inputValue);
+    this.value = value || inputValue;
+    this._updateDateTextfieldValue();
     this.validate();
-
     this.dispatchEvent(new CustomEvent("change"));
   }
 
   _onPaste(e) {
-    let paste = (e.clipboardData || window.clipboardData).getData("text");
-    this.value = this.parseValue(paste);
-    this._updateTextfieldValue();
+    e.preventDefault && e.preventDefault();
+    const paste = (e.clipboardData || window.clipboardData).getData("text");
+    const inputValue = paste || this._getCurrentInputValue();
+    const value = this.parseDateValue(inputValue);
+    this.value = value || paste;
+    this._updateDateTextfieldValue();
     this.validate();
-
     this.dispatchEvent(new CustomEvent("change"));
-
-    e.preventDefault();
   }
 
   _onBlur(e) {
-    let value = e.target.value;
-    this.value = this.parseValue(value);
-    this._updateTextfieldValue();
+    const inputValue = e.target && e.target.value || this._getCurrentInputValue();
+    const value = this.parseDateValue(inputValue);
+    this.value = value || inputValue;
+    this._updateDateTextfieldValue();
     this.validate();
-
     this.dispatchEvent(new CustomEvent("change"));
+  }
+
+  _getCurrentInputValue() {
+    return this._textFieldInstance ? this._textFieldInstance.value: '';
   }
 
   get _warning() {

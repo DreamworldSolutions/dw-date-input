@@ -1,4 +1,4 @@
-import dayjs from 'dayjs/esm/index.js';
+import dayjs from "dayjs/esm/index.js";
 
 /**
  *
@@ -14,180 +14,148 @@ import dayjs from 'dayjs/esm/index.js';
  * @param {String} format date format
  * @returns {String} parsed date in dd/mm/yyyy (default), mm/dd/yyyy
  */
-export const dateParse = (value, format, seperator) => {
+export const dateParse = (value, format) => {
   value = value || "";
-  let isNumber = isNumeric(value.replace(/ /g, "").replace(/[^a-zA-Z0-9 ]/g, ""));
-
-  if (isNumber) {
-    // Prosessing date String, considering input has Seperator (- or / or space)
-    if (hasSeperator(value)) {
-      value = value.replaceAll(" ", "");
-      let places = seperateDate(value, /[-\/, ]/);
-
-      places = fillEmptyPlaces(places, format);
-      return places.slice(0, 3).join(seperator);
-    }
-
-    // Prosessing date String, considering input has only number. no seperator (- or / or space)
-    else {
-      let places = createPlaces(value);
-
-      places = fillEmptyPlaces(places, format);
-      return places.slice(0, 3).join(seperator);
-    }
+  value = value.trim();
+  let date;
+  if(!isNaN(value)) {
+    date = parseSamrtFormat(value, format);
+  } else {
+    date = parseDate(value, format);
   }
 
-  // Processing date String, considering input includes alphabetic like months in MMM format
-  else {
-    value = value.replace(/, /g, " ");
-    let places = seperateDate(value, /[-\/, ]/);
-
-    // Considering date format like DD MMM YYYY
-    if (isNumeric(places[0])) {
-      places[1] = dayjs().month(places[1]).format("MM");
-
-      if (format.toUpperCase() === "MM/DD/YYYY") {
-        places = reorderMonth(places, 1, 0);
-      }
-
-      places = fillEmptyPlaces(places, format);
-      return places.slice(0, 3).join(seperator);
-    }
-    // Considering date format like MMM DD YYYY
-    else {
-      places[0] = dayjs().month(places[0]).format("MM");
-
-      if (format.toUpperCase() === "DD/MM/YYYY") {
-        places = reorderMonth(places, 0, 1);
-      }
-
-      places = fillEmptyPlaces(places, format);
-
-      return places.slice(0, 3).join(seperator);
-    }
+  if(dayjs(date, format, true).isValid()) {
+    return date;
   }
+
+  date = parseDate(value.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '), format);
+  return dayjs(date, format, true).isValid() ? date: null;
 };
 
-/**
- * checks input string is numeric or not
- * @param {String} string date in string
- * @returns {Boolean}
- */
-function isNumeric(string) {
-  return !isNaN(string);
-}
+const knownFormats = [
+  "DD/MM/YYYY",
+  "MM/DD/YYYY",
+  "DD-MM-YYYY",
+  "MM-DD-YYYY",
+  "YYYY-MM-DD",
+  "YYYY/MM/DD",
+  "DD MMM, YYYY",
+  "DD MMM YYYY",
+  "MMM DD, YYYY",
+  "MMM DD YYYY",
+  "MMMM D, YYYY",
+  "MMMM DD, YYYY",
+];
 
-/**
- * Used to check input date has - or / or space.
- * @param {String} value Date in string
- * @returns {Boolean}
- */
-function hasSeperator(value) {
-  return value.split(/[-\/, ]/).length > 1;
-}
+const sortKnownFormats = [
+  "D MMMM",
+  "MMMM D",
+  "D MMM",
+  "MMM D",
+  "D MM",
+  "MM D",
+  "D M",
+  "M D",
+  "DD MMMM",
+  "MMMM DD",
+  "DD MMM",
+  "MMM DD",
+  "DD MM",
+  "MM DD",
+  "M DD",
+  "DD M",
+];
 
-/**
- * Seperator date using regEx
- * @param {Sring} value Date in String
- * @param {String} regEx regEx
- * @returns {Array}
- */
-function seperateDate(value, regEx) {
-  return value.split(regEx);
-}
-
-/**
- * used to set places that are empty or contain only zeros &
- * uses `pad` method to put prefix '0' in value of place[1] and place[2] if there value's length lessthan 2
- *
- * @param {Array} places - represent `dateArray`
- * @param {String} format - represent `_inputFormat` property
- * @return {Array} places - represent `dateArray` with filled places
- */
-function fillEmptyPlaces(places, format) {
-  let tempPlaces = places;
-  let isMonthFirst = format.toUpperCase() === "MM/DD/YYYY";
-  let isYearFirst = places[0].length === 4;
-  let day = dayjs().format("DD");
-  let month = dayjs().format("MM");
-  let year = dayjs().format("YYYY");
-
-  // considering first place has year
-  if (isYearFirst) {
-    if (!parseInt(places[0])) {
-      tempPlaces[0] = year;
-    }
-    if (!parseInt(places[1])) {
-      tempPlaces[1] = isMonthFirst ? day : month;
-    }
-    if (!parseInt(places[2])) {
-      tempPlaces[2] = isMonthFirst ? month : day;
-    }
-
-    return tempPlaces.reverse();
+const parseDate = (value, format) => {
+  if(dayjs(value, knownFormats, true).isValid()) {
+    return dayjs(value, knownFormats, true).format(format);
   }
 
-  if (!parseInt(places[0])) {
-    tempPlaces[0] = isMonthFirst ? (tempPlaces[0] <= day ? month : month - 1) : day;
+  if(dayjs(value, sortKnownFormats, true).isValid()) {
+    const date = dayjs(value, sortKnownFormats, true).format(format);
+    const month = dayjs(date, format).get('month') + 1;
+    return dayjs(date, format).set('year', getNearestYear(month)).format(format);
   }
-  if (!parseInt(places[1])) {
-    tempPlaces[1] = isMonthFirst ? day : tempPlaces[0] <= day ? month : month - 1;
-  }
-  if (!parseInt(places[2])) {
-    tempPlaces[2] = parseInt(tempPlaces[1]) <= month ? year : year - 1;
-  }
-
-  tempPlaces[0] = pad(places[0]);
-  tempPlaces[1] = pad(places[1]);
-
-  if (tempPlaces[2] < 1000) {
-    tempPlaces[2] = 2000 + parseInt(tempPlaces[2]);
-  }
-
-  return tempPlaces;
+  return "";
 }
 
-/**
- * used to set zero as prefix in value store in  number letiable,
- * otherwise keep number's value as it is & return it
- *
- * @param {String} number
- * @return {String} number
- */
-function pad(number) {
-  number = number.toString().length < 2 ? "0" + number : number;
-  return number;
-}
-
-/**
- * used to create places for day, month and year
- *
- * @param {String} value value represent formated text
- * @returns {Array} Array that now have places for day, month and year
- */
-function createPlaces(value) {
-  let place1, place2, place3;
-
-  place1 = value.slice(0, 2);
-  place2 = value.slice(2, 4);
-  place3 = value.slice(4, 8);
-
-  return [place1, place2, place3];
-}
-
-/**
- *
- * @param {Array} value represent `dateArray`
- * @returns {Array} reorder month
- */
-function reorderMonth(value, from, to) {
-  if (value.length === 1) {
-    value.push("", "");
+const parseSamrtFormat = (value, format) => {
+  let date = getParseDate(value, false)
+  const daysInMonth = dayjs(`${date.year}-${date.month}`, ['YYYY-MM', 'YYYY-M'], true).daysInMonth();
+  if(daysInMonth && !isNaN(daysInMonth) && daysInMonth < date.day) {
+    date = getParseDate(value, true);
   }
-  value.move(from, to);
-  return value;
-}
-
-Array.prototype.move = function (from, to) {
-  this.splice(to, 0, this.splice(from, 1)[0]);
+  return dayjs().set('date', date.day).set('month', +date.month - 1).set('year', date.year).format(format);
 };
+
+const getParseDate = (value, onlyFirstDate) => {
+  const month = findMonth(value, onlyFirstDate) || dayjs().get('month') + 1;
+  return {
+    day: findDate(value, onlyFirstDate) || dayjs().get('date'),
+    month: month,
+    year: findYear(value, onlyFirstDate) || getNearestYear(month)
+  }
+}
+
+const findDate = (value, onlyFirstDate) => {
+  if(!value) {
+    return '';
+  }
+
+  if(value.length === 1) {
+    return value
+  }
+
+  if(onlyFirstDate) {
+    return value.charAt(0);
+  }
+  
+  const nDate = (value.charAt(0) + value.charAt(1));
+  return +nDate > 31 ? value.charAt(0): nDate;
+}
+
+const findMonth = (value, onlyFirstDate) => {
+  const replaceValue = value.replace(new RegExp(`^${findDate(value, onlyFirstDate)}`), '');
+  if(!replaceValue) {
+    return '';
+  }
+
+  if(replaceValue.length === 1) {
+    return (replaceValue);
+  }
+
+  const nMonth = replaceValue.charAt(0) + replaceValue.charAt(1);
+  return +nMonth > 12 ? (replaceValue.charAt(0)): nMonth;
+}
+
+const findYear = (value, onlyFirstDate) => {
+  const replaceValue = value.replace(new RegExp(`^${findDate(value, onlyFirstDate)}${findMonth(value, onlyFirstDate)}`), '');
+  if(!replaceValue) {
+    return '';
+  }
+
+  return replaceValue.length < 4 ? '' + (2000 + (+replaceValue)): replaceValue.slice(0, 4);
+}
+
+const getNearestYear = (month) => {
+  month = month - 1;
+  const cMonth = dayjs().get('month');
+  const cYear = dayjs().get('year');
+  if(cMonth === month) {
+    return cYear;
+  }
+  
+  const beforeMonth = cMonth > month;
+  if(beforeMonth) {
+    const diff1 = dayjs(`${cYear}-${cMonth}-01`).diff(`${cYear}-${month}-01`, 'month');
+    const diff2 = dayjs(`${cYear + 1}-${month}-01`).diff(`${cYear}-${cMonth}-01`, 'month');
+    return diff2 < diff1 ? cYear + 1: cYear;
+  }
+
+  const diff1 = dayjs(`${cYear}-${month}-01` ).diff(`${cYear}-${cMonth}-01`, 'month');
+  const diff2 = dayjs(`${cYear}-${cMonth}-01`).diff(`${cYear - 1}-${month}-01`, 'month');
+  return diff2 < diff1 ? cYear - 1: cYear;
+}
+
+window.dateParse = dateParse;
+window.getNearestYear = getNearestYear;

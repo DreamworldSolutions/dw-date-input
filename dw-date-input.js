@@ -4,7 +4,10 @@ import { DwFormElement } from "@dreamworld/dw-form/dw-form-element";
 import dayjs from 'dayjs/esm/index.js';
 import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
+
 import "./date-input";
+import './dw-date-picker';
+import '@dreamworld/dw-icon-button';
 
 const defaultErrorMessages = {
   minDate: "Date must be > {minDate}",
@@ -22,10 +25,19 @@ export class DwDateInput extends DwFormElement(LitElement) {
           display: inline-block;
           outline: none;
           position: relative;
+          --dw-date-input-padding: 12px 48px 14px 16px;
         }
 
         :host[hidden] {
           display: none;
+        }
+
+        dw-icon-button {
+          height: 48px;
+          width: 48px;
+          position: absolute;
+          right: 4px;
+          top: 4px;
         }
       `,
     ];
@@ -174,7 +186,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Whether to show hint in tooltip
        * tip trigger on hover of info, warning, and error icon button at trail.
        */
-      hintInTooltip: {type: Boolean},
+      hintInTooltip: { type: Boolean },
 
       /**
        * Whether to show error in tooltip
@@ -208,20 +220,93 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
        */
       tipPlacement: { type: String },
+
+      // START: Date-picker properties
+      /**
+       * Date-picker
+       * Trigger element for which `popover` dialog is opened.
+       */
+      triggerElement: { type: Object },
+
+      /**
+       * Date-picker
+       * Element in which content will be appened. Default is parent element of trigger element.
+       */
+      appendTo: { type: Object },
+
+      /**
+       * Date-picker
+       * Input property.
+       * Element z-index, default value is 9999.
+       */
+      zIndex: { type: Number },
+
+      /**
+       * Date-picker
+       * Input property.
+       * Display in mobile mode (full screen).
+       */
+      mobileMode: { type: Boolean },
+
+      /**
+       * Date-picker
+       * Opens dialog when true.
+       * Closes dialog when false
+       */
+      opened: { type: Boolean, reflect: true },
+      // END: Date-picker properties
     };
   }
 
   /**
+   * Getter of `inputFormat` property.
+   */
+  get inputFormat() {
+    return this._inputFormat && this._inputFormat.toUpperCase() || this._inputFormat;
+  }
+
+  /**
+   * Setter of `inputFormat` property.
+   */
+  set inputFormat(value) {
+    let oldValue = this._inputFormat;
+    if (value === oldValue) {
+      return;
+    }
+    this._inputFormat = value;
+    this.requestUpdate("inputFormat", oldValue);
+  }
+
+  /**
+   * Getter of `valueFormat` property.
+   */
+  get valueFormat() {
+    return this._valueFormat && this._valueFormat.toUpperCase() || this._valueFormat;
+  }
+
+  /**
+   * Setter of `valueFormat` property.
+   */
+  set valueFormat(value) {
+    let oldValue = this._valueFormat;
+    if (value === oldValue) {
+      return;
+    }
+    this._valueFormat = value;
+    this.requestUpdate("valueFormat", oldValue);
+  }
+
+  /**
    * Sets static errorMessages. Its used at application level.
-   * @param {Object} errorMessages 
+   * @param {Object} errorMessages
    */
   static setErrorMessages(errorMessages) {
-    this.errorMessages = {...this.errorMessages, ...errorMessages};
+    this.errorMessages = { ...this.errorMessages, ...errorMessages };
   }
 
   get _errorMessages() {
     const errorMessages = this.errorMessages || {};
-    return {...DwDateInput.errorMessages, ...errorMessages }
+    return { ...DwDateInput.errorMessages, ...errorMessages };
   }
 
   constructor() {
@@ -239,12 +324,14 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.hintPersistent = false;
     this.invalid = false;
     this.autoSelect = false;
-    this.inputFormat = "dd/mm/yyyy";
-    this.valueFormat = "yyyy-mm-dd";
+    this.inputFormat = "DD/MM/YYYY";
+    this.valueFormat = "YYYY-MM-DD";
     this.highlightChanged = false;
     this.errorMessages = defaultErrorMessages;
     this.showFutureError = false;
     this.showFutureWarning = false;
+    this.appendTo = "parent";
+    this.zIndex = 9999;
   }
 
   render() {
@@ -252,6 +339,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
       <date-input
         id="dateInput"
         .inputFormat="${this.inputFormat}"
+        .valueFormat=${this.valueFormat}
         .label="${this.label}"
         ?disabled="${this.disabled}"
         .invalid=${this.invalid}
@@ -283,18 +371,70 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .tipPlacement="${this.tipPlacement}"
         .errorMessages="${this._errorMessages}"
         @change=${this._onChange}
-        @blur=${this._onBlur}
       ></date-input>
+      <dw-date-picker
+        .type=${this.mobileMode ? "modal" : "popover"}
+        .popoverAnimation=${"expand"}
+        .mobileMode=${this.mobileMode}
+        .showTrigger=${true}
+        .appendTo=${this.appendTo}
+        .zIndex=${this.zIndex}
+        .value=${this.value}
+        .inputFormat=${this.inputFormat}
+        .valueFormat=${this.valueFormat}
+        .triggerElement=${this.triggerElement}
+        .opened=${this.opened}
+        @dw-dialog-closed=${(e) => this._triggerDatePickerOpenedChanged(false)}
+        @dw-dialog-opened=${(e) => this._triggerDatePickerOpenedChanged(true)}
+        @value-changed=${this._onDatePickerValueChanged}
+      >
+      </dw-date-picker>
+      <dw-icon-button .icon=${'date_range'} @click=${this._openDatePicker}></dw-icon-button>
     `;
   }
 
+  firstUpdated(changeProps) {
+    super.firstUpdated && super.firstUpdated(changeProps);
+    if (!this.triggerElement) {
+      this.triggerElement = this.renderRoot.querySelector("#dateInput");
+    }
+  }
+
+  get datePicker() {
+    return this.renderRoot.querySelector("dw-date-picker");
+  }
+
+  _triggerDatePickerOpenedChanged(opened) {
+    this.opened = opened;
+    this.dispatchEvent(
+      new CustomEvent("date-picker-opened-changed", {
+        detail: {
+          opened,
+        },
+      })
+    );
+  }
+
+  _onDatePickerValueChanged(e) {
+    const value = e?.detail?.value || "";
+    if(value) {
+      this.value = value;
+    }
+  }
+
+  _openDatePicker() {
+    if (this.datePicker) {
+      this.datePicker.opened = true;
+    }
+  }
+
   /**
-   * This getter is written because it is used when someone extends this component, and it has some custom validations. 
+   * This getter is written because it is used when someone extends this component, and it has some custom validations.
    * They can override this getter method and add custom validations and call super.
-   * 
+   *
    * NOTE:
    * Q. Why can't extended components use the "error" property? Why is this method needed?
-   * Ans. If the extended components use the "error" property, then at integration time, the integrator can't set an error, 
+   * Ans. If the extended components use the "error" property, then at integration time, the integrator can't set an error,
    * and if it does, that component's deflection validation will not work.
    */
   get _error() {
@@ -302,12 +442,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   /**
-   * This getter is written because it is used when someone extends this component, and it has some custom warnings. 
+   * This getter is written because it is used when someone extends this component, and it has some custom warnings.
    * They can override this getter method and add custom warnings and call super.
-   * 
+   *
    * NOTE:
    * Q. Why can't extended components use the "warning" property? Why is this method needed?
-   * Ans. If the extended components use the "warning" property, then at integration time, the integrator can't set an warning, 
+   * Ans. If the extended components use the "warning" property, then at integration time, the integrator can't set an warning,
    * and if it does, that component's deflection validation will not work.
    */
   get _warning() {
@@ -321,20 +461,10 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   _onChange(e) {
-    const dateInputed = dayjs(e.target.value, this.inputFormat.toUpperCase());
-    let date = "";
-    if (dateInputed.isValid()) {
-      date = dateInputed.format(this.valueFormat.toUpperCase());
-    }
-
+    const dateInputed = dayjs(e.target.value, this.inputFormat);
+    const date = dateInputed.isValid() ? dateInputed.format(this.valueFormat): "";
+    this.value = date || this.value;
     this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
-  }
-
-  _onBlur(e) {
-    let value = e.target.value;
-    const inputFormat = this.inputFormat.toUpperCase();
-    value = value ? dayjs(value, inputFormat).format("YYYY-MM-DD") : ``;
-    this.value = value;
   }
 
   /**

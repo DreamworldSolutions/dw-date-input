@@ -1,11 +1,12 @@
 {
   "name": "@dreamworld/dw-date-input",
+  "type": "module",
   "version": "0.0.0-development",
   "description": "",
   "main": "dw-date-input.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "wds --node-resolve --app-index demo/index.html --open --watch"
+    "start": "web-dev-server  --app-index demo/index.html --open"
   },
   "repository": {
     "type": "git",
@@ -13,7 +14,11 @@
   },
   "keywords": [
     "lit",
-    "input"
+    "input",
+    "datepicker",
+    "date",
+    "picker",
+    "lightweight"
   ],
   "author": "Ruchita kheni",
   "license": "ISC",
@@ -22,13 +27,18 @@
   },
   "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
   "dependencies": {
+    "@dreamworld/dw-dialog": "^5.7.4",
     "@dreamworld/dw-form": "^4.1.2",
+    "@dreamworld/dw-icon-button": "^3.2.5",
     "@dreamworld/dw-input": "^4.0.11",
     "@dreamworld/pwa-helpers": "^2.0.1",
-    "dayjs": "^1.11.10"
+    "dayjs": "^1.11.10",
+    "litepicker": "^2.0.12"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
     "@web/dev-server": "^0.1.34",
+    "@web/dev-server-rollup": "^0.6.1",
     "semantic-release": "17.0.8"
   },
   "publishConfig": {

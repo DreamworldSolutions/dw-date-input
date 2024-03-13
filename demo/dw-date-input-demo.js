@@ -1,7 +1,6 @@
 import { LitElement, html, css } from "@dreamworld/pwa-helpers/lit.js";
 
 import "../dw-date-input.js";
-import "../dw-date-range-selection.js";
 import "../date-input.js";
 
 export class DwDateInputDemo extends LitElement {
@@ -40,7 +39,7 @@ export class DwDateInputDemo extends LitElement {
         .hint="${"Hint"}"
       ></dw-date-input>
 
-      <h4>Required</h4>
+      <!-- <h4>Required</h4>
       <dw-date-input
         label="Start date"
         placeholder="Enter date here"
@@ -53,7 +52,7 @@ export class DwDateInputDemo extends LitElement {
           { name: "UPDATE", label: "Update" },
           { name: "CLEAR", label: "Clear", danger: true },
         ]}
-      ></dw-date-input>
+      ></dw-date-input> -->
 
       <!-- <h4>Required</h4>
       <dw-date-input label="Start date" placeholder="Enter date here" required errorMessage="Required"></dw-date-input>
@@ -96,8 +95,7 @@ export class DwDateInputDemo extends LitElement {
   }
 
   _onValueChange(e) {
-    console.log(e);
-    this.value = e.detail.value;
+    // this.value = e.detail.value;
   }
 }
 
