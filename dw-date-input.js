@@ -5,6 +5,7 @@ import dayjs from 'dayjs/esm/index.js';
 import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 import "./date-input";
+import './dw-date-picker';
 
 const defaultErrorMessages = {
   minDate: "Date must be > {minDate}",
@@ -208,6 +209,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
        */
       tipPlacement: { type: String },
+
+      /**
+       * Date picker dialog opened or not.
+       */
+      _opened: { type: Boolean },
     };
   }
 
@@ -284,8 +290,30 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .errorMessages="${this._errorMessages}"
         @change=${this._onChange}
         @blur=${this._onBlur}
+        @click=${this._openDatePicker}
       ></date-input>
+      <dw-date-picker
+        .type=${'modal'}
+        .popoverAnimation=${'expand'}
+        .appendTo=${document.body}
+        .opened=${!!this._opened}
+        .triggerElement=${this.triggerButton}>
+      </dw-date-picker>
     `;
+  }
+
+  get triggerButton() {
+    return this.renderRoot.querySelector('#dateInput');
+  }
+
+  get datePicker() {
+    return this.renderRoot.querySelector('dw-date-picker');
+  }
+
+  _openDatePicker() {
+    if(this.datePicker) {
+      this.datePicker.opened = true;
+    }
   }
 
   /**

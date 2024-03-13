@@ -5,7 +5,7 @@
   "main": "dw-date-input.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "wds --node-resolve --app-index demo/index.html --open --watch"
+    "start": "wds --node-resolve --app-index demo/index.html --open"
   },
   "repository": {
     "type": "git",
@@ -22,9 +22,11 @@
   },
   "homepage": "https://github.com/DreamworldSolutions/dw-date-input#readme",
   "dependencies": {
+    "@dreamworld/dw-dialog": "^5.7.4",
     "@dreamworld/dw-form": "^4.1.2",
     "@dreamworld/dw-input": "^4.0.11",
     "@dreamworld/pwa-helpers": "^2.0.1",
+    "@easepick/bundle": "^1.2.1",
     "dayjs": "^1.11.10"
   },
   "devDependencies": {

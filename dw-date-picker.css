@@ -1,0 +1,45 @@
+:host {
+  --color-fg-accent: #2096F3;
+  --day-height: 36px;
+  --day-width: 36px;
+}
+
+.container.inline {
+  box-shadow: none;
+  width: 100%;
+}
+
+.calendar>.days-grid>.day {
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0px;
+}
+
+.calendars.grid-1 .calendar>.header .month-name {
+  order: 2;
+  text-align: center
+}
+
+.calendars.grid-1 .calendar>.header .previous-button {
+  order: 1;
+  visibility: hidden
+}
+
+.calendars.grid-1 .calendar>.header .next-button {
+  order: 3;
+  visibility: hidden
+}
+
+.calendars.grid-1 .calendar:first-child>.header .previous-button,
+.calendars.grid-1 .calendar:last-child>.header .next-button {
+  visibility: visible
+}
+
+.container.amp-plugin .calendars.calendars.grid-1 .calendar>.header .reset-button {
+  visibility: hidden
+}
+
+.container.amp-plugin .calendars.calendars.grid-1 .calendar:last-child>.header .reset-button {
+  visibility: visible
+}
