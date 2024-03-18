@@ -34,10 +34,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
           user-select: none;
         }
         
-        date-input {
-          --dw-date-input-padding: 12px 48px 14px 16px;
-        }
-        
         :host[hidden] {
           display: none;
         }
@@ -351,6 +347,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
     return html`
       <date-input
         id="dateInput"
+        .iconTrailing=${'date_range'}
+        .clickableIcon=${true}
         .inputFormat="${this.inputFormat}"
         .valueFormat=${this.valueFormat}
         .label="${this.label}"
@@ -446,7 +444,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
         @value-changed=${this.__onValueChanged}
       >
       </dw-date-input-dialog>
-      <dw-icon-button .icon=${'date_range'} @click=${this._openDatePicker}></dw-icon-button>
     `;
   }
 
@@ -506,10 +503,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   _onDateInputClick() {
-    if(this.mobileMode || this.tabletMode) {
-      const trigger = this.renderRoot.querySelector('dw-icon-button');
-      trigger && trigger.click && trigger.click();
-    }
+    this._openDatePicker();
   }
 
   _openDatePicker() {

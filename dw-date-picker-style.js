@@ -20,7 +20,7 @@ export const datePickerStyle = css`
     --litepicker-month-week-number-color: var(--mdc-theme-text-primary-on-surface);
     --litepicker-day-color: var(--mdc-theme-text-primary-on-surface);
     --litepicker-day-color-hover: var(--mdc-theme-primary);
-    --litepicker-is-today-color: #f44336;
+    --litepicker-is-today-color: var(--mdc-theme-primary);
     --litepicker-is-in-range-color: #bbdefb;
     --litepicker-is-locked-color: #9e9e9e;
     --litepicker-is-start-color: #fff;
@@ -295,6 +295,7 @@ export const datePickerStyle = css`
   }
   .litepicker .container__days .day-item.is-today {
     color: var(--litepicker-is-today-color);
+    box-shadow: inset 0 0 0 1px var(--litepicker-is-today-color);
   }
   .litepicker .container__days .day-item.is-locked {
     color: var(--litepicker-is-locked-color);
@@ -478,10 +479,6 @@ export const datePickerStyle = css`
   .litepicker .container__months .month-item-header .button-next-month,
   .litepicker .container__days .day-item {
     cursor: pointer;
-  }
-
-  .day-item.is-today {
-    --litepicker-is-today-color: var(--mdc-theme-primary);
   }
 
   .litepicker[data-plugins*="ranges"][data-ranges-position="left"]

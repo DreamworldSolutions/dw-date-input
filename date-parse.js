@@ -64,6 +64,10 @@ const sortKnownFormats = [
   "MM DD",
   "M DD",
   "DD M",
+  "DD/MM",
+  "MM/DD",
+  "M/DD",
+  "DD/M",
 ];
 
 const parseDate = (value, format) => {

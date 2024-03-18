@@ -350,7 +350,7 @@ class DwDateInputDialog extends DwCompositeDialog {
 
   _getDayText() {
     if(!this.value) {
-      return ''
+      return 'Selected Day'
     }
 
     return dayjs(this.value).format('dddd');
@@ -358,7 +358,7 @@ class DwDateInputDialog extends DwCompositeDialog {
 
   _getDateText() {
     if(!this.value) {
-      return 'Select Date'
+      return 'Selected Date'
     }
 
     return this.formatDateText(dayjs(this.value, this.valueFormat).format(this.inputFormat));

@@ -57,6 +57,7 @@ class DwDatePicker extends DwCompositeDialog {
           font-size: 16px;
           line-height: 24px;
           letter-spacing: 0.15px;
+          color: var(--mdc-theme-text-secondary-on-surface);
         }
 
         .header .date {
@@ -254,7 +255,7 @@ class DwDatePicker extends DwCompositeDialog {
 
   _getDayText() {
     if(!this.value) {
-      return ''
+      return 'Selected Day'
     }
 
     return dayjs(this.value).format('dddd');
@@ -262,7 +263,7 @@ class DwDatePicker extends DwCompositeDialog {
 
   _getDateText() {
     if(!this.value) {
-      return 'Select Date'
+      return 'Selected Date'
     }
 
     return this.formatDateText(dayjs(this.value, this.valueFormat).format(this.inputFormat));
