@@ -2,8 +2,9 @@ import { css } from "@dreamworld/pwa-helpers/lit.js";
 
 export const datePickerStyle = css`
   :root, :host {
-    --litepicker-day-width: 48px;
-    --litepicker-day-height: 48px;
+    --litepicker-day-width: 44px;
+    --litepicker-day-height: 44px;
+    --litepicker-day-margin: 4px;
     --litepicker-container-months-color-bg: #fff;
     --litepicker-container-months-box-shadow-color: #ddd;
     --litepicker-footer-color-bg: #fafafa;
@@ -14,7 +15,7 @@ export const datePickerStyle = css`
     --litepicker-button-next-month-color: #9e9e9e;
     --litepicker-button-prev-month-color-hover: #2096F3;
     --litepicker-button-next-month-color-hover: #2096F3;
-    --litepicker-month-width: calc(var(--litepicker-day-width) * 7);
+    --litepicker-month-width: calc(calc(var(--litepicker-day-width) + var(--litepicker-day-margin) + var(--litepicker-day-margin)) * 7);
     --litepicker-month-weekday-color: #9e9e9e;
     --litepicker-month-week-number-color: #9e9e9e;
     --litepicker-day-color: rgba(0, 0, 0, .87);
@@ -231,6 +232,7 @@ export const datePickerStyle = css`
     flex: 1;
     width: var(--litepicker-day-width);
     height: var(--litepicker-day-height);
+    margin: var(--litepicker-day-margin);
     text-align: center;
   }
   .litepicker
@@ -274,6 +276,7 @@ export const datePickerStyle = css`
     padding: 0;
     width: var(--litepicker-day-width);
     height: var(--litepicker-day-height);
+    margin: var(--litepicker-day-margin);
   }
   .litepicker .container__days .day-item {
     color: var(--litepicker-day-color);

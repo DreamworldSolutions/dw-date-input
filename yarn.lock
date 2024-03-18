@@ -63,18 +63,7 @@
     "@dreamworld/pwa-helpers" "^1.13.1"
     lodash-es "^4.17.15"
 
-"@dreamworld/dw-icon-button@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon-button/-/dw-icon-button-3.0.0.tgz#b540a13b848da46a50f37d4a83427181f675d119"
-  integrity sha512-8bPtV9GTemgxtf9s0rssxa/9Kx0oc2oLoBGV9YFLg2mrdp18T7GpLljc48h5GxaaFV3m10z7kxDb3JY6WQvATQ==
-  dependencies:
-    "@dreamworld/dw-icon" "^4.0.0"
-    "@dreamworld/dw-tooltip" "^3.0.0"
-    "@dreamworld/pwa-helpers" "^1.13.1"
-    "@dreamworld/web-util" "^1.2.0"
-    "@material/mwc-base" "0.27.0"
-
-"@dreamworld/dw-icon-button@^3.2.5":
+"@dreamworld/dw-icon-button@^3.0.0", "@dreamworld/dw-icon-button@^3.2.5":
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/@dreamworld/dw-icon-button/-/dw-icon-button-3.2.5.tgz#3bb577f373e52c5a979dbcf3715c9a9989c529e9"
   integrity sha512-FIzcTozybkoN2jWC/gK02wPrKM+BvG6uxKfVFqT8XlyCWIcoPtep7CthzMpxUodbRY7OjSC8Vm9OBniZa5li5A==
@@ -2386,12 +2375,7 @@ fsevents@~2.3.2:
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
 
-function-bind@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
-  integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
-
-function-bind@^1.1.2:
+function-bind@^1.1.1, function-bind@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.2.tgz#2c02d864d97f3ea6c8830c464cbd11ab6eab7a1c"
   integrity sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==
@@ -2819,14 +2803,7 @@ is-binary-path@~2.1.0:
   dependencies:
     binary-extensions "^2.0.0"
 
-is-builtin-module@^3.1.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/is-builtin-module/-/is-builtin-module-3.2.0.tgz#bb0310dfe881f144ca83f30100ceb10cf58835e0"
-  integrity sha512-phDA4oSGt7vl1n5tJvTWooWWAsXLY+2xCnxNqvKhGEzujg+A43wPlPOyDg3C8XQHN+6k/JTQWJ/j0dQh/qr+Hw==
-  dependencies:
-    builtin-modules "^3.3.0"
-
-is-builtin-module@^3.2.1:
+is-builtin-module@^3.1.0, is-builtin-module@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/is-builtin-module/-/is-builtin-module-3.2.1.tgz#f03271717d8654cfcaf07ab0463faa3571581169"
   integrity sha512-BSLE3HnV2syZ0FK0iMA/yUGplUeMmNz4AW5fnTunbCIqZi4vG3WjJT9FHMy5D69xmAYBHXQhJdALdpwVxV501A==
@@ -2840,19 +2817,12 @@ is-cidr@^4.0.2:
   dependencies:
     cidr-regex "^3.1.1"
 
-is-core-module@^2.13.0:
+is-core-module@^2.13.0, is-core-module@^2.5.0, is-core-module@^2.9.0:
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.13.1.tgz#ad0d7532c6fea9da1ebdc82742d74525c6273384"
   integrity sha512-hHrIjvZsftOsvKSn2TRYl63zvxsgE0K+0mYMoH6gD4omR5IWB2KynivBQczo3+wF1cCkjzvptnI9Q0sPU66ilw==
   dependencies:
     hasown "^2.0.0"
-
-is-core-module@^2.5.0, is-core-module@^2.9.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.10.0.tgz#9012ede0a91c69587e647514e1d5277019e728ed"
-  integrity sha512-Erxj2n/LDAZ7H8WNJXd9tw38GYM3dv8rk8Zcs+jJuxYTW7sozH+SS8NtrSjVL1/vpLvWi1hxy96IzjJ3EHTJJg==
-  dependencies:
-    has "^1.0.3"
 
 is-docker@^2.0.0, is-docker@^2.1.1:
   version "2.2.1"
@@ -4472,16 +4442,7 @@ resolve-path@^1.4.0:
     http-errors "~1.6.2"
     path-is-absolute "1.0.1"
 
-resolve@^1.10.0, resolve@^1.19.0:
-  version "1.22.1"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.1.tgz#27cb2ebb53f91abb49470a928bba7558066ac177"
-  integrity sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==
-  dependencies:
-    is-core-module "^2.9.0"
-    path-parse "^1.0.7"
-    supports-preserve-symlinks-flag "^1.0.0"
-
-resolve@^1.22.1:
+resolve@^1.10.0, resolve@^1.19.0, resolve@^1.22.1:
   version "1.22.8"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.8.tgz#b6c87a9f2aa06dfab52e3d70ac8cde321fa5a48d"
   integrity sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==

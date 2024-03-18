@@ -95,7 +95,8 @@ export class DwDateInputDemo extends LitElement {
   }
 
   _onValueChange(e) {
-    // this.value = e.detail.value;
+    this.value = e.detail.value;
+    console.log("value-change: ", e.detail.value);
   }
 }
 

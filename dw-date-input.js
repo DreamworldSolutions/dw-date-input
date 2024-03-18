@@ -419,6 +419,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     const value = e?.detail?.value || "";
     if(value) {
       this.value = value;
+      this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
     }
   }
 
