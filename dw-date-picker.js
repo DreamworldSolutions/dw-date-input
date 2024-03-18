@@ -9,6 +9,8 @@ import 'litepicker/dist/plugins/mobilefriendly';
 import dayjs from 'dayjs/esm/index.js';
 import datePickerStyle from './dw-date-picker-style.js';
 
+import '@dreamworld/dw-icon-button';
+
 /**
  * Providing a solution to select date.
  *
@@ -64,6 +66,12 @@ class DwDatePicker extends DwCompositeDialog {
           letter-spacing: 0.15px;
         }
 
+        .header .date-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
         #popover_dialog__surface {
           overflow: hidden;
           border-radius: 18px;
@@ -85,15 +93,51 @@ class DwDatePicker extends DwCompositeDialog {
         .litepicker .container__days .day-item.is-start-date.is-end-date {
           border-radius: 50%;
         }
+
+        :host([mobile-mode]) .litepicker,
+        :host([mobile-mode]) .litepicker .container__months,
+        :host([mobile-mode]) .litepicker .container__months .month-item {
+          width: 100%;
+          max-width: 392px;
+          box-sizing: border-box;
+          padding: 0px;
+        }
+
+        :host([mobile-mode]) {
+          --litepicker-day-width: calc(100% / 7);
+          --litepicker-day-height: calc(100vw / 7);
+          --litepicker-day-margin: 0px;
+        }
+
+        :host([mobile-mode]) .litepicker .container__days > div,
+        :host([mobile-mode]) .litepicker .container__days > a {
+          max-width: 56px;
+          max-height: 56px;
+        }
+
+        :host([mobile-mode]) .litepicker .container__months .month-item-weekdays-row > div {
+          max-width: 56px;
+          max-height: 48px;
+        }
+
+        :host([mobile-mode]) .litepicker .container__tooltip {
+          display: none;
+        }
+
+        :host([mobile-mode]) #dialog-content {
+          overflow-x: hidden;
+        }
+
+        dw-icon-button {
+          height: 48px;
+          width: 48px;
+        }
       `
     ]
   }
 
   constructor(){
     super();
-    this.separator = "/";
-    this.valueFormat = "yyyy-mm-dd";
-    this.mobileMode = false;
     this._onSelected = this._onSelected.bind(this);
   }
 
@@ -115,6 +159,14 @@ class DwDatePicker extends DwCompositeDialog {
        * default `yyyy-mm-dd`.
        */
       valueFormat: { type: String },
+
+      /**
+       * Input property.
+       * Display in mobile mode (full screen).
+       */
+      mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
+
+      tabletMode: { type: Boolean, reflect: true, attribute: 'tablet-mode' },
     }
   }
 
@@ -168,7 +220,12 @@ class DwDatePicker extends DwCompositeDialog {
       <div>
         <div class="header">
           <div class="day">${this._getDayText()}</div>
-          <div class="date">${this._getDateText()}</div>
+          <div class="date-container">
+              <div class="date">${this._getDateText()}</div>
+              ${this.tabletMode || this.mobileMode ?  html`
+                <dw-icon-button @click=${this._onIconClick} .icon=${'edit'}></dw-icon-button>
+              `: ''}
+          </div>
         </div>
         <div id="datepicker"></div>
       </div>
@@ -180,6 +237,19 @@ class DwDatePicker extends DwCompositeDialog {
     if (changedProps.has('value')) {
       this._setPickerDate();
     }
+  }
+
+  _onIconClick() {
+    this.dispatchEvent(
+      new CustomEvent('mode-changed', {
+        detail: {
+          mode: 'INPUT'
+        },
+      })
+    );
+
+
+    this.close();
   }
 
   _getDayText() {

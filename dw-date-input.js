@@ -7,6 +7,7 @@ dayjs.extend(customParseFormat);
 
 import "./date-input";
 import './dw-date-picker';
+import './dw-date-input-dialog';
 import '@dreamworld/dw-icon-button';
 
 const defaultErrorMessages = {
@@ -25,9 +26,18 @@ export class DwDateInput extends DwFormElement(LitElement) {
           display: inline-block;
           outline: none;
           position: relative;
-          --dw-date-input-padding: 12px 48px 14px 16px;
+          --dw-popover-border-radius: 18px;
         }
 
+        :host([mobile-mode]),
+        :host([tablet-mode]) {
+          user-select: none;
+        }
+        
+        date-input {
+          --dw-date-input-padding: 12px 48px 14px 16px;
+        }
+        
         :host[hidden] {
           display: none;
         }
@@ -246,14 +256,14 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Input property.
        * Display in mobile mode (full screen).
        */
-      mobileMode: { type: Boolean },
+      mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
 
       /**
        * Date-picker
-       * Opens dialog when true.
-       * Closes dialog when false
+       * Input property.
+       * Display in tablet mode.
        */
-      opened: { type: Boolean, reflect: true },
+      tabletMode: { type: Boolean, reflect: true, attribute: 'tablet-mode' },
       // END: Date-picker properties
     };
   }
@@ -332,6 +342,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.showFutureWarning = false;
     this.appendTo = "parent";
     this.zIndex = 9999;
+    this.mobileMode = true;
+    this._onDateInputClick = this._onDateInputClick.bind(this);
   }
 
   render() {
@@ -371,11 +383,14 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .tipPlacement="${this.tipPlacement}"
         .errorMessages="${this._errorMessages}"
         @change=${this._onChange}
+        @click=${this._onDateInputClick}
       ></date-input>
       <dw-date-picker
         .type=${this.mobileMode ? "modal" : "popover"}
         .popoverAnimation=${"expand"}
+        .placement=${'bottom'}
         .mobileMode=${this.mobileMode}
+        .tabletMode=${this.tabletMode}
         .showTrigger=${true}
         .appendTo=${this.appendTo}
         .zIndex=${this.zIndex}
@@ -383,12 +398,24 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .inputFormat=${this.inputFormat}
         .valueFormat=${this.valueFormat}
         .triggerElement=${this.triggerElement}
-        .opened=${this.opened}
         @dw-dialog-closed=${(e) => this._triggerDatePickerOpenedChanged(false)}
         @dw-dialog-opened=${(e) => this._triggerDatePickerOpenedChanged(true)}
-        @value-changed=${this._onDatePickerValueChanged}
+        @mode-changed=${this._onDatePickerModeChanged}
+        @value-changed=${this.__onValueChanged}
       >
       </dw-date-picker>
+      <dw-date-input-dialog
+        .type=${"modal"}
+        .placement=${'center'}
+        .value=${this.value}
+        .inputFormat=${this.inputFormat}
+        .valueFormat=${this.valueFormat}
+        @dw-dialog-closed=${(e) => this._triggerDateInputDialogOpenedChanged(false)}
+        @dw-dialog-opened=${(e) => this._triggerDateInputDialogOpenedChanged(true)}
+        @mode-changed=${this._onDateInputDialogModeChanged}
+        @value-changed=${this.__onValueChanged}
+      >
+      </dw-date-input-dialog>
       <dw-icon-button .icon=${'date_range'} @click=${this._openDatePicker}></dw-icon-button>
     `;
   }
@@ -404,8 +431,21 @@ export class DwDateInput extends DwFormElement(LitElement) {
     return this.renderRoot.querySelector("dw-date-picker");
   }
 
+  get dateInputDialog() {
+    return this.renderRoot.querySelector("dw-date-input-dialog");
+  }
+
+  _triggerDateInputDialogOpenedChanged(opened) {
+    this.dispatchEvent(
+      new CustomEvent("date-input-dialog-opened-changed", {
+        detail: {
+          opened,
+        },
+      })
+    );
+  }
+
   _triggerDatePickerOpenedChanged(opened) {
-    this.opened = opened;
     this.dispatchEvent(
       new CustomEvent("date-picker-opened-changed", {
         detail: {
@@ -415,11 +455,30 @@ export class DwDateInput extends DwFormElement(LitElement) {
     );
   }
 
-  _onDatePickerValueChanged(e) {
+  _onDatePickerModeChanged(e) {
+    if (this.dateInputDialog) {
+      this.dateInputDialog.opened = true;
+    }
+  }
+
+  _onDateInputDialogModeChanged(e) {
+    if (this.datePicker) {
+      this.datePicker.opened = true;
+    }
+  }
+
+  __onValueChanged(e) {
     const value = e?.detail?.value || "";
     if(value) {
       this.value = value;
       this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
+    }
+  }
+
+  _onDateInputClick() {
+    if(this.mobileMode || this.tabletMode) {
+      const trigger = this.renderRoot.querySelector('dw-icon-button');
+      trigger && trigger.click && trigger.click();
     }
   }
 

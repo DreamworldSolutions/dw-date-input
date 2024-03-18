@@ -2,8 +2,8 @@ import { css } from "@dreamworld/pwa-helpers/lit.js";
 
 export const datePickerStyle = css`
   :root, :host {
-    --litepicker-day-width: 44px;
-    --litepicker-day-height: 44px;
+    --litepicker-day-width: 40px;
+    --litepicker-day-height: 40px;
     --litepicker-day-margin: 4px;
     --litepicker-container-months-color-bg: #fff;
     --litepicker-container-months-box-shadow-color: #ddd;
@@ -233,6 +233,7 @@ export const datePickerStyle = css`
     width: var(--litepicker-day-width);
     height: var(--litepicker-day-height);
     margin: var(--litepicker-day-margin);
+    max-height: 48px;
     text-align: center;
   }
   .litepicker
