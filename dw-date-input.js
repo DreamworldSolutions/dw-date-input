@@ -407,9 +407,38 @@ export class DwDateInput extends DwFormElement(LitElement) {
       <dw-date-input-dialog
         .type=${"modal"}
         .placement=${'center'}
-        .value=${this.value}
-        .inputFormat=${this.inputFormat}
+        .inputFormat="${this.inputFormat}"
         .valueFormat=${this.valueFormat}
+        .label="${this.label}"
+        ?disabled="${this.disabled}"
+        .invalid=${this.invalid}
+        ?noLabel="${this.noLabel}"
+        ?required="${this.required}"
+        ?readOnly="${this.readOnly}"
+        ?autoSelect="${this.autoSelect}"
+        ?dense="${this.dense}"
+        ?hintPersistent="${this.hintPersistent}"
+        .placeholder="${this.placeholder}"
+        ?highlightChanged="${this.highlightChanged}"
+        ?noHintWrap="${this.noHintWrap}"
+        .value="${this.value}"
+        .originalDate="${this.originalValue}"
+        .name="${this.name}"
+        .hint="${this.hint}"
+        .minDate="${this.minDate}"
+        .maxDate="${this.maxDate}"
+        .showFutureWarning=${this.showFutureWarning}
+        .showFutureError=${this.showFutureError}
+        .warning=${this._warning}
+        .error=${this._error}
+        .hintInTooltip="${this.hintInTooltip}"
+        .errorInTooltip="${this.errorInTooltip}"
+        .warningInTooltip="${this.warningInTooltip}"
+        .hintTooltipActions="${this.hintTooltipActions}"
+        .errorTooltipActions="${this.errorTooltipActions}"
+        .warningTooltipActions="${this.warningTooltipActions}"
+        .tipPlacement="${this.tipPlacement}"
+        .errorMessages="${this._errorMessages}"
         @dw-dialog-closed=${(e) => this._triggerDateInputDialogOpenedChanged(false)}
         @dw-dialog-opened=${(e) => this._triggerDateInputDialogOpenedChanged(true)}
         @mode-changed=${this._onDateInputDialogModeChanged}
