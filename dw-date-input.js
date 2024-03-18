@@ -342,7 +342,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.showFutureWarning = false;
     this.appendTo = "parent";
     this.zIndex = 9999;
-    this.mobileMode = true;
+    this.mobileMode = false;
+    this.tabletMode = false;
     this._onDateInputClick = this._onDateInputClick.bind(this);
   }
 

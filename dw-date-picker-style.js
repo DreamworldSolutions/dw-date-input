@@ -5,34 +5,34 @@ export const datePickerStyle = css`
     --litepicker-day-width: 40px;
     --litepicker-day-height: 40px;
     --litepicker-day-margin: 4px;
-    --litepicker-container-months-color-bg: #fff;
+    --litepicker-container-months-color-bg: var(--mdc-theme-surface);
     --litepicker-container-months-box-shadow-color: #ddd;
     --litepicker-footer-color-bg: #fafafa;
     --litepicker-footer-box-shadow-color: #ddd;
-    --litepicker-tooltip-color-bg: #fff;
+    --litepicker-tooltip-color-bg: var(--mdc-theme-surface);
     --litepicker-month-header-color: #333;
-    --litepicker-button-prev-month-color: #9e9e9e;
-    --litepicker-button-next-month-color: #9e9e9e;
-    --litepicker-button-prev-month-color-hover: #2096F3;
-    --litepicker-button-next-month-color-hover: #2096F3;
+    --litepicker-button-prev-month-color: var(--dw-icon-color);
+    --litepicker-button-next-month-color: var(--dw-icon-color);
+    --litepicker-button-prev-month-color-hover: var(--dw-icon-color);
+    --litepicker-button-next-month-color-hover: var(--dw-icon-color);
     --litepicker-month-width: calc(calc(var(--litepicker-day-width) + var(--litepicker-day-margin) + var(--litepicker-day-margin)) * 7);
-    --litepicker-month-weekday-color: #9e9e9e;
-    --litepicker-month-week-number-color: #9e9e9e;
-    --litepicker-day-color: rgba(0, 0, 0, .87);
-    --litepicker-day-color-hover: #2096F3;
+    --litepicker-month-weekday-color: var(--mdc-theme-text-primary-on-surface);
+    --litepicker-month-week-number-color: var(--mdc-theme-text-primary-on-surface);
+    --litepicker-day-color: var(--mdc-theme-text-primary-on-surface);
+    --litepicker-day-color-hover: var(--mdc-theme-primary);
     --litepicker-is-today-color: #f44336;
     --litepicker-is-in-range-color: #bbdefb;
     --litepicker-is-locked-color: #9e9e9e;
     --litepicker-is-start-color: #fff;
-    --litepicker-is-start-color-bg: #2096F3;
+    --litepicker-is-start-color-bg: var(--mdc-theme-primary);
     --litepicker-is-end-color: #fff;
-    --litepicker-is-end-color-bg: #2096F3;
+    --litepicker-is-end-color-bg: var(--mdc-theme-primary);
     --litepicker-button-cancel-color: #fff;
     --litepicker-button-cancel-color-bg: #9e9e9e;
     --litepicker-button-apply-color: #fff;
-    --litepicker-button-apply-color-bg: #2096F3;
+    --litepicker-button-apply-color-bg: var(--mdc-theme-primary);
     --litepicker-button-reset-color: #909090;
-    --litepicker-button-reset-color-hover: #2096F3;
+    --litepicker-button-reset-color-hover: var(--mdc-theme-primary);
     --litepicker-highlighted-day-color: #333;
     --litepicker-highlighted-day-color-bg: #ffeb3b;
   }
@@ -441,10 +441,10 @@ export const datePickerStyle = css`
   }
 
   .litepicker {
-    --litepicker-button-prev-month-color: rgba(0, 0, 0, 0.87);
-    --litepicker-button-next-month-color: rgba(0, 0, 0, 0.87);
-    --litepicker-button-next-month-color-hover: rgba(0, 0, 0, 0.87);
-    --litepicker-button-prev-month-color-hover: rgba(0, 0, 0, 0.87);
+    --litepicker-button-prev-month-color: var(--mdc-theme-text-primary-on-surface);
+    --litepicker-button-next-month-color: var(--mdc-theme-text-primary-on-surface);
+    --litepicker-button-next-month-color-hover: var(--mdc-theme-text-primary-on-surface);
+    --litepicker-button-prev-month-color-hover: var(--mdc-theme-text-primary-on-surface);
   }
 
   .litepicker .container__months .month-item:first-child .button-previous-month,
@@ -464,7 +464,7 @@ export const datePickerStyle = css`
     letter-spacing: var(--headline6-letter-spacing);
     line-height: var(--headline6-line-height);
     font-weight: var(--headline6-font-weight);
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mdc-theme-text-primary-on-surface);
     font-weight: 500;
   }
 
@@ -481,7 +481,7 @@ export const datePickerStyle = css`
   }
 
   .day-item.is-today {
-    --litepicker-is-today-color: #2096f3;
+    --litepicker-is-today-color: var(--mdc-theme-primary);
   }
 
   .litepicker[data-plugins*="ranges"][data-ranges-position="left"]
