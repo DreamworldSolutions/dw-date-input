@@ -48,7 +48,7 @@ export class DwDateInputDialog extends DwCompositeDialog {
           height: 88px;
           padding: 16px 24px;
           box-sizing: border-box;
-          border-bottom: 1px solid rgba(0,0,0,.06);
+          border-bottom: 1px solid var(--mdc-theme-divider-color);
         }
 
         .header .day {
@@ -75,9 +75,9 @@ export class DwDateInputDialog extends DwCompositeDialog {
           padding: 16px 0px;
         }
 
-        dw-icon-button {
-          height: 48px;
-          width: 48px;
+        .date-container dw-icon-button {
+          height: 32px;
+          width: 32px;
         }
       `
     ]

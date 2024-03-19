@@ -49,7 +49,7 @@ class DwDatePicker extends DwCompositeDialog {
           height: 88px;
           padding: 16px 24px;
           box-sizing: border-box;
-          border-bottom: 1px solid rgba(0,0,0,.06);
+          border-bottom: 1px solid var(--mdc-theme-divider-color);
         }
 
         .header .day {
