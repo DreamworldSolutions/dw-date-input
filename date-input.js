@@ -10,6 +10,10 @@ export class DateInput extends DwInput {
     return [
       super.styles,
       css`
+        :host([readonly]) {
+          --dw-input-outlined-idle-border-color: var(--mdc-theme-divider-color);
+        }
+
         .mdc-text-field--outlined .mdc-text-field__input {
           padding: var(--dw-date-input-padding, 12px 16px 14px);
         }
@@ -259,6 +263,16 @@ export class DateInput extends DwInput {
 
   _getCurrentInputValue() {
     return this._textFieldInstance ? this._textFieldInstance.value: '';
+  }
+
+  showTrailingIconRipple() {
+    const icon = this?.renderRoot?.querySelector('#trailingIcon');
+    if(icon) {
+      icon?.__onStart();
+      setTimeout(() => {
+        icon?.__fadeOut();
+      }, 250)
+    }
   }
 
   get _warning() {

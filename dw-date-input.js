@@ -330,7 +330,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.zIndex = 9999;
     this.mobileMode = false;
     this.tabletMode = false;
-    this._onDateInputClick = this._onDateInputClick.bind(this);
+    this._onClick = this._onClick.bind(this);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener("click", this._onClick);
   }
 
   render() {
@@ -343,51 +348,53 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   get dateInputTemplate() {
     return html`
-      <date-input
-        id="dateInput"
-        .iconTrailing=${'date_range'}
-        .clickableIcon=${true}
-        .inputFormat="${this.inputFormat}"
-        .valueFormat=${this.valueFormat}
-        .label="${this.label}"
-        ?disabled="${this.disabled}"
-        .invalid=${this.invalid}
-        ?noLabel="${this.noLabel}"
-        ?required="${this.required}"
-        ?readOnly="${this.readOnly}"
-        ?autoSelect="${this.autoSelect}"
-        ?dense="${this.dense}"
-        ?hintPersistent="${this.hintPersistent}"
-        .placeholder="${this.placeholder}"
-        ?highlightChanged="${this.highlightChanged}"
-        ?noHintWrap="${this.noHintWrap}"
-        .date="${this.value}"
-        .originalDate="${this.originalValue}"
-        .name="${this.name}"
-        .hint="${this.hint}"
-        .minDate="${this.minDate}"
-        .maxDate="${this.maxDate}"
-        .showFutureWarning=${this.showFutureWarning}
-        .showFutureError=${this.showFutureError}
-        .warning=${this._warning}
-        .error=${this._error}
-        .hintInTooltip="${this.hintInTooltip}"
-        .errorInTooltip="${this.errorInTooltip}"
-        .warningInTooltip="${this.warningInTooltip}"
-        .hintTooltipActions="${this.hintTooltipActions}"
-        .errorTooltipActions="${this.errorTooltipActions}"
-        .warningTooltipActions="${this.warningTooltipActions}"
-        .tipPlacement="${this.tipPlacement}"
-        .errorMessages="${this._errorMessages}"
-        @change=${this._onChange}
-        @click=${this._onDateInputClick}
-      ></date-input>
+      <div class="date-input">
+        <date-input
+          id="dateInput"
+          .iconTrailing=${'date_range'}
+          .clickableIcon=${true}
+          .inputFormat="${this.inputFormat}"
+          .valueFormat=${this.valueFormat}
+          .label="${this.label}"
+          ?disabled="${this.disabled}"
+          .invalid=${this.invalid}
+          ?noLabel="${this.noLabel}"
+          ?required="${this.required}"
+          ?readOnly="${this.readOnly || this.mobileMode || this.tabletMode}"
+          ?autoSelect="${this.autoSelect}"
+          ?dense="${this.dense}"
+          ?hintPersistent="${this.hintPersistent}"
+          .placeholder="${this.placeholder}"
+          ?highlightChanged="${this.highlightChanged}"
+          ?noHintWrap="${this.noHintWrap}"
+          .date="${this.value}"
+          .originalDate="${this.originalValue}"
+          .name="${this.name}"
+          .hint="${this.hint}"
+          .minDate="${this.minDate}"
+          .maxDate="${this.maxDate}"
+          .showFutureWarning=${this.showFutureWarning}
+          .showFutureError=${this.showFutureError}
+          .warning=${this._warning}
+          .error=${this._error}
+          .hintInTooltip="${this.hintInTooltip}"
+          .errorInTooltip="${this.errorInTooltip}"
+          .warningInTooltip="${this.warningInTooltip}"
+          .hintTooltipActions="${this.hintTooltipActions}"
+          .errorTooltipActions="${this.errorTooltipActions}"
+          .warningTooltipActions="${this.warningTooltipActions}"
+          .tipPlacement="${this.tipPlacement}"
+          .errorMessages="${this._errorMessages}"
+          @change=${this._onChange}
+        ></date-input>
+      </div>
     `;
   }
 
   get dateInputDialogTemplate() {
     return html`
       <dw-date-input-dialog
+        date-picker="false"
         .type=${"modal"}
         .placement=${'center'}
         .inputFormat="${this.inputFormat}"
@@ -434,6 +441,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
   get datePickerTemplate() {
     return html`
       <dw-date-picker
+        date-picker="false"
         .type=${this.mobileMode ? "modal" : "popover"}
         .popoverAnimation=${"expand"}
         .placement=${'bottom'}
@@ -446,6 +454,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .inputFormat=${this.inputFormat}
         .valueFormat=${this.valueFormat}
         .triggerElement=${this.triggerElement}
+        .excludeOutsideClickFor=${'date-input'}
         @dw-dialog-closed=${(e) => this._triggerDatePickerOpenedChanged(false)}
         @dw-dialog-opened=${(e) => this._triggerDatePickerOpenedChanged(true)}
         @mode-changed=${this._onDatePickerModeChanged}
@@ -453,6 +462,25 @@ export class DwDateInput extends DwFormElement(LitElement) {
       >
       </dw-date-picker>
     `;
+  }
+
+  _onClick(e) {
+    const paths = e.composedPath && e.composedPath() || e.path || [];
+    let openDatePickerDialog = true;
+    if(paths && paths.length) {
+      paths.forEach((el) => {
+        if(openDatePickerDialog) {
+          const datePicker = el && el.getAttribute && el.getAttribute('date-picker') || '';
+          if(datePicker === 'false') {
+            openDatePickerDialog = false;
+          }
+        }
+      });
+    }
+    if(openDatePickerDialog && this.datePicker && !this.datePicker.opened) {
+      this.renderRoot.querySelector("#dateInput")?.showTrailingIconRipple();
+      this._openDatePicker();
+    }
   }
 
   firstUpdated(changeProps) {
@@ -509,10 +537,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
       this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
     }
-  }
-
-  _onDateInputClick() {
-    this._openDatePicker();
   }
 
   _openDatePicker() {
@@ -589,6 +613,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   reportValidity() {
     return this.renderRoot.querySelector("#dateInput")?.validate();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener("click", this._onClick);
   }
 }
 

@@ -219,12 +219,12 @@ class DwDatePicker extends DwCompositeDialog {
   get _contentTemplate() {
     return html`
       <div>
-        <div class="header">
+        <div class="header" date-picker="false">
           <div class="day">${this._getDayText()}</div>
           <div class="date-container">
               <div class="date">${this._getDateText()}</div>
               ${this.tabletMode || this.mobileMode ?  html`
-                <dw-icon-button .buttonSize=${32} @click=${this._onIconClick} .icon=${'edit'}></dw-icon-button>
+                <dw-icon-button date-picker="false" .iconFont=${'OUTLINED'} .buttonSize=${32} @click=${this._onIconClick} .icon=${'edit'}></dw-icon-button>
               `: ''}
           </div>
         </div>
@@ -338,7 +338,7 @@ class DwDatePicker extends DwCompositeDialog {
     if(value === this.value) {
       return;
     }
-    
+
     this.dispatchEvent(
       new CustomEvent('change', {
         detail: {

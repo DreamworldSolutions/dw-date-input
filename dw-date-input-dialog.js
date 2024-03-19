@@ -310,11 +310,11 @@ export class DwDateInputDialog extends DwCompositeDialog {
 
   get _headerTemplate() {
     return html`
-      <div class="header">
+      <div class="header" date-picker="false">
         <div class="day">${this._getDayText()}</div>
         <div class="date-container">
           <div class="date">${this._getDateText()}</div>
-          <dw-icon-button .buttonSize=${32} @click=${this._onIconClick} .icon=${'date_range'}></dw-icon-button>
+          <dw-icon-button date-picker="false" .buttonSize=${32} @click=${this._onIconClick} .icon=${'date_range'}></dw-icon-button>
         </div>
       </div>
     `;
