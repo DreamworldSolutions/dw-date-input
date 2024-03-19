@@ -15,10 +15,10 @@ import '@dreamworld/dw-icon-button';
  * Providing a solution to select date.
  *
  * ## Events
- *  - `value-changed` Fire when user choose any date from calendar.
+ *  - `change` Fire when user choose any date from calendar.
  *
  * ## Usage Pattern:
- *  - <dw-date-picker value="" @value-changed="">
+ *  - <dw-date-picker value="" @change="">
  *    </dw-date-picker>
  */
 class DwDatePicker extends DwCompositeDialog {
@@ -129,9 +129,9 @@ class DwDatePicker extends DwCompositeDialog {
           overflow-x: hidden;
         }
 
-        dw-icon-button {
-          height: 48px;
-          width: 48px;
+        .date-container dw-icon-button {
+          height: 32px;
+          width: 32px;
         }
       `
     ]
@@ -224,7 +224,7 @@ class DwDatePicker extends DwCompositeDialog {
           <div class="date-container">
               <div class="date">${this._getDateText()}</div>
               ${this.tabletMode || this.mobileMode ?  html`
-                <dw-icon-button @click=${this._onIconClick} .icon=${'edit'}></dw-icon-button>
+                <dw-icon-button .buttonSize=${32} @click=${this._onIconClick} .icon=${'edit'}></dw-icon-button>
               `: ''}
           </div>
         </div>
@@ -334,10 +334,15 @@ class DwDatePicker extends DwCompositeDialog {
 
   _trigerValueChanged(date) {
     date = date && date.dateInstance ? date.dateInstance : date;
+    const value = date ? dayjs(date).startOf('day').format(this.valueFormat) : null;
+    if(value === this.value) {
+      return;
+    }
+    
     this.dispatchEvent(
-      new CustomEvent('value-changed', {
+      new CustomEvent('change', {
         detail: {
-          value: date ? dayjs(date).startOf('day').format(this.valueFormat) : null
+          value
         },
       })
     );

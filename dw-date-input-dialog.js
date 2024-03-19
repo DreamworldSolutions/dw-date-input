@@ -9,6 +9,7 @@ import 'litepicker/dist/plugins/mobilefriendly';
 import dayjs from 'dayjs/esm/index.js';
 
 import '@dreamworld/dw-icon-button';
+import '@dreamworld/dw-button';
 import './date-input';
 
 /**
@@ -21,17 +22,26 @@ import './date-input';
  *  - <dw-date-input-dialog value="" @value-changed="">
  *    </dw-date-input-dialog>
  */
-class DwDateInputDialog extends DwCompositeDialog {
+export class DwDateInputDialog extends DwCompositeDialog {
   static get styles() {
     return [
       super.styles,
       css`
-        :host([type="modal"]:not([has-footer]):not([custom-content-padding-applied])) .mdc-dialog .mdc-dialog__content {
+        :host([type="modal"]) .mdc-dialog__title {
           padding: 0px;
+        }
+
+        :host([type="modal"]) .mdc-dialog__title::before {
+          display: none;
         }
 
         :host([type="modal"]) .mdc-dialog .mdc-dialog__surface {
           min-width: 328px;
+        }
+
+        :host([type="modal"]) .mdc-dialog__actions {
+          padding-right: 24px;
+          height: 48px;
         }
 
         .header {
@@ -59,6 +69,10 @@ class DwDateInputDialog extends DwCompositeDialog {
           display: flex;
           justify-content: space-between;
           align-items: center;
+        }
+
+        date-input {
+          padding: 16px 0px;
         }
 
         dw-icon-button {
@@ -282,6 +296,11 @@ class DwDateInputDialog extends DwCompositeDialog {
     this.requestUpdate("valueFormat", oldValue);
   }
 
+  constructor() {
+    super();
+    this.autoFocusSelector = 'date-input';
+  }
+
   willUpdate(changedProps){
     super.willUpdate(changedProps);
     if (changedProps.has("inputFormat")) {
@@ -289,16 +308,20 @@ class DwDateInputDialog extends DwCompositeDialog {
     }
   }
 
+  get _headerTemplate() {
+    return html`
+      <div class="header">
+        <div class="day">${this._getDayText()}</div>
+        <div class="date-container">
+          <div class="date">${this._getDateText()}</div>
+          <dw-icon-button .buttonSize=${32} @click=${this._onIconClick} .icon=${'date_range'}></dw-icon-button>
+        </div>
+      </div>
+    `;
+  }
+
   get _contentTemplate() {
     return html`
-      <div>
-        <div class="header">
-          <div class="day">${this._getDayText()}</div>
-          <div class="date-container">
-            <div class="date">${this._getDateText()}</div>
-            <dw-icon-button @click=${this._onIconClick} .icon=${'date_range'}></dw-icon-button>
-          </div>
-        </div>
         <date-input
           .inputFormat="${this.inputFormat}"
           .valueFormat=${this.valueFormat}
@@ -337,6 +360,43 @@ class DwDateInputDialog extends DwCompositeDialog {
     `;
   }
 
+  get dateInput() {
+    return this.renderRoot.querySelector('date-input');
+  }
+
+  get _footerTemplate() {
+    return html`
+      <dw-button dismiss>Cancel</dw-button>
+      <dw-button @click=${this._onApply}>Apply</dw-button>
+    `;
+  }
+
+    /**
+   * Performs validatio of input
+   * Returns true if validation is passedisValid
+   */
+    checkValidity() {
+      return this.dateInput?.checkValidity();
+    }
+  
+    /* Call this to perform validation of the date input */
+    // TODO: remove this when `dw-form` elements are updated as per new specs.
+    validate() {
+      return this.reportValidity();
+    }
+  
+    reportValidity() {
+      return this.dateInput?.validate();
+    }
+
+  _onApply() {
+    if(this.dateInput?.validate()) {
+      this.value = this.dateInput?.value;
+      this.dispatchEvent(new CustomEvent("change"));
+      this.close();
+    }
+  }
+
   _onIconClick() {
     this.dispatchEvent(
       new CustomEvent('mode-changed', {
@@ -366,16 +426,6 @@ class DwDateInputDialog extends DwCompositeDialog {
 
   formatDateText(value) {
     return value && value.replace(/ /g, "").split(`${this.separator}`).join(` ${this.separator} `);
-  }
-
-  _trigerValueChanged(date) {
-    this.dispatchEvent(
-      new CustomEvent('value-changed', {
-        detail: {
-          value: date
-        },
-      })
-    );
   }
 }
 

@@ -150,8 +150,10 @@ export class DateInput extends DwInput {
       return;
     }
 
-    let text = this.formatDateText(this.value);
-    this._textFieldInstance.value = text || '';
+    setTimeout(() => {
+      let text = this.formatDateText(this.value);
+      this._textFieldInstance.value = text || '';
+    });
   }
 
   formatDateText() {
