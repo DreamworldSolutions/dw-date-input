@@ -170,6 +170,3 @@ const getNearestYear = (month) => {
   const diff2 = dayjs(`${cYear}-${cMonth}-01`).diff(`${cYear - 1}-${month}-01`, 'month');
   return diff2 < diff1 ? cYear - 1: cYear;
 }
-
-window.dateParse = dateParse;
-window.getNearestYear = getNearestYear;

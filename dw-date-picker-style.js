@@ -280,21 +280,37 @@ export const datePickerStyle = css`
     margin: var(--litepicker-day-margin);
   }
   .litepicker .container__days .day-item {
+    position: relative;
     color: var(--litepicker-day-color);
     text-align: center;
     text-decoration: none;
     border-radius: 3px;
-    -webkit-transition: color 0.3s, border 0.3s;
-    transition: color 0.3s, border 0.3s;
+    -webkit-transition: color 0.3s, border 0.3s opacity 150ms;
+    transition: color 0.3s, border 0.3s opacity 150ms;
     cursor: default;
   }
-  .litepicker .container__days .day-item:hover {
-    color: var(--litepicker-day-color-hover);
-    -webkit-box-shadow: inset 0 0 0 1px var(--litepicker-day-color-hover);
-    box-shadow: inset 0 0 0 1px var(--litepicker-day-color-hover);
+
+  .litepicker .container__days .day-item::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--mdc-theme-on-surface);
+    transition: opacity 150ms;
+    opacity: 0;
+    border-radius: 50%;
   }
+
+  .litepicker .container__days .day-item:hover::before {
+    opacity: 0.04;
+  }
+
   .litepicker .container__days .day-item.is-today {
     color: var(--litepicker-is-today-color);
+    -webkit-box-shadow: inset 0 0 0 1px var(--litepicker-day-color-hover);
     box-shadow: inset 0 0 0 1px var(--litepicker-is-today-color);
   }
   .litepicker .container__days .day-item.is-locked {
