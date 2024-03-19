@@ -581,6 +581,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     const value = e?.detail?.value || "";
     if(value) {
       this.value = value;
+      this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
     }
   }
@@ -593,7 +594,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
       this.value = date || this.value;
       this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
-      console.log("_onChange", {target: e.target, lastValue, value: this.value});
     }
   }
   

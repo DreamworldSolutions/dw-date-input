@@ -11,10 +11,10 @@ export const datePickerStyle = css`
     --litepicker-footer-box-shadow-color: #ddd;
     --litepicker-tooltip-color-bg: var(--mdc-theme-surface);
     --litepicker-month-header-color: #333;
-    --litepicker-button-prev-month-color: var(--dw-icon-color);
-    --litepicker-button-next-month-color: var(--dw-icon-color);
-    --litepicker-button-prev-month-color-hover: var(--dw-icon-color);
-    --litepicker-button-next-month-color-hover: var(--dw-icon-color);
+    --litepicker-button-prev-month-color: var(--mdc-theme-text-secondary-on-surface);
+    --litepicker-button-next-month-color: var(--mdc-theme-text-secondary-on-surface);
+    --litepicker-button-prev-month-color-hover: var(--mdc-theme-text-secondary-on-surface);
+    --litepicker-button-next-month-color-hover: var(--mdc-theme-text-secondary-on-surface);
     --litepicker-month-width: calc(calc(var(--litepicker-day-width) + var(--litepicker-day-margin) + var(--litepicker-day-margin)) * 7);
     --litepicker-month-weekday-color: var(--mdc-theme-text-primary-on-surface);
     --litepicker-month-week-number-color: var(--mdc-theme-text-primary-on-surface);
@@ -442,10 +442,10 @@ export const datePickerStyle = css`
   }
 
   .litepicker {
-    --litepicker-button-prev-month-color: var(--mdc-theme-text-primary-on-surface);
-    --litepicker-button-next-month-color: var(--mdc-theme-text-primary-on-surface);
-    --litepicker-button-next-month-color-hover: var(--mdc-theme-text-primary-on-surface);
-    --litepicker-button-prev-month-color-hover: var(--mdc-theme-text-primary-on-surface);
+    --litepicker-button-prev-month-color: var(--mdc-theme-text-secondary-on-surface);
+    --litepicker-button-next-month-color: var(--mdc-theme-text-secondary-on-surface);
+    --litepicker-button-next-month-color-hover: var(--mdc-theme-text-secondary-on-surface);
+    --litepicker-button-prev-month-color-hover: var(--mdc-theme-text-secondary-on-surface);
   }
 
   .litepicker .container__months .month-item:first-child .button-previous-month,
@@ -461,12 +461,12 @@ export const datePickerStyle = css`
   .litepicker .container__months .month-item-header div > .month-item-name,
   .litepicker .container__months .month-item-header div > .month-item-year {
     font-family: 'Roboto', 'Noto', Arial, Verdana, helvetica, sans-serif;
-    font-size: var(--headline6-font-size);
+    font-size: var(--headline6-font-size, 16px);
     letter-spacing: var(--headline6-letter-spacing);
     line-height: var(--headline6-line-height);
     font-weight: var(--headline6-font-weight);
     color: var(--mdc-theme-text-primary-on-surface);
-    font-weight: 500;
+    font-weight: 700;
   }
 
   .litepicker .container__months .month-item-header {

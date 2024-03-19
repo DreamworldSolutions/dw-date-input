@@ -228,7 +228,7 @@ class DwDatePicker extends DwCompositeDialog {
               `: ''}
           </div>
         </div>
-        <div id="datepicker"></div>
+        <div id="datepicker" date-picker="false"></div>
       </div>
     `;
   }

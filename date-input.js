@@ -3,7 +3,9 @@ import { DwInput } from "@dreamworld/dw-input/dw-input";
 import { dateParse } from "./date-parse";
 import dayjs from 'dayjs/esm/index.js';
 import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
+import isSameOrAfter from 'dayjs/esm/plugin/isSameOrAfter'
 dayjs.extend(customParseFormat);
+dayjs.extend(isSameOrAfter);
 
 export class DateInput extends DwInput {
   static get styles() {
@@ -12,6 +14,17 @@ export class DateInput extends DwInput {
       css`
         :host([readonly]) {
           --dw-input-outlined-idle-border-color: var(--mdc-theme-divider-color);
+        }
+
+        .mdc-text-field--focused:not(.mdc-text-field--invalid):not(.mdc-text-field--disabled) {
+          --dw-icon-color: var(--mdc-theme-primary);
+        }
+
+        .mdc-text-field--with-leading-icon.mdc-text-field--dense .mdc-text-field__icon, 
+        .mdc-text-field--with-trailing-icon.mdc-text-field--dense .mdc-text-field__icon {
+          transform: scale(1);
+          right: 4px;
+          top: 4px;
         }
 
         .mdc-text-field--outlined .mdc-text-field__input {
@@ -105,11 +118,14 @@ export class DateInput extends DwInput {
   constructor() {
     super();
     this.clickableIcon = true;
+    this.iconButtonSize = 40;
+    this.iconSize = 20;
     this.inputFormat = "DD/MM/YYYY";
     this.valueFormat = "YYYY-MM-DD";
     this.separator = "/";
     this.showFutureError = false;
     this.showFutureWarning = false;
+    this.autoSelect = true;
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
     this.addEventListener("blur", this._onBlur);
@@ -139,11 +155,17 @@ export class DateInput extends DwInput {
   }
 
   updated(changedProps) {
-    super.updated(changedProps);
+    super.updated && super.updated(changedProps);
     if (changedProps.has('date')) {
       this._updateDateTextfieldValue();
     }
   }
+
+  /**
+   * @override
+   * Remove date-input format;
+   */
+  _updateTextfieldValue() {}
 
   /**
    * Updates text-field's value based on the current value of `value` property.
@@ -154,10 +176,8 @@ export class DateInput extends DwInput {
       return;
     }
 
-    setTimeout(() => {
-      let text = this.formatDateText(this.value);
-      this._textFieldInstance.value = text || '';
-    });
+    let text = this.formatDateText(this.value);
+    this._textFieldInstance.value = text || '';
   }
 
   formatDateText() {
@@ -176,11 +196,10 @@ export class DateInput extends DwInput {
    */
   _customWarning() {
     if (this.showFutureWarning) {
-      const todayDate = dayjs().format(this.valueFormat);
-      if (this.date > todayDate) {
-        return "Future date is selected";
-      } else {
+      if (dayjs().isSameOrAfter(this.date, 'day')) {
         return "";
+      } else {
+        return "Future date is selected";
       }
     }
     return "";
@@ -236,8 +255,8 @@ export class DateInput extends DwInput {
     const inputValue = e.detail.value || this._getCurrentInputValue();
     const value = this.parseDateValue(inputValue);
     this.value = value || inputValue;
-    this._updateDateTextfieldValue();
     this.validate();
+    this._updateDateTextfieldValue();
     this.dispatchEvent(new CustomEvent("change"));
   }
 
@@ -247,8 +266,8 @@ export class DateInput extends DwInput {
     const inputValue = paste || this._getCurrentInputValue();
     const value = this.parseDateValue(inputValue);
     this.value = value || paste;
-    this._updateDateTextfieldValue();
     this.validate();
+    this._updateDateTextfieldValue();
     this.dispatchEvent(new CustomEvent("change"));
   }
 
@@ -256,8 +275,8 @@ export class DateInput extends DwInput {
     const inputValue = e.target && e.target.value || this._getCurrentInputValue();
     const value = this.parseDateValue(inputValue);
     this.value = value || inputValue;
-    this._updateDateTextfieldValue();
     this.validate();
+    this._updateDateTextfieldValue();
     this.dispatchEvent(new CustomEvent("change"));
   }
 
