@@ -4,7 +4,10 @@ import { DwFormElement } from "@dreamworld/dw-form/dw-form-element";
 import dayjs from 'dayjs/esm/index.js';
 import customParseFormat from 'dayjs/esm/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
+
 import "./date-input";
+import './dw-date-picker';
+import './dw-date-input-dialog';
 
 const defaultErrorMessages = {
   minDate: "Date must be > {minDate}",
@@ -21,9 +24,14 @@ export class DwDateInput extends DwFormElement(LitElement) {
         :host {
           display: inline-block;
           outline: none;
-          position: relative;
+          --dw-popover-border-radius: 18px;
         }
 
+        :host([mobile-mode]),
+        :host([tablet-mode]) {
+          user-select: none;
+        }
+        
         :host[hidden] {
           display: none;
         }
@@ -174,7 +182,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * Whether to show hint in tooltip
        * tip trigger on hover of info, warning, and error icon button at trail.
        */
-      hintInTooltip: {type: Boolean},
+      hintInTooltip: { type: Boolean },
 
       /**
        * Whether to show error in tooltip
@@ -208,20 +216,93 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
        */
       tipPlacement: { type: String },
+
+      // START: Date-picker properties
+      /**
+       * Date-picker
+       * Trigger element for which `popover` dialog is opened.
+       */
+      triggerElement: { type: Object },
+
+      /**
+       * Date-picker
+       * Element in which content will be appened. Default is parent element of trigger element.
+       */
+      appendTo: { type: Object },
+
+      /**
+       * Date-picker
+       * Input property.
+       * Element z-index, default value is 9999.
+       */
+      zIndex: { type: Number },
+
+      /**
+       * Date-picker
+       * Input property.
+       * Display in mobile mode (full screen).
+       */
+      mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
+
+      /**
+       * Date-picker
+       * Input property.
+       * Display in tablet mode.
+       */
+      tabletMode: { type: Boolean, reflect: true, attribute: 'tablet-mode' },
+      // END: Date-picker properties
     };
   }
 
   /**
+   * Getter of `inputFormat` property.
+   */
+  get inputFormat() {
+    return this._inputFormat && this._inputFormat.toUpperCase() || this._inputFormat;
+  }
+
+  /**
+   * Setter of `inputFormat` property.
+   */
+  set inputFormat(value) {
+    let oldValue = this._inputFormat;
+    if (value === oldValue) {
+      return;
+    }
+    this._inputFormat = value;
+    this.requestUpdate("inputFormat", oldValue);
+  }
+
+  /**
+   * Getter of `valueFormat` property.
+   */
+  get valueFormat() {
+    return this._valueFormat && this._valueFormat.toUpperCase() || this._valueFormat;
+  }
+
+  /**
+   * Setter of `valueFormat` property.
+   */
+  set valueFormat(value) {
+    let oldValue = this._valueFormat;
+    if (value === oldValue) {
+      return;
+    }
+    this._valueFormat = value;
+    this.requestUpdate("valueFormat", oldValue);
+  }
+
+  /**
    * Sets static errorMessages. Its used at application level.
-   * @param {Object} errorMessages 
+   * @param {Object} errorMessages
    */
   static setErrorMessages(errorMessages) {
-    this.errorMessages = {...this.errorMessages, ...errorMessages};
+    this.errorMessages = { ...this.errorMessages, ...errorMessages };
   }
 
   get _errorMessages() {
     const errorMessages = this.errorMessages || {};
-    return {...DwDateInput.errorMessages, ...errorMessages }
+    return { ...DwDateInput.errorMessages, ...errorMessages };
   }
 
   constructor() {
@@ -239,19 +320,85 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.hintPersistent = false;
     this.invalid = false;
     this.autoSelect = false;
-    this.inputFormat = "dd/mm/yyyy";
-    this.valueFormat = "yyyy-mm-dd";
+    this.inputFormat = "DD/MM/YYYY";
+    this.valueFormat = "YYYY-MM-DD";
     this.highlightChanged = false;
     this.errorMessages = defaultErrorMessages;
     this.showFutureError = false;
     this.showFutureWarning = false;
+    this.appendTo = 'parent';
+    this.zIndex = 9999;
+    this.mobileMode = false;
+    this.tabletMode = false;
+    this._onClick = this._onClick.bind(this);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener("click", this._onClick);
   }
 
   render() {
     return html`
-      <date-input
-        id="dateInput"
+      ${this.dateInputTemplate}
+      ${this.datePickerTemplate}
+      ${this.dateInputDialogTemplate}
+    `;
+  }
+
+  get dateInputTemplate() {
+    return html`
+      <div class="date-input">
+        <date-input
+          id="dateInput"
+          .iconTrailing=${'date_range'}
+          .clickableIcon=${true}
+          .inputFormat="${this.inputFormat}"
+          .valueFormat=${this.valueFormat}
+          .label="${this.label}"
+          ?disabled="${this.disabled}"
+          .invalid=${this.invalid}
+          ?noLabel="${this.noLabel}"
+          ?required="${this.required}"
+          ?readOnly="${this.readOnly || this.mobileMode || this.tabletMode}"
+          ?autoSelect="${this.autoSelect}"
+          ?dense="${this.dense}"
+          ?hintPersistent="${this.hintPersistent}"
+          .placeholder="${this.placeholder}"
+          ?highlightChanged="${this.highlightChanged}"
+          ?noHintWrap="${this.noHintWrap}"
+          .date="${this.value}"
+          .originalDate="${this.originalValue}"
+          .name="${this.name}"
+          .hint="${this.hint}"
+          .minDate="${this.minDate}"
+          .maxDate="${this.maxDate}"
+          .showFutureWarning=${this.showFutureWarning}
+          .showFutureError=${this.showFutureError}
+          .warning=${this._warning}
+          .error=${this._error}
+          .hintInTooltip="${this.hintInTooltip}"
+          .errorInTooltip="${this.errorInTooltip}"
+          .warningInTooltip="${this.warningInTooltip}"
+          .hintTooltipActions="${this.hintTooltipActions}"
+          .errorTooltipActions="${this.errorTooltipActions}"
+          .warningTooltipActions="${this.warningTooltipActions}"
+          .tipPlacement="${this.tipPlacement}"
+          .errorMessages="${this._errorMessages}"
+          @change=${this._onChange}
+        ></date-input>
+      </div>
+    `;
+  }
+
+  get dateInputDialogTemplate() {
+    return html`
+      <dw-date-input-dialog
+        date-picker="false"
+        .type=${"modal"}
+        .placement=${'center'}
         .inputFormat="${this.inputFormat}"
+        .valueFormat=${this.valueFormat}
         .label="${this.label}"
         ?disabled="${this.disabled}"
         .invalid=${this.invalid}
@@ -264,7 +411,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .placeholder="${this.placeholder}"
         ?highlightChanged="${this.highlightChanged}"
         ?noHintWrap="${this.noHintWrap}"
-        .date="${this.value}"
+        .value="${this.value}"
         .originalDate="${this.originalValue}"
         .name="${this.name}"
         .hint="${this.hint}"
@@ -282,19 +429,129 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .warningTooltipActions="${this.warningTooltipActions}"
         .tipPlacement="${this.tipPlacement}"
         .errorMessages="${this._errorMessages}"
+        @dw-dialog-closed=${(e) => this._triggerDateInputDialogOpenedChanged(false)}
+        @dw-dialog-opened=${(e) => this._triggerDateInputDialogOpenedChanged(true)}
+        @mode-changed=${this._onDateInputDialogModeChanged}
         @change=${this._onChange}
-        @blur=${this._onBlur}
-      ></date-input>
+      >
+      </dw-date-input-dialog>
     `;
   }
 
+  get datePickerTemplate() {
+    return html`
+      <dw-date-picker
+        date-picker="false"
+        .type=${this.mobileMode ? "modal" : "popover"}
+        .popoverAnimation=${"expand"}
+        .placement=${'bottom'}
+        .mobileMode=${this.mobileMode}
+        .tabletMode=${this.tabletMode}
+        .showTrigger=${true}
+        .appendTo=${this.appendTo}
+        .zIndex=${this.zIndex}
+        .value=${this.value}
+        .inputFormat=${this.inputFormat}
+        .valueFormat=${this.valueFormat}
+        .triggerElement=${this.triggerElement}
+        .excludeOutsideClickFor=${'date-input'}
+        @dw-dialog-closed=${(e) => this._triggerDatePickerOpenedChanged(false)}
+        @dw-dialog-opened=${(e) => this._triggerDatePickerOpenedChanged(true)}
+        @mode-changed=${this._onDatePickerModeChanged}
+        @change=${this._onDatePickerDateChange}
+      >
+      </dw-date-picker>
+    `;
+  }
+
+  _onClick(e) {
+    const paths = e.composedPath && e.composedPath() || e.path || [];
+    let openDatePickerDialog = true;
+    if(paths && paths.length) {
+      paths.forEach((el) => {
+        if(openDatePickerDialog) {
+          const datePicker = el && el.getAttribute && el.getAttribute('date-picker') || '';
+          if(datePicker === 'false') {
+            openDatePickerDialog = false;
+          }
+        }
+      });
+    }
+    if(openDatePickerDialog && this.datePicker && !this.datePicker.opened) {
+      this.renderRoot.querySelector("#dateInput")?.showTrailingIconRipple();
+      this._openDatePicker();
+    }
+  }
+
+  firstUpdated(changeProps) {
+    super.firstUpdated && super.firstUpdated(changeProps);
+    if (!this.triggerElement) {
+      this.triggerElement = this.renderRoot.querySelector("#dateInput");
+    }
+  }
+
+  get datePicker() {
+    return this.renderRoot.querySelector("dw-date-picker");
+  }
+
+  get dateInputDialog() {
+    return this.renderRoot.querySelector("dw-date-input-dialog");
+  }
+
+  _triggerDateInputDialogOpenedChanged(opened) {
+    this.dispatchEvent(
+      new CustomEvent("date-input-dialog-opened-changed", {
+        detail: {
+          opened,
+        },
+      })
+    );
+  }
+
+  _triggerDatePickerOpenedChanged(opened) {
+    this.dispatchEvent(
+      new CustomEvent("date-picker-opened-changed", {
+        detail: {
+          opened,
+        },
+      })
+    );
+  }
+
+  _onDatePickerModeChanged(e) {
+    if (this.dateInputDialog) {
+      this.dateInputDialog.opened = true;
+    }
+  }
+
+  _onDateInputDialogModeChanged(e) {
+    if (this.datePicker) {
+      this.datePicker.opened = true;
+    }
+  }
+
+  _onDatePickerValueChanged(e) {
+    const value = e?.detail?.value || "";
+    if(value) {
+      this.value = value;
+      this.validate();
+      this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
+    }
+  }
+
+  _openDatePicker() {
+    if (this.datePicker) {
+      this.datePicker.opened = true;
+    }
+  }
+
   /**
-   * This getter is written because it is used when someone extends this component, and it has some custom validations. 
+   * This getter is written because it is used when someone extends this component, and it has some custom validations.
    * They can override this getter method and add custom validations and call super.
-   * 
+   *
    * NOTE:
    * Q. Why can't extended components use the "error" property? Why is this method needed?
-   * Ans. If the extended components use the "error" property, then at integration time, the integrator can't set an error, 
+   * Ans. If the extended components use the "error" property, then at integration time, the integrator can't set an error,
    * and if it does, that component's deflection validation will not work.
    */
   get _error() {
@@ -302,12 +559,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   /**
-   * This getter is written because it is used when someone extends this component, and it has some custom warnings. 
+   * This getter is written because it is used when someone extends this component, and it has some custom warnings.
    * They can override this getter method and add custom warnings and call super.
-   * 
+   *
    * NOTE:
    * Q. Why can't extended components use the "warning" property? Why is this method needed?
-   * Ans. If the extended components use the "warning" property, then at integration time, the integrator can't set an warning, 
+   * Ans. If the extended components use the "warning" property, then at integration time, the integrator can't set an warning,
    * and if it does, that component's deflection validation will not work.
    */
   get _warning() {
@@ -320,23 +577,26 @@ export class DwDateInput extends DwFormElement(LitElement) {
     el && el.focus();
   }
 
-  _onChange(e) {
-    const dateInputed = dayjs(e.target.value, this.inputFormat.toUpperCase());
-    let date = "";
-    if (dateInputed.isValid()) {
-      date = dateInputed.format(this.valueFormat.toUpperCase());
+  _onDatePickerDateChange(e) {
+    const value = e?.detail?.value || "";
+    if(value) {
+      this.value = value;
+      this.validate();
+      this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
     }
-
-    this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
   }
 
-  _onBlur(e) {
-    let value = e.target.value;
-    const inputFormat = this.inputFormat.toUpperCase();
-    value = value ? dayjs(value, inputFormat).format("YYYY-MM-DD") : ``;
-    this.value = value;
+  _onChange(e) {
+    if(e && e.target) {
+      const dateInputed = dayjs(e.target.value, this.inputFormat);
+      const date = dateInputed.isValid() ? dateInputed.format(this.valueFormat): "";
+      const lastValue = this.value;
+      this.value = date || this.value;
+      this.validate();
+      this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
+    }
   }
-
+  
   /**
    * Performs validatio of input
    * Returns true if validation is passedisValid
@@ -353,6 +613,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   reportValidity() {
     return this.renderRoot.querySelector("#dateInput")?.validate();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener("click", this._onClick);
   }
 }
 
