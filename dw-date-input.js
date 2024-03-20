@@ -460,7 +460,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         @dw-dialog-closed=${(e) => this._triggerDatePickerOpenedChanged(false)}
         @dw-dialog-opened=${(e) => this._triggerDatePickerOpenedChanged(true)}
         @mode-changed=${this._onDatePickerModeChanged}
-        @change=${this._onDatePickerDateChange}
+        @change=${this._onDatePickerValueChanged}
       >
       </dw-date-picker>
     `;
@@ -537,7 +537,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
     if(value) {
       this.value = value;
       this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
-      this.validate();
+      setTimeout(() => {
+        this.validate();
+      }, 0);
     }
   }
 

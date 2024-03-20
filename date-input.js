@@ -162,10 +162,12 @@ export class DateInput extends DwInput {
   }
 
   /**
-   * @override
-   * Remove date-input format;
+   * Updates text-field's value based on the current value of `value` property.
+   * It applies formatting.
    */
-  _updateTextfieldValue() {}
+  _updateTextfieldValue() {
+    this._updateDateTextfieldValue();
+  }
 
   /**
    * Updates text-field's value based on the current value of `value` property.
