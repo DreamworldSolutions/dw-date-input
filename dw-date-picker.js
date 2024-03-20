@@ -162,6 +162,16 @@ class DwDatePicker extends DwCompositeDialog {
       valueFormat: { type: String },
 
       /**
+       * The minimum allowed date (inclusively).
+       */
+      minDate: { type: String },
+
+      /**
+       * The maximum allowed date (inclusively).
+       */
+      maxDate: { type: String },
+
+      /**
        * Input property.
        * Display in mobile mode (full screen).
        */
@@ -238,6 +248,18 @@ class DwDatePicker extends DwCompositeDialog {
     if (changedProps.has('value')) {
       this._setPickerDate();
     }
+
+    if(changedProps.has('minDate')) {
+      this._setOptions({minDate: this.minDate || null});
+    }
+
+    if(changedProps.has('maxDate')) {
+      this._setOptions({maxDate: this.maxDate || null});
+    }
+
+    if(changedProps.has('valueFormat')) {
+      this._setOptions({format: this.valueFormat});
+    }
   }
 
   _onIconClick() {
@@ -288,6 +310,8 @@ class DwDatePicker extends DwCompositeDialog {
       inlineMode: true,
       format: this.valueFormat,
       scrollToDate: true,
+      minDate: this.minDate || null,
+      maxDate: this.maxDate || null,
       plugins: ['keyboardnav', 'mobilefriendly'],
       buttonText: {
         previousMonth: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15.705 7.41L14.295 6L8.29504 12L14.295 18L15.705 16.59L11.125 12L15.705 7.41Z"/></svg>',
@@ -308,8 +332,14 @@ class DwDatePicker extends DwCompositeDialog {
   
   _setPickerDate() {
     if(this.value && this._instance) {
-      this._instance.setDateRange(this.value);
+      this._instance.setDate(this.value);
       this._instance.gotoDate(this.value);
+    }
+  }
+
+  _setOptions(options) {
+    if(options && this._instance) {
+      this._instance.setOptions(options);
     }
   }
 

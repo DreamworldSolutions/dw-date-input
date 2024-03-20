@@ -313,15 +313,28 @@ export const datePickerStyle = css`
     -webkit-box-shadow: inset 0 0 0 1px var(--litepicker-day-color-hover);
     box-shadow: inset 0 0 0 1px var(--litepicker-is-today-color);
   }
+
+  .litepicker .container__days .day-item.is-today.is-locked,
   .litepicker .container__days .day-item.is-locked {
     color: var(--litepicker-is-locked-color);
+    cursor: default;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    cursor: default;
   }
+
   .litepicker .container__days .day-item.is-locked:hover {
     color: var(--litepicker-is-locked-color);
     -webkit-box-shadow: none;
     box-shadow: none;
     cursor: default;
   }
+
+  .litepicker .container__days .day-item.is-locked:hover::before,
+  .litepicker .container__days .day-item.is-today.is-locked:hover::before {
+    opacity: 0;
+  }
+
   .litepicker .container__days .day-item.is-in-range {
     background-color: var(--litepicker-is-in-range-color);
     border-radius: 0;

@@ -354,7 +354,8 @@ export class DwDateInputDialog extends DwCompositeDialog {
           .errorTooltipActions="${this.errorTooltipActions}"
           .warningTooltipActions="${this.warningTooltipActions}"
           .tipPlacement="${this.tipPlacement}"
-          .errorMessages="${this._errorMessages}"
+          .errorMessages="${this.errorMessages}"
+          @change=${this._onChange}
         ></date-input>
       </div>
     `;
@@ -371,23 +372,32 @@ export class DwDateInputDialog extends DwCompositeDialog {
     `;
   }
 
-    /**
+  _onChange(e) {
+    if(e && e.target) {
+      const dateInputed = dayjs(e.target.value, this.inputFormat);
+      const date = dateInputed.isValid() ? dateInputed.format(this.valueFormat): "";
+      this.value = date || this.value;
+      this.validate();
+    }
+  }
+
+  /**
    * Performs validatio of input
    * Returns true if validation is passedisValid
    */
-    checkValidity() {
-      return this.dateInput?.checkValidity();
-    }
-  
-    /* Call this to perform validation of the date input */
-    // TODO: remove this when `dw-form` elements are updated as per new specs.
-    validate() {
-      return this.reportValidity();
-    }
-  
-    reportValidity() {
-      return this.dateInput?.validate();
-    }
+  checkValidity() {
+    return this.dateInput?.checkValidity();
+  }
+
+  /* Call this to perform validation of the date input */
+  // TODO: remove this when `dw-form` elements are updated as per new specs.
+  validate() {
+    return this.reportValidity();
+  }
+
+  reportValidity() {
+    return this.dateInput?.validate();
+  }
 
   _onApply() {
     if(this.dateInput?.validate()) {

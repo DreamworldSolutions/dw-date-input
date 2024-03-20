@@ -451,6 +451,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .appendTo=${this.appendTo}
         .zIndex=${this.zIndex}
         .value=${this.value}
+        .minDate="${this.minDate}"
+        .maxDate="${this.maxDate}"
         .inputFormat=${this.inputFormat}
         .valueFormat=${this.valueFormat}
         .triggerElement=${this.triggerElement}
@@ -534,8 +536,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
     const value = e?.detail?.value || "";
     if(value) {
       this.value = value;
-      this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
+      this.validate();
     }
   }
 
@@ -590,7 +592,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
     if(e && e.target) {
       const dateInputed = dayjs(e.target.value, this.inputFormat);
       const date = dateInputed.isValid() ? dateInputed.format(this.valueFormat): "";
-      const lastValue = this.value;
       this.value = date || this.value;
       this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
