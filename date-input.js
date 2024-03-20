@@ -195,11 +195,14 @@ export class DateInput extends DwInput {
    * @returns {String} Warning message by state
    */
   _customWarning() {
+    if(!this.date) {
+      return "";
+    }
     if (this.showFutureWarning) {
-      if (dayjs().isSameOrAfter(this.date, 'day')) {
-        return "";
-      } else {
+      if (!dayjs().isSameOrAfter(this.date, 'day')) {
         return "Future date is selected";
+      } else {
+        return "";
       }
     }
     return "";
@@ -234,12 +237,12 @@ export class DateInput extends DwInput {
     }
 
     if (this.maxDate && value > maxDate) {
-      errorText = this.errorMessages["maxDate"];
+      errorText = this.errorMessages && this.errorMessages["maxDate"] || '';
       return errorText.replace("{maxDate}", this.maxDate);
     }
 
     if (this.minDate && value < minDate) {
-      errorText = this.errorMessages["minDate"];
+      errorText = this.errorMessages && this.errorMessages["minDate"] || '';
       return errorText.replace("{minDate}", this.minDate);
     }
 
