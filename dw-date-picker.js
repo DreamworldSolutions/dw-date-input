@@ -251,6 +251,9 @@ class DwDatePicker extends DwCompositeDialog {
 
     if(changedProps.has('minDate')) {
       this._setOptions({minDate: this.minDate || null});
+      if(!this.value && this.minDate) {
+        this._goToDate(this.minDate);
+      }
     }
 
     if(changedProps.has('maxDate')) {
@@ -328,12 +331,21 @@ class DwDatePicker extends DwCompositeDialog {
     this._instance.on('selected', this._onSelected);
     this._instance.show();
     this._setPickerDate();
+    if(!this.value && this.minDate) {
+      this._goToDate(this.minDate);
+    }
   }
   
   _setPickerDate() {
     if(this.value && this._instance) {
       this._instance.setDate(this.value);
-      this._instance.gotoDate(this.value);
+      this._goToDate(this.value);
+    }
+  }
+
+  _goToDate(value) {
+    if(value && this._instance) {
+      this._instance.gotoDate(value);
     }
   }
 
