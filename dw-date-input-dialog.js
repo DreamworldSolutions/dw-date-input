@@ -255,6 +255,12 @@ export class DwDateInputDialog extends DwCompositeDialog {
        * for more see tippyJs doc: https://atomiks.github.io/tippyjs/v6/all-props/#placement
        */
       tipPlacement: { type: String },
+
+      /**
+       * Date represent format
+       * default `dd mmm yyyy`
+       */
+      dateRepresentationFormat: { type: String },
     }
   }
 
@@ -431,7 +437,8 @@ export class DwDateInputDialog extends DwCompositeDialog {
       return 'Selected Date'
     }
 
-    return this.formatDateText(dayjs(this.value, this.valueFormat).format(this.inputFormat));
+    const format = this.dateRepresentationFormat || this.inputFormat;
+    return dayjs(this.value, this.valueFormat).format(format);
   }
 
   formatDateText(value) {

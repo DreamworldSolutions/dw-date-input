@@ -127,6 +127,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
        * default `yyyy-mm-dd`.
        */
       valueFormat: { type: String },
+      
+      /**
+       * Date represent format
+       * default `dd mmm yyyy`
+       */
+      dateRepresentationFormat: { type: String },
 
       /**
        * Set to true to make it dense
@@ -292,6 +298,26 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.requestUpdate("valueFormat", oldValue);
   }
 
+
+  /**
+   * Getter of `dateRepresentationFormat` property.
+   */
+  get dateRepresentationFormat() {
+    return this._dateRepresentationFormat && this._dateRepresentationFormat.toUpperCase() || this._dateRepresentationFormat;
+  }
+  
+  /**
+   * Setter of `dateRepresentationFormat` property.
+   */
+  set dateRepresentationFormat(value) {
+    let oldValue = this._dateRepresentationFormat;
+    if (value === oldValue) {
+      return;
+    }
+    this._dateRepresentationFormat = value;
+    this.requestUpdate("dateRepresentationFormat", oldValue);
+  }
+
   /**
    * Sets static errorMessages. Its used at application level.
    * @param {Object} errorMessages
@@ -322,6 +348,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.autoSelect = false;
     this.inputFormat = "DD/MM/YYYY";
     this.valueFormat = "YYYY-MM-DD";
+    this.dateRepresentationFormat = 'DD MMM YYYY';
     this.highlightChanged = false;
     this.errorMessages = defaultErrorMessages;
     this.showFutureError = false;
@@ -354,6 +381,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .clickableIcon=${true}
         .inputFormat="${this.inputFormat}"
         .valueFormat=${this.valueFormat}
+        .dateRepresentationFormat="${this.dateRepresentationFormat}"
         .label="${this.label}"
         ?disabled="${this.disabled}"
         .invalid=${this.invalid}
@@ -397,6 +425,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .placement=${'center'}
         .inputFormat="${this.inputFormat}"
         .valueFormat=${this.valueFormat}
+        .dateRepresentationFormat="${this.dateRepresentationFormat}"
         .label="${this.label}"
         ?disabled="${this.disabled}"
         .invalid=${this.invalid}
@@ -453,6 +482,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .maxDate="${this.maxDate}"
         .inputFormat=${this.inputFormat}
         .valueFormat=${this.valueFormat}
+        .dateRepresentationFormat="${this.dateRepresentationFormat}"
         .triggerElement=${this.triggerElement}
         @dw-dialog-closed=${(e) => this._triggerDatePickerOpenedChanged(false)}
         @dw-dialog-opened=${(e) => this._triggerDatePickerOpenedChanged(true)}

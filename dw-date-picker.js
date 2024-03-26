@@ -178,6 +178,12 @@ class DwDatePicker extends DwCompositeDialog {
       mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
 
       tabletMode: { type: Boolean, reflect: true, attribute: 'tablet-mode' },
+
+      /**
+       * Date represent format
+       * default `dd mmm yyyy`
+       */
+      dateRepresentationFormat: { type: String },
     }
   }
 
@@ -291,7 +297,8 @@ class DwDatePicker extends DwCompositeDialog {
       return 'Selected Date'
     }
 
-    return this.formatDateText(dayjs(this.value, this.valueFormat).format(this.inputFormat));
+    const format = this.dateRepresentationFormat || this.inputFormat;
+    return dayjs(this.value, this.valueFormat).format(format);
   }
 
   formatDateText(value) {

@@ -126,9 +126,11 @@ export class DateInput extends DwInput {
     this.showFutureError = false;
     this.showFutureWarning = false;
     this.autoSelect = true;
+    this._onBlur = this._onBlur.bind(this);
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
     this.addEventListener("blur", this._onBlur);
+    this.addEventListener("input-blur", this._onBlur);
   }
 
   connectedCallback() {
@@ -256,8 +258,36 @@ export class DateInput extends DwInput {
     return super._customError();
   }
 
+  _onInput(e) {
+    if (!this._textFieldInstance) {
+      console.warn('dw-input: Somehow "_onInput" method is triggered after "disconnectedCallback"');
+      return;
+    }
+    
+    const value = this.parseValue(this._textFieldInstance.value, true);
+    this.___dateInputValue = value;
+  }
+
+  /**
+   * Invokes on input blur
+   * Validates input value
+   */
+  _onInputBlur(e) {
+    super._onInputBlur && super._onInputBlur(e);
+    this._dispatchInputBlur(e);
+  }
+
+  _dispatchInputBlur(e) {
+    const value = e?.target?.value || '';
+    this.dispatchEvent(
+      new CustomEvent('input-blur', {
+        detail: { value, event: e },
+      })
+    );
+  }
+
   _onEnter(e) {
-    const inputValue = e.detail.value || this._getCurrentInputValue();
+    const inputValue = e?.detail?.value || this._getCurrentInputValue();
     const value = this.parseDateValue(inputValue);
     this.value = value || inputValue;
     this.validate();
@@ -277,7 +307,7 @@ export class DateInput extends DwInput {
   }
 
   _onBlur(e) {
-    const inputValue = e.target && e.target.value || this._getCurrentInputValue();
+    const inputValue = e?.target?.value || e?.detail?.value || this._getCurrentInputValue() || this.___dateInputValue;
     const value = this.parseDateValue(inputValue);
     this.value = value || inputValue;
     this.validate();
@@ -286,7 +316,7 @@ export class DateInput extends DwInput {
   }
 
   _getCurrentInputValue() {
-    return this._textFieldInstance ? this._textFieldInstance.value: '';
+    return this._textFieldInstance?.value || this._textFieldInstance?.input?.value || '';
   }
 
   showTrailingIconRipple() {

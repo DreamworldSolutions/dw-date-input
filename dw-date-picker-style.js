@@ -23,13 +23,13 @@ export const datePickerStyle = css`
     --litepicker-is-today-color: var(--mdc-theme-primary);
     --litepicker-is-in-range-color: #bbdefb;
     --litepicker-is-locked-color: #9e9e9e;
-    --litepicker-is-start-color: #fff;
+    --litepicker-is-start-color: var(--mdc-theme-text-primary-on-primary);
     --litepicker-is-start-color-bg: var(--mdc-theme-primary);
-    --litepicker-is-end-color: #fff;
+    --litepicker-is-end-color: var(--mdc-theme-text-primary-on-primary);
     --litepicker-is-end-color-bg: var(--mdc-theme-primary);
-    --litepicker-button-cancel-color: #fff;
+    --litepicker-button-cancel-color: var(--mdc-theme-text-primary-on-primary);
     --litepicker-button-cancel-color-bg: #9e9e9e;
-    --litepicker-button-apply-color: #fff;
+    --litepicker-button-apply-color: var(--mdc-theme-text-primary-on-primary);
     --litepicker-button-apply-color-bg: var(--mdc-theme-primary);
     --litepicker-button-reset-color: #909090;
     --litepicker-button-reset-color-hover: var(--mdc-theme-primary);
