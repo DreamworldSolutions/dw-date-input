@@ -37,6 +37,7 @@ export class DwDateInputDialog extends DwCompositeDialog {
 
         :host([type="modal"]) .mdc-dialog .mdc-dialog__surface {
           min-width: 328px;
+          box-shadow: none;
         }
 
         :host([type="modal"]) .mdc-dialog__actions {
