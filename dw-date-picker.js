@@ -33,6 +33,10 @@ class DwDatePicker extends DwCompositeDialog {
           --dw-popover-border-radius: 18px;
         }
 
+        :host([type="modal"]) .mdc-dialog {
+          z-index: 100;
+        }
+
         :host([type="modal"]:not([has-footer]):not([custom-content-padding-applied])) .mdc-dialog .mdc-dialog__content {
           padding: 0px;
         }
