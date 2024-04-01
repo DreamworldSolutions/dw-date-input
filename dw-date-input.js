@@ -387,7 +387,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .invalid=${this.invalid}
         ?noLabel="${this.noLabel}"
         ?required="${this.required}"
-        ?readOnly="${this.readOnly || this.mobileMode || this.tabletMode}"
+        ?readOnly="${this.readOnly}"
         ?autoSelect="${this.autoSelect}"
         ?dense="${this.dense}"
         ?hintPersistent="${this.hintPersistent}"
@@ -396,6 +396,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
         ?noHintWrap="${this.noHintWrap}"
         .date="${this.value}"
         .originalDate="${this.originalValue}"
+        .mobileMode=${this.mobileMode}
+        .tabletMode=${this.tabletMode}
         .name="${this.name}"
         .hint="${this.hint}"
         .minDate="${this.minDate}"
@@ -494,6 +496,10 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   _onClick(e) {
+    if(this.readOnly) {
+      return;
+    }
+
     const paths = e.composedPath && e.composedPath() || e.path || [];
     let openDatePickerDialog = true;
     if(paths && paths.length) {

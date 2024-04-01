@@ -12,8 +12,14 @@ export class DateInput extends DwInput {
     return [
       super.styles,
       css`
-        :host([readonly]) {
-          --dw-input-outlined-idle-border-color: var(--mdc-theme-divider-color);
+        :host([readonly]) .mdc-text-field--with-leading-icon.mdc-text-field--dense .mdc-text-field__icon,
+        :host([readonly]) .mdc-text-field--with-trailing-icon.mdc-text-field--dense .mdc-text-field__icon {
+          visibility: hidden;
+        }
+
+        :host([mobile-mode]),
+        :host([tablet-mode]) {
+          pointer-events: none;
         }
 
         .mdc-text-field--focused:not(.mdc-text-field--invalid):not(.mdc-text-field--disabled) {
@@ -73,7 +79,17 @@ export class DateInput extends DwInput {
        * Input property.
        * Set `true` to show error message when user select future date.
        */
-      showFutureError: { type: Boolean, reflect: true }
+      showFutureError: { type: Boolean, reflect: true },
+
+      /**
+       * Display in mobile mode.
+       */
+      mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
+
+      /**
+       * Display in tablet mode.
+       */
+      tabletMode: { type: Boolean, reflect: true, attribute: 'tablet-mode' },
     };
   }
 
