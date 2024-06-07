@@ -10,6 +10,8 @@ import dayjs from 'dayjs/esm/index.js';
 import datePickerStyle from './dw-date-picker-style.js';
 
 import '@dreamworld/dw-icon-button';
+import '@dreamworld/dw-button/dw-button.js'
+import './dw-date-input.js';
 
 /**
  * Providing a solution to select date.
@@ -54,6 +56,16 @@ class DwDatePicker extends DwCompositeDialog {
           padding: 16px 24px;
           box-sizing: border-box;
           border-bottom: 1px solid var(--mdc-theme-divider-color);
+        }
+
+        :host([edit-mode]) .header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        dw-date-input {
+          width: 156px;
         }
 
         .header .day {
@@ -144,6 +156,8 @@ class DwDatePicker extends DwCompositeDialog {
   constructor(){
     super();
     this._onSelected = this._onSelected.bind(this);
+    this._editMode = false;
+
   }
 
   static get properties() {
@@ -182,6 +196,18 @@ class DwDatePicker extends DwCompositeDialog {
       mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
 
       tabletMode: { type: Boolean, reflect: true, attribute: 'tablet-mode' },
+
+      /**
+       * Date picker use for input and select
+       * possible value 'input' and 'select'
+       * default 'input
+       */
+      for: { type: String },
+
+      /**
+       * _editMode will be enabled only if the value of 'for' is 'select'
+       */
+      _editMode: { type: Boolean, reflect: true, attribute: 'edit-mode' },
 
       /**
        * Date represent format
@@ -240,13 +266,18 @@ class DwDatePicker extends DwCompositeDialog {
     return html`
       <div>
         <div class="header" date-picker="false">
-          <div class="day">${this._getDayText()}</div>
+          ${this._editMode ? html`
+          <dw-date-input dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onChange}></dw-date-input>
+          <dw-button @click=${this._onCancel}>Cancel</dw-button>
+          <dw-button @click=${this._onApply}>Apply</dw-button>
+          ` : html` <div class="day">${this._getDayText()}</div>
           <div class="date-container">
               <div class="date">${this._getDateText()}</div>
-              ${this.tabletMode || this.mobileMode ?  html`
+              ${this.tabletMode || this.mobileMode || this.for === 'select'?  html`
                 <dw-icon-button date-picker="false" .iconFont=${'OUTLINED'} .buttonSize=${32} @click=${this._onIconClick} .icon=${'edit'}></dw-icon-button>
               `: ''}
-          </div>
+          </div>`}
+         
         </div>
         <div id="datepicker" date-picker="false"></div>
       </div>
@@ -276,16 +307,26 @@ class DwDatePicker extends DwCompositeDialog {
   }
 
   _onIconClick() {
-    this.dispatchEvent(
-      new CustomEvent('mode-changed', {
-        detail: {
-          mode: 'INPUT'
-        },
-      })
-    );
+    if(this.for === 'input' && (this.mobileMode || this.tabletMode)) {
+      this.dispatchEvent(
+        new CustomEvent('mode-changed', {
+          detail: {
+            mode: 'INPUT'
+          },
+        })
+      );
+  
+      this.close();
+    }
+    
+    this._editMode = true;
+    this._dateInputFocus();
+  }
 
-
-    this.close();
+  async _dateInputFocus() {
+    await this.updateComplete;
+    const dateInputEl = this.renderRoot.querySelector('dw-date-input');
+    dateInputEl && dateInputEl.focus();
   }
 
   _getDayText() {
@@ -332,6 +373,23 @@ class DwDatePicker extends DwCompositeDialog {
         nextMonth: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9.70498 6L8.29498 7.41L12.875 12L8.29498 16.59L9.70498 18L15.705 12L9.70498 6Z"/></svg>',
       },
     });
+  }
+
+  _onCancel() {
+    this._editMode = false;
+  }
+
+  _onApply() {
+      console.log(this._newDate);
+      if(this._newDate && this._newDate !== this.value) {
+        this._trigerValueChanged(this._newDate);
+      }
+      this.close();
+      this._editMode = false;
+  }
+
+  _onChange(e) {
+    this._newDate = e?.detail?.value;
   }
 
   _show() {
