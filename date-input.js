@@ -303,7 +303,7 @@ export class DateInput extends DwInput {
   }
 
   _onEnter(e) {
-    const inputValue = e?.detail?.value || this._getCurrentInputValue();
+    const inputValue = this._getCurrentInputValue() || e?.detail?.value;
     const value = this.parseDateValue(inputValue);
     this.value = value || inputValue;
     this.validate();
