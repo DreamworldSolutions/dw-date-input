@@ -99,7 +99,7 @@ const parseSamrtFormat = (value, format) => {
   if(daysInMonth && !isNaN(daysInMonth) && daysInMonth < date.day) {
     date = getParseDate(value, true);
   }
-  return dayjs().set('date', date.day).set('month', +date.month - 1).set('year', date.year).format(format);
+  return dayjs().year(date.year).month(+date.month - 1).date(date.day).format(format);
 };
 
 const getParseDate = (value, onlyFirstDate) => {
