@@ -223,6 +223,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
        */
       tipPlacement: { type: String },
 
+      iconTrailing: { type: String },
+
       // START: Date-picker properties
       /**
        * Date-picker
@@ -358,6 +360,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.mobileMode = false;
     this.tabletMode = false;
     this._onClick = this._onClick.bind(this);
+    this.iconTrailing = 'date_range';
   }
 
   connectedCallback() {
@@ -377,7 +380,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     return html`
       <date-input
         id="dateInput"
-        .iconTrailing=${'date_range'}
+        .iconTrailing=${this.iconTrailing}
         .clickableIcon=${true}
         .inputFormat="${this.inputFormat}"
         .valueFormat=${this.valueFormat}
