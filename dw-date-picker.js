@@ -267,7 +267,7 @@ class DwDatePicker extends DwCompositeDialog {
       <div>
         <div class="header" date-picker="false">
           ${this._editMode ? html`
-          <dw-date-input dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onChange}></dw-date-input>
+          <dw-date-input dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange}></dw-date-input>
           <dw-button @click=${this._onCancel}>Cancel</dw-button>
           <dw-button @click=${this._onApply}>Apply</dw-button>
           ` : html` <div class="day">${this._getDayText()}</div>
@@ -320,10 +320,10 @@ class DwDatePicker extends DwCompositeDialog {
     }
     
     this._editMode = true;
-    this._dateInputFocus();
+    this._focusDateInput();
   }
 
-  async _dateInputFocus() {
+  async _focusDateInput() {
     await this.updateComplete;
     const dateInputEl = this.renderRoot.querySelector('dw-date-input');
     dateInputEl && dateInputEl.focus();
@@ -388,7 +388,7 @@ class DwDatePicker extends DwCompositeDialog {
       this._editMode = false;
   }
 
-  _onChange(e) {
+  _onInputChange(e) {
     this._newDate = e?.detail?.value;
   }
 
