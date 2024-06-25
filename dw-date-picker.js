@@ -307,7 +307,7 @@ class DwDatePicker extends DwCompositeDialog {
   }
 
   _onIconClick() {
-    if(this.for === 'input' && (this.mobileMode || this.tabletMode)) {
+    if(this.mobileMode || this.tabletMode) {
       this.dispatchEvent(
         new CustomEvent('mode-changed', {
           detail: {
@@ -319,8 +319,10 @@ class DwDatePicker extends DwCompositeDialog {
       this.close();
     }
     
-    this._editMode = true;
-    this._focusDateInput();
+    if (this.for === 'select') {
+      this._editMode = true;
+      this._focusDateInput();
+    }
   }
 
   async _focusDateInput() {
