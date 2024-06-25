@@ -267,7 +267,7 @@ class DwDatePicker extends DwCompositeDialog {
       <div>
         <div class="header" date-picker="false">
           ${this._editMode ? html`
-          <dw-date-input dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange}></dw-date-input>
+          <dw-date-input dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange} @enter=${this._onInputEnter}></dw-date-input>
           <dw-button @click=${this._onCancel}>Cancel</dw-button>
           <dw-button @click=${this._onApply}>Apply</dw-button>
           ` : html` <div class="day">${this._getDayText()}</div>
@@ -380,12 +380,16 @@ class DwDatePicker extends DwCompositeDialog {
   }
 
   _onApply() {
-      console.log(this._newDate);
       if(this._newDate && this._newDate !== this.value) {
         this._trigerValueChanged(this._newDate);
       }
       this.close();
       this._editMode = false;
+  }
+
+  _onInputEnter(e) {
+    this._newDate = e?.detail?.value;
+    this._onApply();
   }
 
   _onInputChange(e) {
@@ -444,6 +448,7 @@ class DwDatePicker extends DwCompositeDialog {
   }
 
   _trigerValueChanged(date) {
+    // Note: 'date.dateInstance' will be availalble when date is selected from date picker.
     date = date && date.dateInstance ? date.dateInstance : date;
     const value = date ? dayjs(date).startOf('day').format(this.valueFormat) : null;
     if(value === this.value) {

@@ -418,6 +418,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .tipPlacement="${this.tipPlacement}"
         .errorMessages="${this._errorMessages}"
         @change=${this._onChange}
+        @enter=${this._onEnter}
       ></date-input>
     `;
   }
@@ -624,6 +625,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
       this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
     }
+  }
+
+  _onEnter(e) {
+    this._onChange(e)
+    this.dispatchEvent(new CustomEvent("enter", { detail: { value: this.value } }));
   }
 
   _onChange(e) {
