@@ -448,6 +448,7 @@ class DwDatePicker extends DwCompositeDialog {
   }
 
   _trigerValueChanged(date) {
+    // Note: 'date.dateInstance' will be availalble when date is selected from date picker.
     date = date && date.dateInstance ? date.dateInstance : date;
     const value = date ? dayjs(date).startOf('day').format(this.valueFormat) : null;
     if(value === this.value) {
