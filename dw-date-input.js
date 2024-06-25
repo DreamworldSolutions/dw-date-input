@@ -628,13 +628,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   _onEnter(e) {
-    if(e && e.target) {
-      const dateInputed = dayjs(e.target.value, this.inputFormat);
-      const date = dateInputed.isValid() ? dateInputed.format(this.valueFormat): "";
-      this.value = date || this.value;
-      this.validate();
-      this.dispatchEvent(new CustomEvent("enter", { detail: { value: date } }));
-    }
+    this._onChange(e)
+    this.dispatchEvent(new CustomEvent("enter", { detail: { value: this.value } }));
   }
 
   _onChange(e) {
