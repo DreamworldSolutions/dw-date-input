@@ -418,6 +418,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .tipPlacement="${this.tipPlacement}"
         .errorMessages="${this._errorMessages}"
         @change=${this._onChange}
+        @enter=${this._onEnter}
       ></date-input>
     `;
   }
@@ -623,6 +624,16 @@ export class DwDateInput extends DwFormElement(LitElement) {
       this.value = value;
       this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
+    }
+  }
+
+  _onEnter(e) {
+    if(e && e.target) {
+      const dateInputed = dayjs(e.target.value, this.inputFormat);
+      const date = dateInputed.isValid() ? dateInputed.format(this.valueFormat): "";
+      this.value = date || this.value;
+      this.validate();
+      this.dispatchEvent(new CustomEvent("enter", { detail: { value: date } }));
     }
   }
 
