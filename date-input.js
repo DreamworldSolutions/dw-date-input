@@ -1,4 +1,5 @@
-import { css } from '@dreamworld/pwa-helpers/lit.js';
+import { html, css, nothing } from '@dreamworld/pwa-helpers/lit.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { DwInput } from "@dreamworld/dw-input/dw-input";
 import { dateParse } from "./date-parse";
 import dayjs from 'dayjs/esm/index.js';
@@ -170,6 +171,36 @@ export class DateInput extends DwInput {
     if(changedProps.has('originalDate')){
       this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, this.valueFormat).format(this.inputFormat)) : '';
     }
+  }
+   
+  get _getSuffixIconTrailingTemplate() {
+    const tooltipClass = {
+      hint: this.hint && this.hintInTooltip && !this._warning && !this.invalid,
+      warning: this._warning && this.warningInTooltip && !this.invalid,
+      error: this.invalid && this.errorInTooltip,
+    };
+    return html`<dw-icon-button
+        id="trailingIcon"
+        class="mdc-text-field__icon ${classMap(tooltipClass)}"
+        icon="${this.iconTrailing}"
+        .iconSize=${this.iconSize}
+        .buttonSize=${this.iconButtonSize}
+        ?disabled="${this.disabled}"
+        tabindex="${this.clickableIcon ? this.value  ? -1 : '' : -1}"
+        .symbol=${this.symbol}
+      ></dw-icon-button>
+      ${this.errorInTooltip || this.warningInTooltip || this.hintInTooltip
+        ? html`
+            <dw-tooltip
+              for="trailingIcon"
+              trigger="mouseenter focus click"
+              .extraOptions=${this._extraOptions}
+              .placement="${this.tipPlacement}"
+              .content=${this._trailingIconTooltipContent}
+            >
+            </dw-tooltip>
+          `
+        : nothing}`;
   }
 
   updated(changedProps) {
