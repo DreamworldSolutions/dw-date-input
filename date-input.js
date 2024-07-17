@@ -186,7 +186,7 @@ export class DateInput extends DwInput {
         .iconSize=${this.iconSize}
         .buttonSize=${this.iconButtonSize}
         ?disabled="${this.disabled}"
-        tabindex="${this.clickableIcon ? this.value  ? -1 : '' : -1}"
+        tabindex="${this.clickableIcon ? -1 : ''}"
         .symbol=${this.symbol}
       ></dw-icon-button>
       ${this.errorInTooltip || this.warningInTooltip || this.hintInTooltip
