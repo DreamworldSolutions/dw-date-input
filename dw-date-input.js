@@ -518,12 +518,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
     }
   }
 
-  _openDatePicker() {
-    if (this.datePicker) {
-      this.datePicker.opened = true;
-    }
-  }
-
   /**
    * This getter is written because it is used when someone extends this component, and it has some custom validations.
    * They can override this getter method and add custom validations and call super.
@@ -572,7 +566,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   _onInputKeydown(e) {
     if(e.key === 'Tab' && this.datePicker) {
-      this.datePicker.close();
+      this._onPickerClosed();
     }
   }
 
