@@ -471,7 +471,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
       paths.forEach((el) => {
         if(openDatePickerDialog) {
           const datePicker = el && el.getAttribute && el.getAttribute('date-picker') || '';
-          if(datePicker === 'false') {
+          const trailingIcon = el?.id === 'trailingIcon';
+          if(datePicker === 'false' || ((this.mobileMode || this.tabletMode) && this.error && trailingIcon)) {
             openDatePickerDialog = false;
           }
         }
