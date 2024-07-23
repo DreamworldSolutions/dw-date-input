@@ -35,6 +35,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
         :host[hidden] {
           display: none;
         }
+
+        :host([picker-opened]) date-input {
+          --dw-icon-color: var(--mdc-theme-primary);
+          --dw-icon-color-active: var(--mdc-theme-primary);
+        }
       `,
     ];
   }
@@ -259,6 +264,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
        */
       tabletMode: { type: Boolean, reflect: true, attribute: 'tablet-mode' },
       // END: Date-picker properties
+
+      _pickerOpened: { type: Boolean, reflect: true, attribute: 'picker-opened' }
     };
   }
 
@@ -347,7 +354,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.hint = "";
     this.hintPersistent = false;
     this.invalid = false;
-    this.autoSelect = false;
+    this.autoSelect = true;
     this.inputFormat = "DD/MM/YYYY";
     this.valueFormat = "YYYY-MM-DD";
     this.dateRepresentationFormat = 'DD MMM YYYY';
@@ -391,7 +398,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         ?noLabel="${this.noLabel}"
         ?required="${this.required}"
         ?readOnly="${this.readOnly}"
-        ?autoSelect="${this.autoSelect}"
+        .autoSelect="${this.autoSelect}"
         ?dense="${this.dense}"
         ?hintPersistent="${this.hintPersistent}"
         .placeholder="${this.placeholder}"
@@ -419,62 +426,18 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .errorMessages="${this._errorMessages}"
         @change=${this._onChange}
         @enter=${this._onEnter}
+        @keydown=${this._onInputKeydown}
       ></date-input>
     `;
   }
 
-  get dateInputDialogTemplate() {
-    return html`
-      <dw-date-input-dialog
-        date-picker="false"
-        .type=${"modal"}
-        .placement=${'center'}
-        .inputFormat="${this.inputFormat}"
-        .valueFormat=${this.valueFormat}
-        .dateRepresentationFormat="${this.dateRepresentationFormat}"
-        .label="${this.label}"
-        ?disabled="${this.disabled}"
-        .invalid=${this.invalid}
-        ?noLabel="${this.noLabel}"
-        ?required="${this.required}"
-        ?readOnly="${this.readOnly}"
-        ?autoSelect="${this.autoSelect}"
-        ?dense="${this.dense}"
-        ?hintPersistent="${this.hintPersistent}"
-        .placeholder="${this.placeholder}"
-        ?highlightChanged="${this.highlightChanged}"
-        ?noHintWrap="${this.noHintWrap}"
-        .value="${this.value}"
-        .originalDate="${this.originalValue}"
-        .name="${this.name}"
-        .hint="${this.hint}"
-        .minDate="${this.minDate}"
-        .maxDate="${this.maxDate}"
-        .showFutureWarning=${this.showFutureWarning}
-        .showFutureError=${this.showFutureError}
-        .warning=${this._warning}
-        .error=${this._error}
-        .hintInTooltip="${this.hintInTooltip}"
-        .errorInTooltip="${this.errorInTooltip}"
-        .warningInTooltip="${this.warningInTooltip}"
-        .hintTooltipActions="${this.hintTooltipActions}"
-        .errorTooltipActions="${this.errorTooltipActions}"
-        .warningTooltipActions="${this.warningTooltipActions}"
-        .tipPlacement="${this.tipPlacement}"
-        .errorMessages="${this._errorMessages}"
-        @dw-dialog-closed=${(e) => this._triggerDateInputDialogOpenedChanged(false)}
-        @dw-dialog-opened=${(e) => this._triggerDateInputDialogOpenedChanged(true)}
-        @mode-changed=${this._onDateInputDialogModeChanged}
-        @change=${this._onChange}
-      >
-      </dw-date-input-dialog>
-    `;
-  }
-
   get datePickerTemplate() {
+    if (!this._pickerOpened) return;
+
     return html`
       <dw-date-picker
         date-picker="false"
+        .opened=${true}
         .type=${this.mobileMode ? "modal" : "popover"}
         .popoverAnimation=${"expand"}
         .placement=${'bottom'}
@@ -490,9 +453,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .valueFormat=${this.valueFormat}
         .dateRepresentationFormat="${this.dateRepresentationFormat}"
         .triggerElement=${this.triggerElement}
-        @dw-dialog-closed=${(e) => this._triggerDatePickerOpenedChanged(false)}
-        @dw-dialog-opened=${(e) => this._triggerDatePickerOpenedChanged(true)}
-        @mode-changed=${this._onDatePickerModeChanged}
+        @dw-dialog-closed=${this._onPickerClosed}
         @change=${this._onDatePickerValueChanged}
       >
       </dw-date-picker>
@@ -516,9 +477,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
         }
       });
     }
-    if(openDatePickerDialog && this.datePicker && !this.datePicker.opened) {
+    if(openDatePickerDialog && !this._pickerOpened) {
       this.renderRoot.querySelector("#dateInput")?.showTrailingIconRipple();
-      this._openDatePicker();
+      this._pickerOpened = true;
     }
   }
 
@@ -537,36 +498,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
     return this.renderRoot.querySelector("dw-date-input-dialog");
   }
 
-  _triggerDateInputDialogOpenedChanged(opened) {
-    this.dispatchEvent(
-      new CustomEvent("date-input-dialog-opened-changed", {
-        detail: {
-          opened,
-        },
-      })
-    );
-  }
-
-  _triggerDatePickerOpenedChanged(opened) {
-    this.dispatchEvent(
-      new CustomEvent("date-picker-opened-changed", {
-        detail: {
-          opened,
-        },
-      })
-    );
-  }
-
-  _onDatePickerModeChanged(e) {
-    if (this.dateInputDialog) {
-      this.dateInputDialog.opened = true;
-    }
-  }
-
-  _onDateInputDialogModeChanged(e) {
-    if (this.datePicker) {
-      this.datePicker.opened = true;
-    }
+  async _onPickerClosed() {
+    this._pickerOpened = false;
+    if ( this.mobileMode || this.tabletMode) return;
+    this.autoSelect = false;
+    this.focus();
+    await this.updateComplete;
+    this.autoSelect = true;
   }
 
   _onDatePickerValueChanged(e) {
@@ -577,12 +515,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
       setTimeout(() => {
         this.validate();
       }, 0);
-    }
-  }
-
-  _openDatePicker() {
-    if (this.datePicker) {
-      this.datePicker.opened = true;
     }
   }
 
@@ -630,6 +562,12 @@ export class DwDateInput extends DwFormElement(LitElement) {
   _onEnter(e) {
     this._onChange(e)
     this.dispatchEvent(new CustomEvent("enter", { detail: { value: this.value } }));
+  }
+
+  _onInputKeydown(e) {
+    if(e.key === 'Tab' && this.datePicker) {
+      this._onPickerClosed();
+    }
   }
 
   _onChange(e) {

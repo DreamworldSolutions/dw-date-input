@@ -18,13 +18,9 @@ export class DateInput extends DwInput {
           visibility: hidden;
         }
 
-        :host([mobile-mode]),
-        :host([tablet-mode]) {
+        :host([mobile-mode]) input,
+        :host([tablet-mode]) input {
           pointer-events: none;
-        }
-
-        .mdc-text-field--focused:not(.mdc-text-field--invalid):not(.mdc-text-field--disabled) {
-          --dw-icon-color: var(--mdc-theme-primary);
         }
 
         .mdc-text-field--with-leading-icon.mdc-text-field--dense .mdc-text-field__icon, 
@@ -36,6 +32,11 @@ export class DateInput extends DwInput {
 
         .mdc-text-field--outlined .mdc-text-field__input {
           padding: var(--dw-date-input-padding, 12px 16px 14px);
+        }
+
+        .mdc-text-field__icon:not([tabindex]),
+        .mdc-text-field__icon[tabindex='-1'] {
+          pointer-events: auto;
         }
       `
     ]

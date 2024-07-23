@@ -157,6 +157,7 @@ class DwDatePicker extends DwCompositeDialog {
     super();
     this._onSelected = this._onSelected.bind(this);
     this._editMode = false;
+    this.tabindex = -1;
 
   }
 
@@ -214,6 +215,8 @@ class DwDatePicker extends DwCompositeDialog {
        * default `dd mmm yyyy`
        */
       dateRepresentationFormat: { type: String },
+
+      tabindex: { type: String, reflect: true }
     }
   }
 
