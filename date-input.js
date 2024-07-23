@@ -18,8 +18,8 @@ export class DateInput extends DwInput {
           visibility: hidden;
         }
 
-        :host([mobile-mode]),
-        :host([tablet-mode]) {
+        :host([mobile-mode]) input,
+        :host([tablet-mode]) input {
           pointer-events: none;
         }
 
