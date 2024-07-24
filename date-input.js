@@ -55,10 +55,20 @@ export class DateInput extends DwInput {
       inputFormat: { type: String },
 
       /**
+       * Uppercase of `inputFormat`
+       */
+      _inputFormat: { type: String },
+
+      /**
        * date value format
        * default `yyyy-mm-dd`.
        */
       valueFormat: { type: String },
+
+      /**
+       * Uppercase of `valueFormat`
+       */
+      _valueFormat: { type: String },
 
       /**
        * The minimum allowed date (inclusively).
@@ -100,8 +110,8 @@ export class DateInput extends DwInput {
     this.clickableIcon = true;
     this.iconButtonSize = 40;
     this.iconSize = 20;
-    this.inputFormat = "DD/MM/YYYY";
-    this.valueFormat = "YYYY-MM-DD";
+    this._inputFormat = "DD/MM/YYYY";
+    this._valueFormat = "YYYY-MM-DD";
     this.separator = "/";
     this.showFutureError = false;
     this.showFutureWarning = false;
@@ -115,7 +125,7 @@ export class DateInput extends DwInput {
 
   connectedCallback() {
     super.connectedCallback && super.connectedCallback();
-    this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, this.valueFormat).format(this.inputFormat)) : '';
+    this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, this._valueFormat).format(this._inputFormat)) : '';
     this.updateComplete.then(() => {
       this._updateDateTextfieldValue();
     });
@@ -124,20 +134,20 @@ export class DateInput extends DwInput {
   willUpdate(changedProps){
     super.willUpdate(changedProps);
     if (changedProps.has("inputFormat")) {
-      this.inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
-      this.separator = this.inputFormat ? this.inputFormat.slice(2, 3): '/';
+      this._inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
+      this.separator = this._inputFormat ? this._inputFormat.slice(2, 3): '/';
     }
 
     if (changedProps.has("valueFormat")) {
-      this.valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
+      this._valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
     }
 
     if(changedProps.has('date')){
-      this.value = this.date ? this.parseValue(dayjs(this.date, this.valueFormat).format(this.inputFormat)) : '';
+      this.value = this.date ? this.parseValue(dayjs(this.date, this._valueFormat).format(this._inputFormat)) : '';
     }
 
     if(changedProps.has('originalDate')){
-      this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, this.valueFormat).format(this.inputFormat)) : '';
+      this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, this._valueFormat).format(this._inputFormat)) : '';
     }
   }
    
@@ -207,7 +217,7 @@ export class DateInput extends DwInput {
     if (!value) {
       return "";
     }
-    return dateParse(value, this.inputFormat);
+    return dateParse(value, this._inputFormat);
   }
 
   /**
@@ -234,19 +244,18 @@ export class DateInput extends DwInput {
    */
   _customError() {
     let value = this.value ? this.value.replace(/ /g, "") : '';
-    const inputFormat = this.inputFormat ? this.inputFormat : "DD/MM/YYYY";
     if(!value){
       return '';
     }
 
-    if (!dayjs(value, inputFormat, true).isValid()) {
+    if (!dayjs(value, this._inputFormat, true).isValid()) {
       return this._errorMessages["invalidDate"];
     }
     
-    value = dayjs(value, inputFormat).format(this.valueFormat);
+    value = dayjs(value, this._inputFormat).format(this._valueFormat);
     let errorText;
-    let minDate = this.minDate && dayjs(this.minDate).format(this.valueFormat);
-    let maxDate = this.maxDate && dayjs(this.maxDate).format(this.valueFormat);
+    let minDate = this.minDate && dayjs(this.minDate).format(this._valueFormat);
+    let maxDate = this.maxDate && dayjs(this.maxDate).format(this._valueFormat);
 
     if (this.maxDate && this.minDate && (value > maxDate || value < minDate)) {
       errorText = this._errorMessages["minMaxDate"];
@@ -265,7 +274,7 @@ export class DateInput extends DwInput {
       return errorText.replace("{minDate}", this.minDate);
     }
 
-    const todayDate = dayjs().format(this.valueFormat);
+    const todayDate = dayjs().format(this._valueFormat);
     if (this.showFutureError && value > todayDate) {
       return this._errorMessages["showFutureError"];
     }

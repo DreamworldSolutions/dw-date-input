@@ -128,16 +128,31 @@ export class DwDateInput extends DwFormElement(LitElement) {
       inputFormat: { type: String },
 
       /**
+       * Uppercase of `inputFormat`
+       */
+      _inputFormat: { type: String },
+
+      /**
        * date value format
        * default `yyyy-mm-dd`.
        */
       valueFormat: { type: String },
+
+      /**
+       * Uppercase of `valueFormat`
+       */
+      _valueFormat: { type: String },
       
       /**
        * Date represent format
        * default `dd mmm yyyy`
        */
       dateRepresentationFormat: { type: String },
+
+      /**
+       * Uppercase of `dateRepresentationFormat`
+       */
+      _dateRepresentationFormat: { type: String },
 
       /**
        * Set to true to make it dense
@@ -297,9 +312,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.hintPersistent = false;
     this.invalid = false;
     this.autoSelect = true;
-    this.inputFormat = "DD/MM/YYYY";
-    this.valueFormat = "YYYY-MM-DD";
-    this.dateRepresentationFormat = 'DD MMM YYYY';
+    this._inputFormat = "DD/MM/YYYY";
+    this._valueFormat = "YYYY-MM-DD";
+    this._dateRepresentationFormat = 'DD MMM YYYY';
     this.highlightChanged = false;
     this.errorMessages = defaultErrorMessages;
     this.showFutureError = false;
@@ -320,15 +335,15 @@ export class DwDateInput extends DwFormElement(LitElement) {
   willUpdate(changedProps){
     super.willUpdate(changedProps);
     if (changedProps.has("inputFormat")) {
-      this.inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
+      this._inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
     }
 
     if (changedProps.has("valueFormat")) {
-      this.valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
+      this._valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
     }
 
     if (changedProps.has("dateRepresentationFormat")) {
-      this.dateRepresentationFormat = this.dateRepresentationFormat ? this.dateRepresentationFormat.toUpperCase() : 'DD MMM YYYY';
+      this._dateRepresentationFormat = this.dateRepresentationFormat ? this.dateRepresentationFormat.toUpperCase() : 'DD MMM YYYY';
     }
   }
 
@@ -346,9 +361,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
         id="dateInput"
         .iconTrailing=${this.iconTrailing}
         .clickableIcon=${true}
-        .inputFormat="${this.inputFormat}"
-        .valueFormat=${this.valueFormat}
-        .dateRepresentationFormat="${this.dateRepresentationFormat}"
+        .inputFormat="${this._inputFormat}"
+        .valueFormat=${this._valueFormat}
+        .dateRepresentationFormat="${this._dateRepresentationFormat}"
         .label="${this.label}"
         ?disabled="${this.disabled}"
         .invalid=${this.invalid}
@@ -406,9 +421,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .value=${this.value}
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
-        .inputFormat=${this.inputFormat}
-        .valueFormat=${this.valueFormat}
-        .dateRepresentationFormat="${this.dateRepresentationFormat}"
+        .inputFormat=${this._inputFormat}
+        .valueFormat=${this._valueFormat}
+        .dateRepresentationFormat="${this._dateRepresentationFormat}"
         .triggerElement=${this.triggerElement}
         @dw-dialog-closed=${this._onPickerClosed}
         @change=${this._onDatePickerValueChanged}
@@ -529,8 +544,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   _onChange(e) {
     if(e && e.target) {
-      const dateInputed = dayjs(e.target.value, this.inputFormat);
-      const date = dateInputed.isValid() ? dateInputed.format(this.valueFormat): "";
+      const dateInputed = dayjs(e.target.value, this._inputFormat);
+      const date = dateInputed.isValid() ? dateInputed.format(this._valueFormat): "";
       this.value = date || this.value;
       this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
