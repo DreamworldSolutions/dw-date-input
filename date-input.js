@@ -135,7 +135,7 @@ export class DateInput extends DwInput {
     super.willUpdate(changedProps);
     if (changedProps.has("inputFormat")) {
       this._inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
-      this.separator = this._inputFormat ? this._inputFormat.slice(2, 3): '/';
+      this.separator = this._inputFormat.slice(2, 3);
     }
 
     if (changedProps.has("valueFormat")) {
