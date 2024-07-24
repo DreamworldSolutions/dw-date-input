@@ -270,64 +270,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   /**
-   * Getter of `inputFormat` property.
-   */
-  get inputFormat() {
-    return this._inputFormat && this._inputFormat.toUpperCase() || this._inputFormat;
-  }
-
-  /**
-   * Setter of `inputFormat` property.
-   */
-  set inputFormat(value) {
-    let oldValue = this._inputFormat;
-    if (value === oldValue) {
-      return;
-    }
-    this._inputFormat = value;
-    this.requestUpdate("inputFormat", oldValue);
-  }
-
-  /**
-   * Getter of `valueFormat` property.
-   */
-  get valueFormat() {
-    return this._valueFormat && this._valueFormat.toUpperCase() || this._valueFormat;
-  }
-
-  /**
-   * Setter of `valueFormat` property.
-   */
-  set valueFormat(value) {
-    let oldValue = this._valueFormat;
-    if (value === oldValue) {
-      return;
-    }
-    this._valueFormat = value;
-    this.requestUpdate("valueFormat", oldValue);
-  }
-
-
-  /**
-   * Getter of `dateRepresentationFormat` property.
-   */
-  get dateRepresentationFormat() {
-    return this._dateRepresentationFormat && this._dateRepresentationFormat.toUpperCase() || this._dateRepresentationFormat;
-  }
-  
-  /**
-   * Setter of `dateRepresentationFormat` property.
-   */
-  set dateRepresentationFormat(value) {
-    let oldValue = this._dateRepresentationFormat;
-    if (value === oldValue) {
-      return;
-    }
-    this._dateRepresentationFormat = value;
-    this.requestUpdate("dateRepresentationFormat", oldValue);
-  }
-
-  /**
    * Sets static errorMessages. Its used at application level.
    * @param {Object} errorMessages
    */
@@ -373,6 +315,21 @@ export class DwDateInput extends DwFormElement(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener("click", this._onClick);
+  }
+
+  willUpdate(changedProps){
+    super.willUpdate(changedProps);
+    if (changedProps.has("inputFormat")) {
+      this.inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
+    }
+
+    if (changedProps.has("valueFormat")) {
+      this.valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
+    }
+
+    if (changedProps.has("dateRepresentationFormat")) {
+      this.dateRepresentationFormat = this.dateRepresentationFormat ? this.dateRepresentationFormat.toUpperCase() : 'DD MMM YYYY';
+    }
   }
 
   render() {

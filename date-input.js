@@ -95,44 +95,6 @@ export class DateInput extends DwInput {
     };
   }
 
-  /**
-   * Getter of `inputFormat` property.
-   */
-  get inputFormat() {
-    return this._inputFormat && this._inputFormat.toUpperCase() || this._inputFormat;
-  }
-  
-  /**
-   * Setter of `inputFormat` property.
-   */
-  set inputFormat(value) {
-    let oldValue = this._inputFormat;
-    if (value === oldValue) {
-      return;
-    }
-    this._inputFormat = value;
-    this.requestUpdate("inputFormat", oldValue);
-  }
-
-  /**
-   * Getter of `valueFormat` property.
-   */
-  get valueFormat() {
-    return this._valueFormat && this._valueFormat.toUpperCase() || this._valueFormat;
-  }
-  
-  /**
-   * Setter of `valueFormat` property.
-   */
-  set valueFormat(value) {
-    let oldValue = this._valueFormat;
-    if (value === oldValue) {
-      return;
-    }
-    this._valueFormat = value;
-    this.requestUpdate("valueFormat", oldValue);
-  }
-
   constructor() {
     super();
     this.clickableIcon = true;
@@ -162,7 +124,12 @@ export class DateInput extends DwInput {
   willUpdate(changedProps){
     super.willUpdate(changedProps);
     if (changedProps.has("inputFormat")) {
+      this.inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
       this.separator = this.inputFormat ? this.inputFormat.slice(2, 3): '/';
+    }
+
+    if (changedProps.has("valueFormat")) {
+      this.valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
     }
 
     if(changedProps.has('date')){
