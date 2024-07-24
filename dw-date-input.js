@@ -128,16 +128,31 @@ export class DwDateInput extends DwFormElement(LitElement) {
       inputFormat: { type: String },
 
       /**
+       * Uppercase of `inputFormat`
+       */
+      _inputFormat: { type: String },
+
+      /**
        * date value format
        * default `yyyy-mm-dd`.
        */
       valueFormat: { type: String },
+
+      /**
+       * Uppercase of `valueFormat`
+       */
+      _valueFormat: { type: String },
       
       /**
        * Date represent format
        * default `dd mmm yyyy`
        */
       dateRepresentationFormat: { type: String },
+
+      /**
+       * Uppercase of `dateRepresentationFormat`
+       */
+      _dateRepresentationFormat: { type: String },
 
       /**
        * Set to true to make it dense
@@ -270,64 +285,6 @@ export class DwDateInput extends DwFormElement(LitElement) {
   }
 
   /**
-   * Getter of `inputFormat` property.
-   */
-  get inputFormat() {
-    return this._inputFormat && this._inputFormat.toUpperCase() || this._inputFormat;
-  }
-
-  /**
-   * Setter of `inputFormat` property.
-   */
-  set inputFormat(value) {
-    let oldValue = this._inputFormat;
-    if (value === oldValue) {
-      return;
-    }
-    this._inputFormat = value;
-    this.requestUpdate("inputFormat", oldValue);
-  }
-
-  /**
-   * Getter of `valueFormat` property.
-   */
-  get valueFormat() {
-    return this._valueFormat && this._valueFormat.toUpperCase() || this._valueFormat;
-  }
-
-  /**
-   * Setter of `valueFormat` property.
-   */
-  set valueFormat(value) {
-    let oldValue = this._valueFormat;
-    if (value === oldValue) {
-      return;
-    }
-    this._valueFormat = value;
-    this.requestUpdate("valueFormat", oldValue);
-  }
-
-
-  /**
-   * Getter of `dateRepresentationFormat` property.
-   */
-  get dateRepresentationFormat() {
-    return this._dateRepresentationFormat && this._dateRepresentationFormat.toUpperCase() || this._dateRepresentationFormat;
-  }
-  
-  /**
-   * Setter of `dateRepresentationFormat` property.
-   */
-  set dateRepresentationFormat(value) {
-    let oldValue = this._dateRepresentationFormat;
-    if (value === oldValue) {
-      return;
-    }
-    this._dateRepresentationFormat = value;
-    this.requestUpdate("dateRepresentationFormat", oldValue);
-  }
-
-  /**
    * Sets static errorMessages. Its used at application level.
    * @param {Object} errorMessages
    */
@@ -355,9 +312,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.hintPersistent = false;
     this.invalid = false;
     this.autoSelect = true;
-    this.inputFormat = "DD/MM/YYYY";
-    this.valueFormat = "YYYY-MM-DD";
-    this.dateRepresentationFormat = 'DD MMM YYYY';
+    this._inputFormat = "DD/MM/YYYY";
+    this._valueFormat = "YYYY-MM-DD";
+    this._dateRepresentationFormat = 'DD MMM YYYY';
     this.highlightChanged = false;
     this.errorMessages = defaultErrorMessages;
     this.showFutureError = false;
@@ -375,6 +332,21 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.addEventListener("click", this._onClick);
   }
 
+  willUpdate(changedProps){
+    super.willUpdate(changedProps);
+    if (changedProps.has("inputFormat")) {
+      this._inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
+    }
+
+    if (changedProps.has("valueFormat")) {
+      this._valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
+    }
+
+    if (changedProps.has("dateRepresentationFormat")) {
+      this._dateRepresentationFormat = this.dateRepresentationFormat ? this.dateRepresentationFormat.toUpperCase() : 'DD MMM YYYY';
+    }
+  }
+
   render() {
     return html`
       ${this.dateInputTemplate}
@@ -389,9 +361,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
         id="dateInput"
         .iconTrailing=${this.iconTrailing}
         .clickableIcon=${true}
-        .inputFormat="${this.inputFormat}"
-        .valueFormat=${this.valueFormat}
-        .dateRepresentationFormat="${this.dateRepresentationFormat}"
+        .inputFormat="${this._inputFormat}"
+        .valueFormat=${this._valueFormat}
+        .dateRepresentationFormat="${this._dateRepresentationFormat}"
         .label="${this.label}"
         ?disabled="${this.disabled}"
         .invalid=${this.invalid}
@@ -449,9 +421,9 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .value=${this.value}
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
-        .inputFormat=${this.inputFormat}
-        .valueFormat=${this.valueFormat}
-        .dateRepresentationFormat="${this.dateRepresentationFormat}"
+        .inputFormat=${this._inputFormat}
+        .valueFormat=${this._valueFormat}
+        .dateRepresentationFormat="${this._dateRepresentationFormat}"
         .triggerElement=${this.triggerElement}
         @dw-dialog-closed=${this._onPickerClosed}
         @change=${this._onDatePickerValueChanged}
@@ -471,7 +443,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
       paths.forEach((el) => {
         if(openDatePickerDialog) {
           const datePicker = el && el.getAttribute && el.getAttribute('date-picker') || '';
-          if(datePicker === 'false') {
+          const trailingIcon = el?.id === 'trailingIcon';
+          if(datePicker === 'false' || ((this.mobileMode || this.tabletMode) && this.error && trailingIcon)) {
             openDatePickerDialog = false;
           }
         }
@@ -572,8 +545,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   _onChange(e) {
     if(e && e.target) {
-      const dateInputed = dayjs(e.target.value, this.inputFormat);
-      const date = dateInputed.isValid() ? dateInputed.format(this.valueFormat): "";
+      const dateInputed = dayjs(e.target.value, this._inputFormat);
+      const date = dateInputed.isValid() ? dateInputed.format(this._valueFormat): "";
       this.value = date || this.value;
       this.validate();
       this.dispatchEvent(new CustomEvent("change", { detail: { value: date } }));
