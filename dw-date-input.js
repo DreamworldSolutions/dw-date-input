@@ -482,13 +482,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   _onDatePickerValueChanged(e) {
     const value = e?.detail?.value || "";
-    if(value) {
-      this.value = value;
-      this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
-      setTimeout(() => {
-        this.validate();
-      }, 0);
-    }
+    this.value = value;
+    this.dispatchEvent(new CustomEvent("change", { detail: { value } }));
+    setTimeout(() => {
+      this.validate();
+    }, 0);
   }
 
   /**

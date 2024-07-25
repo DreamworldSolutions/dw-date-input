@@ -383,7 +383,7 @@ class DwDatePicker extends DwCompositeDialog {
   }
 
   _onApply() {
-      if(this._newDate && this._newDate !== this.value) {
+      if(this._newDate !== this.value) {
         this._trigerValueChanged(this._newDate);
       }
       this.close();
