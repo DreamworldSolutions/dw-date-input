@@ -120,7 +120,6 @@ export class DateInput extends DwInput {
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
     this.addEventListener("blur", this._onBlur);
-    this.addEventListener("input-blur", this._onBlur);
   }
 
   connectedCallback() {
@@ -290,24 +289,6 @@ export class DateInput extends DwInput {
     
     const value = this.parseValue(this._textFieldInstance.value, true);
     this.___dateInputValue = value;
-  }
-
-  /**
-   * Invokes on input blur
-   * Validates input value
-   */
-  _onInputBlur(e) {
-    super._onInputBlur && super._onInputBlur(e);
-    this._dispatchInputBlur(e);
-  }
-
-  _dispatchInputBlur(e) {
-    const value = e?.target?.value || '';
-    this.dispatchEvent(
-      new CustomEvent('input-blur', {
-        detail: { value, event: e },
-      })
-    );
   }
 
   _onEnter(e) {
