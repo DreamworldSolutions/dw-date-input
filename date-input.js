@@ -28,6 +28,7 @@ export class DateInput extends DwInput {
           transform: scale(1);
           right: 4px;
           top: 4px;
+          height: 40px;
         }
 
         .mdc-text-field--outlined .mdc-text-field__input {
@@ -156,6 +157,9 @@ export class DateInput extends DwInput {
       warning: this._warning && this.warningInTooltip && !this.invalid,
       error: this.invalid && this.errorInTooltip,
     };
+    const shouldOpenTooltipOnHover = !this._vkb && !this.hintInTooltip;
+    const offset = this._extraOptions?.offset ? this._extraOptions.offset : [0,8];
+
     return html`<dw-icon-button
         id="trailingIcon"
         class="mdc-text-field__icon ${classMap(tooltipClass)}"
@@ -171,6 +175,8 @@ export class DateInput extends DwInput {
             <dw-tooltip
               for="trailingIcon"
               trigger="mouseenter focus click"
+              .offset=${offset}
+              .forEl=${shouldOpenTooltipOnHover ? this : ``}
               .extraOptions=${this._extraOptions}
               .placement="${this.tipPlacement}"
               .content=${this._trailingIconTooltipContent}
@@ -282,6 +288,11 @@ export class DateInput extends DwInput {
   }
 
   _onInput(e) {
+    if(this.error && this.errorInTooltip) {
+      const tipElement = this.renderRoot.querySelector('dw-tooltip');
+      tipElement && tipElement.hide();
+    }
+
     if (!this._textFieldInstance) {
       console.warn('dw-input: Somehow "_onInput" method is triggered after "disconnectedCallback"');
       return;
