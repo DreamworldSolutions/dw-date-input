@@ -174,7 +174,7 @@ export class DateInput extends DwInput {
         ? html`
             <dw-tooltip
               for="trailingIcon"
-              trigger="mouseenter focus click"
+              trigger=${this._vkb ? 'mouseenter click' : 'mouseenter'}
               .offset=${offset}
               .forEl=${shouldOpenTooltipOnHover ? this : ``}
               .extraOptions=${this._extraOptions}
