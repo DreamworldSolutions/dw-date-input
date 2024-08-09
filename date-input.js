@@ -23,6 +23,13 @@ export class DateInput extends DwInput {
           pointer-events: none;
         }
 
+        .mdc-text-field--with-leading-icon.mdc-text-field--outlined .mdc-text-field__icon,
+        .mdc-text-field--with-trailing-icon.mdc-text-field--outlined .mdc-text-field__icon {
+          right: 4px;
+          top: 8px;
+          height: 40px;
+        }
+
         .mdc-text-field--with-leading-icon.mdc-text-field--dense .mdc-text-field__icon, 
         .mdc-text-field--with-trailing-icon.mdc-text-field--dense .mdc-text-field__icon {
           transform: scale(1);
@@ -157,7 +164,7 @@ export class DateInput extends DwInput {
       warning: this._warning && this.warningInTooltip && !this.invalid,
       error: this.invalid && this.errorInTooltip,
     };
-    const shouldOpenTooltipOnHover = !this._vkb && !this.hintInTooltip;
+    const shouldOpenTooltipOnHover = !this._vkb && !(this.hint && this.hintInTooltip);
     const offset = this._extraOptions?.offset ? this._extraOptions.offset : [0,8];
 
     return html`<dw-icon-button
@@ -170,7 +177,7 @@ export class DateInput extends DwInput {
         tabindex="${this.clickableIcon ? -1 : ''}"
         .symbol=${this.symbol}
       ></dw-icon-button>
-      ${this.errorInTooltip || this.warningInTooltip || this.hintInTooltip
+      ${(this.error && this.errorInTooltip) || (this.warning && this.warningInTooltip) || (this.hint && this.hintInTooltip)
         ? html`
             <dw-tooltip
               for="trailingIcon"
