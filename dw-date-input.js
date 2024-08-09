@@ -325,6 +325,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.tabletMode = false;
     this._onClick = this._onClick.bind(this);
     this.iconTrailing = 'date_range';
+    this.tipPlacement = 'bottom-end';
   }
 
   connectedCallback() {
