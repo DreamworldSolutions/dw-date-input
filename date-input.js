@@ -184,7 +184,7 @@ export class DateInput extends DwInput {
               trigger=${this._vkb ? 'mouseenter click' : 'mouseenter'}
               .offset=${offset}
               .forEl=${shouldOpenTooltipOnHover ? this : ``}
-              .extraOptions=${this._extraOptions}
+              .extraOptions=${{...this._extraOptions ,...this.tipExtraOptions}}
               .placement="${this.tipPlacement}"
               .content=${this._trailingIconTooltipContent}
             >
