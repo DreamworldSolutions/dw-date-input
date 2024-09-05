@@ -243,6 +243,11 @@ export class DwDateInput extends DwFormElement(LitElement) {
        */
       tipPlacement: { type: String },
 
+      /**
+       * Hold extra options of tooltip.
+       */
+      tipExtraOptions: { type: Object },
+
       iconTrailing: { type: String },
 
       // START: Date-picker properties
@@ -396,6 +401,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .errorTooltipActions="${this.errorTooltipActions}"
         .warningTooltipActions="${this.warningTooltipActions}"
         .tipPlacement="${this.tipPlacement}"
+        .tipExtraOptions=${this.tipExtraOptions}
         .errorMessages="${this._errorMessages}"
         @change=${this._onChange}
         @enter=${this._onEnter}
