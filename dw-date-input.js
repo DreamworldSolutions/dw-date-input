@@ -432,6 +432,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .valueFormat=${this._valueFormat}
         .dateRepresentationFormat="${this._dateRepresentationFormat}"
         .triggerElement=${this.triggerElement}
+        @dw-dialog-opened=${this._onPickerOpened}
         @dw-dialog-closed=${this._onPickerClosed}
         @change=${this._onDatePickerValueChanged}
       >
@@ -478,8 +479,13 @@ export class DwDateInput extends DwFormElement(LitElement) {
     return this.renderRoot.querySelector("dw-date-input-dialog");
   }
 
+  _onPickerOpened() {
+    this.dispatchEvent(new CustomEvent("date-picker-opened"));
+  }
+
   async _onPickerClosed() {
     this._pickerOpened = false;
+    this.dispatchEvent(new CustomEvent("date-picker-closed"));
     if ( this.mobileMode || this.tabletMode) return;
     this.autoSelect = false;
     this.focus();
