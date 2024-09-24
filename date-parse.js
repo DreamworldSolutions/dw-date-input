@@ -82,7 +82,7 @@ const sortKnownFormats = [
 
 const parseDate = (value, format) => {
   if(dayjs(value, knownFormats, true).isValid()) {
-    return dayjs(value, knownFormats, true).format(format);
+    return dayjs(value, format).format(format);
   }
 
   if(dayjs(value, sortKnownFormats, true).isValid()) {
@@ -94,24 +94,24 @@ const parseDate = (value, format) => {
 }
 
 const parseSamrtFormat = (value, format) => {
-  let date = getParseDate(value, false)
+  let date = getParseDate(value, false, format);
   const daysInMonth = dayjs(`${date.year}-${date.month}`, ['YYYY-MM', 'YYYY-M'], true).daysInMonth();
   if(daysInMonth && !isNaN(daysInMonth) && daysInMonth < date.day) {
-    date = getParseDate(value, true);
+    date = getParseDate(value, true, format);
   }
   return dayjs().year(date.year).month(+date.month - 1).date(date.day).format(format);
 };
 
-const getParseDate = (value, onlyFirstDate) => {
-  const month = findMonth(value, onlyFirstDate) || dayjs().get('month') + 1;
+const getParseDate = (value, onlyFirstDate, format) => {
+  const month = findMonth(value, onlyFirstDate, format) || dayjs().get('month') + 1;
   return {
-    day: findDate(value, onlyFirstDate) || dayjs().get('date'),
+    day: findDate(value, onlyFirstDate, format) || dayjs().get('date'),
     month: month,
-    year: findYear(value, onlyFirstDate) || getNearestYear(month)
+    year: findYear(value, onlyFirstDate, format) || getNearestYear(month)
   }
 }
 
-const findDate = (value, onlyFirstDate) => {
+const findDate = (value, onlyFirstDate, format) => {
   if(!value) {
     return '';
   }
@@ -123,13 +123,21 @@ const findDate = (value, onlyFirstDate) => {
   if(onlyFirstDate) {
     return value.charAt(0);
   }
+
+  if(format === "MM/DD/YYYY") {
+    if (value.length === 2 && +value > 12 ) {
+      return value.charAt(1)
+    }
+    const nDate = value.charAt(2) + value.charAt(3);
+    return +nDate > 31 ? value.charAt(0): nDate;
+  }
   
   const nDate = (value.charAt(0) + value.charAt(1));
   return +nDate > 31 ? value.charAt(0): nDate;
 }
 
-const findMonth = (value, onlyFirstDate) => {
-  const replaceValue = value.replace(new RegExp(`^${findDate(value, onlyFirstDate)}`), '');
+const findMonth = (value, onlyFirstDate, format) => {
+  const replaceValue = value.replace(new RegExp(`^${findDate(value, onlyFirstDate, format)}`), '');
   if(!replaceValue) {
     return '';
   }
@@ -142,8 +150,9 @@ const findMonth = (value, onlyFirstDate) => {
   return +nMonth > 12 ? (replaceValue.charAt(0)): nMonth;
 }
 
-const findYear = (value, onlyFirstDate) => {
-  const replaceValue = value.replace(new RegExp(`^${findDate(value, onlyFirstDate)}${findMonth(value, onlyFirstDate)}`), '');
+const findYear = (value, onlyFirstDate, format) => {
+  const dayAndMonth = format === "MM/DD/YYYY" ? `${findMonth(value, onlyFirstDate, format)}${findDate(value, onlyFirstDate, format)}` : `${findDate(value, onlyFirstDate, format)}${findMonth(value, onlyFirstDate, format)}`;
+  const replaceValue = value.replace(new RegExp(`^${dayAndMonth}`), '');
   if(!replaceValue) {
     return '';
   }
