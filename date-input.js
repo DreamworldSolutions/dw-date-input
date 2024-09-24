@@ -138,22 +138,22 @@ export class DateInput extends DwInput {
     });
   }
 
-  willUpdate(changedProps){
-    super.willUpdate(changedProps);
-    if (changedProps.has("inputFormat")) {
+  willUpdate(props){
+    super.willUpdate(props);
+    if (props.has("inputFormat")) {
       this._inputFormat = this.inputFormat ? this.inputFormat.toUpperCase() : 'DD/MM/YYYY';
       this.separator = this._inputFormat.slice(2, 3);
     }
 
-    if (changedProps.has("valueFormat")) {
+    if (props.has("valueFormat")) {
       this._valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
     }
 
-    if(changedProps.has('date')){
+    if(props.has('date')){
       this.value = this.date ? this.parseValue(dayjs(this.date, this._valueFormat).format(this._inputFormat)) : '';
     }
 
-    if(changedProps.has('originalDate')){
+    if(props.has('originalDate')){
       this.originalValue = this.originalDate ? this.parseValue(dayjs(this.originalDate, this._valueFormat).format(this._inputFormat)) : '';
     }
   }
@@ -193,9 +193,9 @@ export class DateInput extends DwInput {
         : nothing}`;
   }
 
-  updated(changedProps) {
-    super.updated && super.updated(changedProps);
-    if (changedProps.has('date')) {
+  updated(props) {
+    super.updated && super.updated(props);
+    if (props.has('date')) {
       this._updateDateTextfieldValue();
     }
   }
