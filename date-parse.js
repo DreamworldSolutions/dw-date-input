@@ -125,7 +125,11 @@ const findDate = (value, onlyFirstDate, format) => {
   }
 
   if(format === "MM/DD/YYYY") {
-    return value.charAt(2) + value.charAt(3);
+    if (value.length === 2 && +value > 12 ) {
+      return value.charAt(1)
+    }
+    const nDate = value.charAt(2) + value.charAt(3);
+    return +nDate > 31 ? value.charAt(0): nDate;
   }
   
   const nDate = (value.charAt(0) + value.charAt(1));
