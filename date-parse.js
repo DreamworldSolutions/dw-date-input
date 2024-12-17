@@ -88,7 +88,7 @@ const parseDate = (value, format) => {
   if(dayjs(value, sortKnownFormats, true).isValid()) {
     const date = dayjs(value, sortKnownFormats, true).format(format);
     const month = dayjs(date, format).get('month') + 1;
-    return dayjs(date, format).set('year', getNearestYear(month)).format(format);
+    return dayjs(date, format).set('year', dayjs().get('year')).format(format);
   }
   return "";
 }
@@ -107,7 +107,7 @@ const getParseDate = (value, onlyFirstDate, format) => {
   return {
     day: findDate(value, onlyFirstDate, format) || dayjs().get('date'),
     month: month,
-    year: findYear(value, onlyFirstDate, format) || getNearestYear(month)
+    year: findYear(value, onlyFirstDate, format) || dayjs().get('year')
   }
 }
 
@@ -158,24 +158,4 @@ const findYear = (value, onlyFirstDate, format) => {
   }
 
   return replaceValue.length < 4 ? '' + (2000 + (+replaceValue)): replaceValue.slice(0, 4);
-}
-
-const getNearestYear = (month) => {
-  month = month - 1;
-  const cMonth = dayjs().get('month');
-  const cYear = dayjs().get('year');
-  if(cMonth === month) {
-    return cYear;
-  }
-  
-  const beforeMonth = cMonth > month;
-  if(beforeMonth) {
-    const diff1 = dayjs(`${cYear}-${cMonth}-01`).diff(`${cYear}-${month}-01`, 'month');
-    const diff2 = dayjs(`${cYear + 1}-${month}-01`).diff(`${cYear}-${cMonth}-01`, 'month');
-    return diff2 < diff1 ? cYear + 1: cYear;
-  }
-
-  const diff1 = dayjs(`${cYear}-${month}-01` ).diff(`${cYear}-${cMonth}-01`, 'month');
-  const diff2 = dayjs(`${cYear}-${cMonth}-01`).diff(`${cYear - 1}-${month}-01`, 'month');
-  return diff2 < diff1 ? cYear - 1: cYear;
 }
