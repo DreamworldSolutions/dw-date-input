@@ -125,6 +125,7 @@ export class DateInput extends DwInput {
     this.showFutureWarning = false;
     this.autoSelect = true;
     this._onBlur = this._onBlur.bind(this);
+    this.allowedPattern = '^[a-zA-Z0-9/-]+$'
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
     this.addEventListener("blur", this._onBlur);
