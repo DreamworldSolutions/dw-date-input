@@ -52,7 +52,7 @@ class DwDatePicker extends DwCompositeDialog {
         }
         
         .header {
-          height: 88px;
+          height: 96px;
           padding: 16px 24px;
           box-sizing: border-box;
           border-bottom: 1px solid var(--mdc-theme-divider-color);
@@ -270,7 +270,7 @@ class DwDatePicker extends DwCompositeDialog {
       <div>
         <div class="header" date-picker="false">
           ${this._editMode ? html`
-          <dw-date-input dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange} @enter=${this._onInputEnter}></dw-date-input>
+          <dw-date-input .minDate=${this.minDate} dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange} @enter=${this._onInputEnter}></dw-date-input>
           <dw-button @click=${this._onCancel}>Cancel</dw-button>
           <dw-button @click=${this._onApply}>Apply</dw-button>
           ` : html` <div class="day">${this._getDayText()}</div>
@@ -382,7 +382,13 @@ class DwDatePicker extends DwCompositeDialog {
     this._editMode = false;
   }
 
+  reportValidity() {
+    return this.renderRoot.querySelector('dw-date-input')?.validate()
+  }
+
   _onApply() {
+      if (!this.reportValidity()) return;
+
       if(this._newDate !== this.value) {
         this._trigerValueChanged(this._newDate);
       }

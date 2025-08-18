@@ -10,7 +10,7 @@ import './dw-date-picker';
 import './dw-date-input-dialog';
 
 const defaultErrorMessages = {
-  minDate: "Date must be > {minDate}",
+  minDate: "Must be > {minDate}",
   maxDate: "Date must be < {maxDate}",
   minMaxDate: "Date must be between {minDate} and {maxDate}",
   invalidDate: "Date is invalid",
