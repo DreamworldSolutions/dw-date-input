@@ -270,7 +270,7 @@ class DwDatePicker extends DwCompositeDialog {
       <div>
         <div class="header" date-picker="false">
           ${this._editMode ? html`
-          <dw-date-input .minDate=${this.minDate} dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange} @enter=${this._onInputEnter}></dw-date-input>
+          <dw-date-input .maxDate=${this.maxDate} .minDate=${this.minDate} dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange} @enter=${this._onInputEnter}></dw-date-input>
           <dw-button @click=${this._onCancel}>Cancel</dw-button>
           <dw-button @click=${this._onApply}>Apply</dw-button>
           ` : html` <div class="day">${this._getDayText()}</div>
