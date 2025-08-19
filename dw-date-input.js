@@ -11,7 +11,7 @@ import './dw-date-input-dialog';
 
 const defaultErrorMessages = {
   minDate: "Must be > {minDate}",
-  maxDate: "Date must be < {maxDate}",
+  maxDate: "Must be < {maxDate}",
   minMaxDate: "Date must be between {minDate} and {maxDate}",
   invalidDate: "Date is invalid",
   showFutureError: "Future date is not allowed.",

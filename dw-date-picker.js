@@ -383,7 +383,7 @@ class DwDatePicker extends DwCompositeDialog {
   }
 
   reportValidity() {
-    return this.renderRoot.querySelector('dw-date-input')?.validate()
+    return this.renderRoot.querySelector('dw-date-input')?.validate();
   }
 
   _onApply() {
