@@ -49,9 +49,9 @@ export class DwDateInputDemo extends LitElement {
         errorInTooltip
         @action=${(e) => console.log(e.detail)}
         .tooltipActions=${[
-          { name: "UPDATE", label: "Update" },
-          { name: "CLEAR", label: "Clear", danger: true },
-        ]}
+        { name: "UPDATE", label: "Update" },
+        { name: "CLEAR", label: "Clear", danger: true },
+      ]}
       ></dw-date-input> -->
 
       <!-- <h4>Required</h4>
