@@ -345,7 +345,7 @@ export class DateInput extends DwInput {
     const { key } = e;
     if (key !== "ArrowUp" && key !== "ArrowDown") return;
 
-    const format = this.inputFormat || "DD-MM-YYYY";
+    const format = this._inputFormat || "DD-MM-YYYY";
     const currentDate = dayjs(this.value, format);
 
     const newDate =
