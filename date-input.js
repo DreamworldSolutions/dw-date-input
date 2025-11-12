@@ -339,6 +339,27 @@ export class DateInput extends DwInput {
     this.dispatchEvent(new CustomEvent("change"));
   }
 
+  _onKeyDown(e) {
+    super._onKeyDown(e);
+
+    const { key } = e;
+    if (key !== "ArrowUp" && key !== "ArrowDown") return;
+
+    const format = this.inputFormat || "DD-MM-YYYY";
+    const currentDate = dayjs(this.value, format);
+
+    const newDate =
+        !this.value
+        ? dayjs()
+        : key === "ArrowUp"
+        ? currentDate.add(1, "day")
+        : currentDate.subtract(1, "day");
+
+    this.value = newDate.format(format);
+    this._updateDateTextfieldValue();
+    this.dispatchEvent(new CustomEvent("change"));
+  }
+
   _getCurrentInputValue() {
     return this._textFieldInstance?.value || this._textFieldInstance?.input?.value || '';
   }
