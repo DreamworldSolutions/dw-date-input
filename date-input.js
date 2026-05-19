@@ -102,6 +102,22 @@ export class DateInput extends DwInput {
       showFutureError: { type: Boolean, reflect: true },
 
       /**
+       * Input property.
+       * Set `true` to enable relative-date shortcuts: typing `+N`, `-N`, or `+0`
+       * resolves to base date ± N days on blur/Enter/paste. Base date is
+       * `relativeDateBase` if set, otherwise today.
+       */
+      supportRelativeDate: { type: Boolean, reflect: true, attribute: 'support-relative-date' },
+
+      /**
+       * Input property.
+       * Anchor date for relative-date shortcuts (in `valueFormat`). When provided
+       * and `supportRelativeDate` is true, `+N` / `-N` resolve to this date ± N days.
+       * Falls back to today if omitted or unparseable.
+       */
+      relativeDateBase: { type: String, attribute: 'relative-date-base' },
+
+      /**
        * Display in mobile mode.
        */
       mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
@@ -124,8 +140,9 @@ export class DateInput extends DwInput {
     this.showFutureError = false;
     this.showFutureWarning = false;
     this.autoSelect = true;
+    this.supportRelativeDate = false;
     this._onBlur = this._onBlur.bind(this);
-    this.allowedPattern = '^[a-zA-Z0-9/-]+$'
+    this.allowedPattern = '^[a-zA-Z0-9/+-]+$'
     this.addEventListener("enter", this._onEnter);
     this.addEventListener("paste", this._onPaste);
     this.addEventListener("blur", this._onBlur);
@@ -229,6 +246,14 @@ export class DateInput extends DwInput {
   parseDateValue(value) {
     if (!value) {
       return "";
+    }
+    if (this.supportRelativeDate) {
+      const trimmed = value.trim();
+      if (/^[+-]\d+$/.test(trimmed)) {
+        const base = this.relativeDateBase && dayjs(this.relativeDateBase, this._valueFormat, true);
+        const anchor = base && base.isValid() ? base : dayjs();
+        return anchor.add(parseInt(trimmed, 10), 'day').format(this._inputFormat);
+      }
     }
     return dateParse(value, this._inputFormat);
   }

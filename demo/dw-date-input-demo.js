@@ -37,6 +37,8 @@ export class DwDateInputDemo extends LitElement {
         warningText="Warning Text"
         warningInTooltip
         .hint="${"Hint"}"
+        support-relative-date
+        .relativeDateBase=${'1926-10-19'}
       ></dw-date-input>
 
       <!-- <h4>Required</h4>

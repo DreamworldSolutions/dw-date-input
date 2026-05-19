@@ -58,6 +58,8 @@ The `value` property is always read/written in `valueFormat` (default `YYYY-MM-D
 | `maxDate` | `String` | — | No | Maximum allowed date (inclusive), in `valueFormat`. Dates after this trigger a validation error. |
 | `showFutureError` | `Boolean` | `false` | No | When `true`, selecting a future date is a validation error. |
 | `showFutureWarning` | `Boolean` | `false` | No | When `true`, selecting a future date shows a warning (suppressed when an error is active). |
+| `supportRelativeDate` | `Boolean` | `false` | No | When `true`, typing `+N`, `-N`, or `+0` resolves to base date ± N days on blur, Enter, or paste. Resolution happens before validation, so `minDate`/`maxDate`/`showFutureError` apply to the resolved date. |
+| `relativeDateBase` | `String` | — | No | Anchor date (in `valueFormat`) used by `supportRelativeDate`. When omitted or unparseable, today is used as the base. |
 | `invalid` | `Boolean` | `false` | No | Reflects the last validation result. Set externally to force an invalid state. |
 | `originalValue` | `String` | `""` | No | Reference value used with `highlightChanged` to detect user modifications. |
 | `highlightChanged` | `Boolean` | `false` | No | When `true` and `value !== originalValue`, applies a visual highlight. Requires `originalValue` to be set. |
@@ -256,6 +258,32 @@ In these modes, the `<input>` element is pointer-events disabled; date entry is 
 #### Arrow-key date increment
 
 When the text field is focused and contains a valid date, pressing **Arrow Up** increments the date by 1 day and **Arrow Down** decrements by 1 day. If the field is empty, Arrow Up/Down sets the value to today's date.
+
+---
+
+#### Relative date shortcuts
+
+```html
+<!-- Resolve +N / -N against today -->
+<dw-date-input support-relative-date label="Due Date"></dw-date-input>
+
+<!-- Resolve against an explicit base date (e.g., a transaction date) -->
+<dw-date-input
+  support-relative-date
+  .relativeDateBase=${"2024-06-01"}
+  label="Due Date"
+></dw-date-input>
+```
+
+When `supportRelativeDate` is `true`, the user can type `+N`, `-N`, or `+0` and the input is replaced on blur/Enter/paste with the resolved date:
+
+- `+5` → base date + 5 days
+- `-10` → base date − 10 days
+- `+0` / `-0` → base date
+
+If `relativeDateBase` is set (in `valueFormat`), it acts as the anchor; otherwise today is used. An unparseable `relativeDateBase` silently falls back to today.
+
+The regex is strict — `+ 5`, `++5`, bare `+`, etc. are not treated as relative-date input and fall through to normal date parsing. The resolved date is then run through standard `minDate`/`maxDate`/`showFutureError` validation.
 
 ---
 

@@ -192,6 +192,22 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
       /**
        * Input property.
+       * Set `true` to enable relative-date shortcuts: typing `+N`, `-N`, or `+0`
+       * resolves to base date ± N days on blur/Enter/paste of the input. Base date
+       * is `relativeDateBase` if set, otherwise today.
+       */
+      supportRelativeDate: { type: Boolean, reflect: true, attribute: 'support-relative-date' },
+
+      /**
+       * Input property.
+       * Anchor date for relative-date shortcuts (in `valueFormat`). When provided
+       * and `supportRelativeDate` is true, `+N` / `-N` resolve to this date ± N days.
+       * Falls back to today if omitted or unparseable.
+       */
+      relativeDateBase: { type: String, attribute: 'relative-date-base' },
+
+      /**
+       * Input property.
        * Set `true` to enable warning when user enters future date.
        * Note: Error has high priority so when error message is displayed, this warning will not be displayed
        */
@@ -324,6 +340,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
     this.errorMessages = defaultErrorMessages;
     this.showFutureError = false;
     this.showFutureWarning = false;
+    this.supportRelativeDate = false;
     this.appendTo = 'parent';
     this.zIndex = 9999;
     this.mobileMode = false;
@@ -392,6 +409,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .maxDate="${this.maxDate}"
         .showFutureWarning=${this.showFutureWarning}
         .showFutureError=${this.showFutureError}
+        .supportRelativeDate=${this.supportRelativeDate}
+        .relativeDateBase=${this.relativeDateBase}
         .warning=${this._warning}
         .error=${this._error}
         .hintInTooltip="${this.hintInTooltip}"
