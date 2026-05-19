@@ -192,6 +192,20 @@ class DwDatePicker extends DwCompositeDialog {
 
       /**
        * Input property.
+       * Set `true` to enable relative-date shortcuts (`+N`/`-N`/`+0`) in the
+       * edit-mode input. Forwarded to the inner `<dw-date-input>`.
+       */
+      supportRelativeDate: { type: Boolean, reflect: true, attribute: 'support-relative-date' },
+
+      /**
+       * Input property.
+       * Anchor date (in `valueFormat`) for relative-date shortcuts. Forwarded to
+       * the inner `<dw-date-input>`.
+       */
+      relativeDateBase: { type: String, attribute: 'relative-date-base' },
+
+      /**
+       * Input property.
        * Display in mobile mode (full screen).
        */
       mobileMode: { type: Boolean, reflect: true, attribute: 'mobile-mode' },
@@ -270,7 +284,7 @@ class DwDatePicker extends DwCompositeDialog {
       <div>
         <div class="header" date-picker="false">
           ${this._editMode ? html`
-          <dw-date-input .maxDate=${this.maxDate} .minDate=${this.minDate} dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange} @enter=${this._onInputEnter}></dw-date-input>
+          <dw-date-input .maxDate=${this.maxDate} .minDate=${this.minDate} .supportRelativeDate=${this.supportRelativeDate} .relativeDateBase=${this.relativeDateBase} dense iconTrailing="" .placeholder=${this.inputFormat} label="Date" inputformat=${this.inputFormat} value=${this.value} active="" @change=${this._onInputChange} @enter=${this._onInputEnter}></dw-date-input>
           <dw-button @click=${this._onCancel}>Cancel</dw-button>
           <dw-button @click=${this._onApply}>Apply</dw-button>
           ` : html` <div class="day">${this._getDayText()}</div>

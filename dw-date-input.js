@@ -447,6 +447,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .value=${this.value}
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
+        .supportRelativeDate=${this.supportRelativeDate}
+        .relativeDateBase=${this.relativeDateBase}
         .inputFormat=${this._inputFormat}
         .valueFormat=${this._valueFormat}
         .dateRepresentationFormat="${this._dateRepresentationFormat}"
