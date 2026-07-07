@@ -404,7 +404,7 @@ export class DwDateInput extends DwFormElement(LitElement) {
         .mobileMode=${this.mobileMode}
         .tabletMode=${this.tabletMode}
         .name="${this.name}"
-        .hint="${this.hint}"
+        .hint=${this.hint}
         .minDate="${this.minDate}"
         .maxDate="${this.maxDate}"
         .showFutureWarning=${this.showFutureWarning}
