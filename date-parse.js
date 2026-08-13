@@ -95,6 +95,9 @@ const parseDate = (value, format) => {
 
 const parseSamrtFormat = (value, format) => {
   let date = getParseDate(value, false, format);
+  if (+date.day === 0) {
+    return '';
+  }
   const daysInMonth = dayjs(`${date.year}-${date.month}`, ['YYYY-MM', 'YYYY-M'], true).daysInMonth();
   if(daysInMonth && !isNaN(daysInMonth) && daysInMonth < date.day) {
     date = getParseDate(value, true, format);

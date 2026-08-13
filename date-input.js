@@ -252,7 +252,8 @@ export class DateInput extends DwInput {
       if (/^[+-]\d+$/.test(trimmed)) {
         const base = this.relativeDateBase && dayjs(this.relativeDateBase, this._valueFormat, true);
         const anchor = base && base.isValid() ? base : dayjs();
-        return anchor.add(parseInt(trimmed, 10), 'day').format(this._inputFormat);
+        const result = anchor.add(parseInt(trimmed, 10), 'day');
+        return result.isValid() ? result.format(this._inputFormat) : '';
       }
     }
     return dateParse(value, this._inputFormat);
