@@ -18,6 +18,7 @@ import './dw-date-input.js';
  *
  * ## Events
  *  - `change` Fire when user choose any date from calendar.
+ *    Not fired when the chosen date equals `value`, unless `notifySameValue` is set.
  *
  * ## Usage Pattern:
  *  - <dw-date-picker value="" @change="">
@@ -230,7 +231,14 @@ class DwDatePicker extends DwCompositeDialog {
        */
       dateRepresentationFormat: { type: String },
 
-      tabindex: { type: String, reflect: true }
+      tabindex: { type: String, reflect: true },
+
+      /**
+       * Input property.
+       * Set `true` to fire `change` even when the chosen date equals `value`.
+       * Use it when picking a date also picks a mode (e.g. "Up to a Date"), so re-picking the pre-filled date must still apply.
+       */
+      notifySameValue: { type: Boolean }
     }
   }
 
@@ -403,7 +411,7 @@ class DwDatePicker extends DwCompositeDialog {
   _onApply() {
       if (!this.reportValidity()) return;
 
-      if(this._newDate !== this.value) {
+      if(this._newDate !== this.value || (this.notifySameValue && this._newDate)) {
         this._trigerValueChanged(this._newDate);
       }
       this.close();
@@ -434,7 +442,13 @@ class DwDatePicker extends DwCompositeDialog {
   
   _setPickerDate() {
     if(this.value && this._instance) {
-      this._instance.setDate(this.value);
+      // Litepicker's setDate() emits 'selected' synchronously; flag it so it isn't taken as a user pick.
+      this._settingDate = true;
+      try {
+        this._instance.setDate(this.value);
+      } finally {
+        this._settingDate = false;
+      }
       this._goToDate(this.value);
     }
   }
@@ -474,7 +488,7 @@ class DwDatePicker extends DwCompositeDialog {
     // Note: 'date.dateInstance' will be availalble when date is selected from date picker.
     date = date && date.dateInstance ? date.dateInstance : date;
     const value = date ? dayjs(date).startOf('day').format(this.valueFormat) : null;
-    if(value === this.value) {
+    if(value === this.value && (!this.notifySameValue || this._settingDate)) {
       return;
     }
 
