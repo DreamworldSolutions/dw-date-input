@@ -167,7 +167,9 @@ export class DateInput extends DwInput {
       this._valueFormat = this.valueFormat ? this.valueFormat.toUpperCase() :  'YYYY-MM-DD';
     }
 
-    if(props.has('date')){
+    // Parent echoes back '' for rejected text: keep that text so its error stays visible.
+    const rejected = !this.date && this.value && !dayjs(this.value.replace(/ /g, ''), this._inputFormat, true).isValid();
+    if(props.has('date') && !rejected){
       this.value = this.date ? this.parseValue(dayjs(this.date, this._valueFormat).format(this._inputFormat)) : '';
     }
 
@@ -288,7 +290,8 @@ export class DateInput extends DwInput {
     }
 
     if (!dayjs(value, this._inputFormat, true).isValid()) {
-      return this._errorMessages["invalidDate"];
+      // A missing message must not make an invalid date pass as valid.
+      return this._errorMessages["invalidDate"] || "Date is invalid";
     }
     
     value = dayjs(value, this._inputFormat).format(this._valueFormat);
@@ -372,7 +375,8 @@ export class DateInput extends DwInput {
     if (key !== "ArrowUp" && key !== "ArrowDown") return;
 
     const format = this._inputFormat || "DD-MM-YYYY";
-    const currentDate = dayjs(this.value, format);
+    const currentDate = dayjs((this.value || '').replace(/ /g, ''), format, true);
+    if (this.value && !currentDate.isValid()) return;
 
     const newDate =
         !this.value

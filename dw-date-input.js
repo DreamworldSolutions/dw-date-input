@@ -577,7 +577,8 @@ export class DwDateInput extends DwFormElement(LitElement) {
 
   _onChange(e) {
     if(e && e.target) {
-      const dateInputed = dayjs(e.target.value, this._inputFormat);
+      // Strict: otherwise 40/04/2026 silently rolls over to 10/05/2026. The field's text holds spaces.
+      const dateInputed = dayjs((e.target.value || '').replace(/ /g, ''), this._inputFormat, true);
       const date = dateInputed.isValid() ? dateInputed.format(this._valueFormat): "";
       this.value = date || this.value;
       this.validate();

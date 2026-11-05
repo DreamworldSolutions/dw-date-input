@@ -81,8 +81,15 @@ const sortKnownFormats = [
 ];
 
 const parseDate = (value, format) => {
-  if(dayjs(value, knownFormats, true).isValid()) {
-    return dayjs(value, format).format(format);
+  // Company format first, so 10/13/2026 can't pass as MM/DD in a DD/MM company and roll over to January.
+  const normalized = value.replace(/\s*[\/-]\s*/g, format.charAt(2));
+  if(dayjs(normalized, format, true).isValid()) {
+    return normalized;
+  }
+
+  const unambiguous = dayjs(value, knownFormats.filter(f => /^YYYY|MMM/.test(f)), true);
+  if(unambiguous.isValid()) {
+    return unambiguous.format(format);
   }
 
   if(dayjs(value, sortKnownFormats, true).isValid()) {
@@ -101,6 +108,10 @@ const parseSamrtFormat = (value, format) => {
   const daysInMonth = dayjs(`${date.year}-${date.month}`, ['YYYY-MM', 'YYYY-M'], true).daysInMonth();
   if(daysInMonth && !isNaN(daysInMonth) && daysInMonth < date.day) {
     date = getParseDate(value, true, format);
+  }
+  // Month 0 doesn't exist: dayjs would roll it back to December of last year.
+  if (+date.month === 0) {
+    return '';
   }
   return dayjs().year(date.year).month(+date.month - 1).date(date.day).format(format);
 };
